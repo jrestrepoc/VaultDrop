@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+
+{% block title %}VaultDrop{% endblock %}
+
+{% block content %}
+  <div class="card">
+    {% if user.is_authenticated %}
+      <h1>Hola, {{ user.username }} 👋</h1>
+      <p>Bienvenido/a de vuelta a VaultDrop. Tu billetera y tu actividad te esperan.</p>
+      <p><a class="button" href="{% url 'users:dashboard' %}">Ir a mi Dashboard</a></p>
+    {% else %}
+      <h1>VaultDrop</h1>
+      <p>
+        Simulación académica, apertura de cajas estilo KeyDrop. EAFIT, sin dinero real.
+      </p>
+      <p><a class="button" href="{% url 'users:register' %}">Registrarme</a></p>
+    {% endif %}
+  </div>
+{% endblock %}
