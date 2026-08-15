@@ -8,22 +8,15 @@ from apps.users.services import UserService
 
 
 def register_view(request):
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            svc = UserService()
-            try:
-                user = svc.register(username=username, email=email, password=password)
-            except ValueError as e:
-                form.add_error(None, str(e))
-            else:
-                login(request, user)
-                return redirect('users:dashboard')
-    else:
-        form = RegistrationForm()
+    form = RegistrationForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        try:
+            user = UserService().register(**form.cleaned_data)
+        except ValueError as e:
+            form.add_error(None, str(e))
+        else:
+            login(request, user)
+            return redirect('users:dashboard')
     return render(request, 'users/register.html', {'form': form})
 
 
