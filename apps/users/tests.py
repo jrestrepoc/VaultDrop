@@ -1,5 +1,10 @@
+import os
+from unittest import mock
+
 from django.test import TestCase
 from apps.users.services import UserService
+from apps.users.domain.builders import UserBuilder
+from apps.users.infra.factories import NotificadorFactory, NotificadorConsola, NotificadorEmail
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from decimal import Decimal
@@ -48,3 +53,55 @@ class UserRegistrationViewTest(TestCase):
         self.assertEqual(resp.status_code, 200)
         users = get_user_model().objects.filter(email='eve@example.com')
         self.assertEqual(users.count(), 1)
+
+
+class UserBuilderTest(TestCase):
+    def test_build_success_returns_valid_unsaved_user(self):
+        user = (
+            UserBuilder()
+            .con_username('frank')
+            .con_email('frank@example.com')
+            .con_password('strongpass')
+            .build()
+        )
+        self.assertIsNone(user.pk)
+        self.assertEqual(user.username, 'frank')
+        self.assertEqual(user.email, 'frank@example.com')
+        self.assertTrue(user.is_active)
+        self.assertTrue(user.check_password('strongpass'))
+
+    def test_build_with_short_password_raises_value_error(self):
+        with self.assertRaises(ValueError):
+            (
+                UserBuilder()
+                .con_username('gina')
+                .con_email('gina@example.com')
+                .con_password('short')
+                .build()
+            )
+
+    def test_build_without_email_raises_value_error(self):
+        with self.assertRaises(ValueError):
+            (
+                UserBuilder()
+                .con_username('hugo')
+                .con_password('strongpass')
+                .build()
+            )
+
+
+class NotificadorFactoryTest(TestCase):
+    @mock.patch.dict(os.environ, {'NOTIFICACION_MODE': 'MOCK'})
+    def test_crea_notificador_consola_en_modo_mock(self):
+        notificador = NotificadorFactory.crear()
+        self.assertIsInstance(notificador, NotificadorConsola)
+
+    @mock.patch.dict(os.environ, {'NOTIFICACION_MODE': 'REAL'})
+    def test_crea_notificador_email_en_modo_real(self):
+        notificador = NotificadorFactory.crear()
+        self.assertIsInstance(notificador, NotificadorEmail)
+
+    @mock.patch.dict(os.environ, {}, clear=True)
+    def test_modo_por_defecto_es_mock_si_no_hay_variable_de_entorno(self):
+        notificador = NotificadorFactory.crear()
+        self.assertIsInstance(notificador, NotificadorConsola)
