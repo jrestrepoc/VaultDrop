@@ -54,6 +54,35 @@ class UserRegistrationViewTest(TestCase):
         users = get_user_model().objects.filter(email='eve@example.com')
         self.assertEqual(users.count(), 1)
 
+    def test_register_view_duplicate_username(self):
+        svc = UserService()
+        svc.register(username='ivan', email='ivan1@example.com', password='strongpass')
+        url = reverse('users:register')
+        resp = self.client.post(url, data={
+            'username': 'ivan',
+            'email': 'ivan2@example.com',
+            'password': 'anotherstrong',
+        })
+        # No debe reventar con un 500 (IntegrityError): el form vuelve a
+        # renderizarse con el error de negocio.
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'nombre de usuario ya está en uso')
+        self.assertFalse(get_user_model().objects.filter(email='ivan2@example.com').exists())
+
+
+class UserServiceDuplicateDataTest(TestCase):
+    def test_register_with_duplicate_username_raises_value_error(self):
+        svc = UserService()
+        svc.register(username='julia', email='julia1@example.com', password='strongpass')
+        with self.assertRaisesMessage(ValueError, 'El nombre de usuario ya está en uso'):
+            svc.register(username='julia', email='julia2@example.com', password='strongpass')
+
+    def test_register_with_duplicate_email_raises_value_error(self):
+        svc = UserService()
+        svc.register(username='karen', email='karen@example.com', password='strongpass')
+        with self.assertRaisesMessage(ValueError, 'El correo ya está registrado'):
+            svc.register(username='karen2', email='karen@example.com', password='strongpass')
+
 
 class UserBuilderTest(TestCase):
     def test_build_success_returns_valid_unsaved_user(self):
