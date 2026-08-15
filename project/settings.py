@@ -67,3 +67,13 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+
+# Modo de la Factory de notificaciones (patrón Factory, apps/users/infra/factories.py).
+# MOCK: imprime/loguea el mensaje de bienvenida (dev/tests, sin dependencias externas).
+# REAL: envía un correo de verdad mediante django.core.mail.send_mail.
+NOTIFICACION_MODE = os.environ.get('NOTIFICACION_MODE', 'MOCK')
+
+# Backend de correo para el modo REAL de NotificadorFactory. Por defecto escribe a
+# consola para no requerir SMTP configurado; en producción se reemplaza por un backend
+# real (ej. SMTP/SendGrid) vía variable de entorno.
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
