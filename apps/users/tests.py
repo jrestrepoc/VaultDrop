@@ -31,6 +31,16 @@ class UserRegistrationViewTest(TestCase):
         self.assertEqual(resp.status_code, 302)
         self.assertTrue(get_user_model().objects.filter(email='carol@example.com').exists())
 
+    def test_login_view_success(self):
+        UserService().register(username='login-user', email='login-user@example.com', password='strongpass')
+        url = reverse('users:login')
+        resp = self.client.post(url, data={
+            'username': 'login-user',
+            'password': 'strongpass',
+        })
+        self.assertEqual(resp.status_code, 302)
+        self.assertTrue(resp.url.endswith(reverse('core:home')))
+
     def test_register_view_short_password(self):
         url = reverse('users:register')
         resp = self.client.post(url, data={

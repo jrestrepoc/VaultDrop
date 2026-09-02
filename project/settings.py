@@ -14,9 +14,13 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
     'apps.core',
     'apps.users',
     'apps.wallet',
+    'apps.cases',
+    'apps.openings',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +73,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
 
+STATIC_URL = 'static/'
+
 # Modo de la Factory de notificaciones (patrón Factory, apps/users/infra/factories.py).
 # MOCK: imprime/loguea el mensaje de bienvenida (dev/tests, sin dependencias externas).
 # REAL: envía un correo de verdad mediante django.core.mail.send_mail.
@@ -78,3 +84,10 @@ NOTIFICACION_MODE = os.environ.get('NOTIFICACION_MODE', 'MOCK')
 # consola para no requerir SMTP configurado; en producción se reemplaza por un backend
 # real (ej. SMTP/SendGrid) vía variable de entorno.
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+}

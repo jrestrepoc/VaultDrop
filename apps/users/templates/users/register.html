@@ -1,12 +1,18 @@
-<!doctype html>
-<html>
-  <head><title>Register</title></head>
-  <body>
-    <h1>Register</h1>
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Register</button>
-    </form>
-  </body>
-</html>
+{% extends "core/base.html" %}
+
+{% block title %}Register | VaultDrop{% endblock %}
+
+{% block body %}
+  <div class="auth-shell">
+    <a class="auth-brand" href="{% url 'core:home' %}">⚡ VAULTDROP</a>
+    <section class="auth-card">
+      <h1 class="gradient-text auth-title">REGISTER</h1>
+      <p class="auth-subtitle">Create your academic simulation account.</p>
+      <form method="post" class="auth-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="primary-action" type="submit">CREATE ACCOUNT</button>
+      </form>
+    </section>
+  </div>
+{% endblock %}

@@ -1,89 +1,17 @@
+{% load static %}
 <!doctype html>
 <html lang="es">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}VaultDrop{% endblock %}</title>
-    <style>
-      :root {
-        --bg: #0f1115;
-        --surface: #171a21;
-        --text: #e8e8ea;
-        --muted: #9a9ea6;
-        --accent: #5b8def;
-        --border: #262a33;
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-      }
-      .topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1rem 2rem;
-        border-bottom: 1px solid var(--border);
-      }
-      .brand {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--text);
-        text-decoration: none;
-        letter-spacing: 0.02em;
-      }
-      .nav-links {
-        list-style: none;
-        display: flex;
-        gap: 1.25rem;
-        margin: 0;
-        padding: 0;
-      }
-      .nav-links a {
-        color: var(--muted);
-        text-decoration: none;
-        font-size: 0.95rem;
-      }
-      .nav-links a:hover { color: var(--text); }
-      .nav-links a.button {
-        background: var(--accent);
-        color: #0b0d10;
-        padding: 0.45rem 0.9rem;
-        border-radius: 6px;
-        font-weight: 600;
-      }
-      main {
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 3rem 2rem;
-      }
-      .card {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 2rem;
-      }
-    </style>
+    <link rel="stylesheet" href="{% static 'core/css/vaultdrop.css' %}">
+    {% block extra_head %}{% endblock %}
   </head>
   <body>
-    <header class="topbar">
-      <a class="brand" href="{% url 'core:home' %}">VaultDrop</a>
-      <nav>
-        <ul class="nav-links">
-          {% block nav_links %}
-            {% if user.is_authenticated %}
-              <li><a class="button" href="{% url 'users:dashboard' %}">Mi Dashboard</a></li>
-            {% else %}
-              <li><a class="button" href="{% url 'users:register' %}">Registrarse</a></li>
-            {% endif %}
-          {% endblock %}
-        </ul>
-      </nav>
-    </header>
-    <main>
+    {% block body %}
       {% block content %}{% endblock %}
-    </main>
+    {% endblock %}
+    {% block scripts %}{% endblock %}
   </body>
 </html>

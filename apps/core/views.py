@@ -2,6 +2,5 @@ from django.shortcuts import render
 
 
 def home_view(request):
-    """Home pública/autenticada: el contenido (bienvenida vs. saludo) se
-    resuelve en el template a partir de `user.is_authenticated`."""
+    """Muestra la plataforma; las acciones que requieren cuenta se protegen en ella."""
     return render(request, 'core/home.html')

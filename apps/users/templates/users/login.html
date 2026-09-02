@@ -1,0 +1,22 @@
+{% extends "core/base.html" %}
+
+{% block title %}Login | VaultDrop{% endblock %}
+
+{% block body %}
+  <div class="auth-shell">
+    <a class="auth-brand" href="{% url 'core:home' %}">⚡ VAULTDROP</a>
+    <section class="auth-card">
+      <h1 class="gradient-text auth-title">LOGIN</h1>
+      <p class="auth-subtitle">Access your academic simulation account.</p>
+      <form method="post" class="auth-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="primary-action" type="submit">LOGIN</button>
+      </form>
+      <div class="auth-switch">
+        <span>Need an account?</span>
+        <a href="{% url 'users:register' %}">REGISTER</a>
+      </div>
+    </section>
+  </div>
+{% endblock %}
