@@ -23,5 +23,9 @@ def register_view(request):
 @login_required
 def dashboard_view(request):
     billetera = getattr(request.user, 'billetera', None)
-    saldo = billetera.saldo if billetera else 0
-    return HttpResponse(f"Saldo: {saldo}")
+    transacciones = billetera.transacciones.all().order_by('-created_at') if billetera else []
+    return render(request, 'users/dashboard.html', {
+        'billetera': billetera,
+        'transacciones': transacciones,
+    })
+

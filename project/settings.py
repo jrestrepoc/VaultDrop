@@ -14,6 +14,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'rest_framework',
+    'rest_framework.authtoken',
     'apps.core',
     'apps.users',
     'apps.wallet',
@@ -78,3 +80,13 @@ NOTIFICACION_MODE = os.environ.get('NOTIFICACION_MODE', 'MOCK')
 # consola para no requerir SMTP configurado; en producción se reemplaza por un backend
 # real (ej. SMTP/SendGrid) vía variable de entorno.
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
