@@ -2,12 +2,15 @@ import os
 from unittest import mock
 
 from django.test import TestCase
+from rest_framework.test import APITestCase
+from rest_framework import status
 from apps.users.services import UserService
 from apps.users.domain.builders import UserBuilder
 from apps.users.infra.factories import NotificadorFactory, NotificadorConsola, NotificadorEmail
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from decimal import Decimal
+
 
 
 class UserRegistrationServiceTest(TestCase):
@@ -144,3 +147,83 @@ class NotificadorFactoryTest(TestCase):
     def test_modo_por_defecto_es_mock_si_no_hay_variable_de_entorno(self):
         notificador = NotificadorFactory.crear()
         self.assertIsInstance(notificador, NotificadorConsola)
+
+
+class UserAPITestCase(APITestCase):
+    def test_register_api_success_201(self):
+        url = reverse('users:api_register')
+        payload = {
+            'username': 'juanperez',
+            'email': 'juan@example.com',
+            'password': 'supersecretpassword123',
+        }
+        resp = self.client.post(url, data=payload, format='json')
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertIn('token', resp.data)
+        self.assertIn('user', resp.data)
+        self.assertEqual(resp.data['user']['username'], 'juanperez')
+        self.assertEqual(resp.data['user']['email'], 'juan@example.com')
+
+        User = get_user_model()
+        user = User.objects.get(username='juanperez')
+        self.assertTrue(hasattr(user, 'billetera'))
+        self.assertEqual(user.billetera.saldo, Decimal('1000.00'))
+
+    def test_register_api_duplicate_username_409(self):
+        UserService().register(username='clon', email='clon1@example.com', password='password123')
+        url = reverse('users:api_register')
+        payload = {
+            'username': 'clon',
+            'email': 'clon2@example.com',
+            'password': 'password123',
+        }
+        resp = self.client.post(url, data=payload, format='json')
+        self.assertEqual(resp.status_code, status.HTTP_409_CONFLICT)
+        self.assertIn('error', resp.data)
+
+    def test_register_api_duplicate_email_409(self):
+        UserService().register(username='user1', email='repetido@example.com', password='password123')
+        url = reverse('users:api_register')
+        payload = {
+            'username': 'user2',
+            'email': 'repetido@example.com',
+            'password': 'password123',
+        }
+        resp = self.client.post(url, data=payload, format='json')
+        self.assertEqual(resp.status_code, status.HTTP_409_CONFLICT)
+        self.assertIn('error', resp.data)
+
+    def test_register_api_short_password_400(self):
+        url = reverse('users:api_register')
+        payload = {
+            'username': 'shortpass',
+            'email': 'shortpass@example.com',
+            'password': '123',
+        }
+        resp = self.client.post(url, data=payload, format='json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('errors', resp.data)
+
+    def test_login_api_success_200(self):
+        UserService().register(username='logintest', email='login@example.com', password='password123')
+        url = reverse('users:api_login')
+        payload = {
+            'username': 'logintest',
+            'password': 'password123',
+        }
+        resp = self.client.post(url, data=payload, format='json')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertIn('token', resp.data)
+        self.assertEqual(resp.data['user']['username'], 'logintest')
+
+    def test_login_api_invalid_credentials_400(self):
+        UserService().register(username='loginbad', email='loginbad@example.com', password='password123')
+        url = reverse('users:api_login')
+        payload = {
+            'username': 'loginbad',
+            'password': 'wrongpassword',
+        }
+        resp = self.client.post(url, data=payload, format='json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('error', resp.data)
+

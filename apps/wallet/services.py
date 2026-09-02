@@ -58,3 +58,10 @@ class WalletService:
                 saldo_posterior=billetera.saldo,
             )
             return billetera
+
+    def get_billetera(self, user):
+        billetera = self.billetera_repository.get_by_user(user)
+        if not billetera:
+            raise ValueError('El usuario no posee una billetera activa')
+        return billetera
+

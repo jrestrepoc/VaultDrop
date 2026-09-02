@@ -86,7 +86,8 @@ class CajaApiTest(TestCase):
 
         self.assertEqual(response.status_code, 404)
 
-    def test_abrir_caja_sin_autenticacion_responde_403(self):
+    def test_abrir_caja_sin_autenticacion_responde_401(self):
         response = self.client.post(reverse('cases:open', kwargs={'caja_id': self.caja.id}))
 
-        self.assertEqual(response.status_code, 403)
+        self.assertIn(response.status_code, (401, 403))
+

@@ -1,0 +1,57 @@
+{% extends "core/base.html" %}
+
+{% block title %}Mi Dashboard - VaultDrop{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 2rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <h1 style="margin: 0 0 0.5rem 0;">Panel de Control</h1>
+      <p style="margin: 0; color: var(--muted);">Usuario: <strong>{{ user.username }}</strong> ({{ user.email }})</p>
+    </div>
+    <div style="background: rgba(91, 141, 239, 0.1); border: 1px solid var(--accent); padding: 1rem 1.5rem; border-radius: 8px; text-align: right;">
+      <span style="font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; display: block;">Saldo Virtual</span>
+      <span style="font-size: 1.8rem; font-weight: 700; color: #64ffda;">${{ billetera.saldo|default:"0.00" }}</span>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2 style="margin-top: 0;">Historial de Movimientos</h2>
+  {% if transacciones %}
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; margin-top: 1rem;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--border); color: var(--muted); font-size: 0.9rem;">
+            <th style="padding: 0.75rem 0.5rem;">Fecha</th>
+            <th style="padding: 0.75rem 0.5rem;">Tipo</th>
+            <th style="padding: 0.75rem 0.5rem;">Monto</th>
+            <th style="padding: 0.75rem 0.5rem;">Saldo Anterior</th>
+            <th style="padding: 0.75rem 0.5rem;">Saldo Posterior</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for tx in transacciones %}
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-size: 0.9rem; color: var(--muted);">{{ tx.created_at|date:"Y-m-d H:i" }}</td>
+              <td style="padding: 0.75rem 0.5rem;">
+                <span style="background: var(--border); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">
+                  {{ tx.tipo }}
+                </span>
+              </td>
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; {% if tx.tipo == 'DEBITO' %}color: #ff6b6b;{% else %}color: #64ffda;{% endif %}">
+                {% if tx.tipo == 'DEBITO' %}-{% else %}+{% endif %}${{ tx.monto }}
+              </td>
+              <td style="padding: 0.75rem 0.5rem; color: var(--muted);">${{{ tx.saldo_anterior }}}</td>
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600;">${{{ tx.saldo_posterior }}}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p style="color: var(--muted); margin: 1rem 0 0 0;">No se registran movimientos en tu billetera todavía.</p>
+  {% endif %}
+</div>
+{% endblock %}
+
