@@ -1,19 +1,15 @@
-class CajaNoEncontradaError(ValueError):
+from apps.core.domain import BusinessError, ConflictError, InsufficientBalanceError, NotFoundError
+
+class CajaNoEncontradaError(NotFoundError):
     pass
 
-
-class CajaNoDisponibleError(ValueError):
+class CajaNoDisponibleError(ConflictError):
     pass
 
-
-class CajaSinItemsError(ValueError):
+class CajaSinItemsError(BusinessError):
     pass
 
-
-class ProbabilidadesInvalidasError(ValueError):
+class ProbabilidadesInvalidasError(BusinessError):
     pass
 
-
-class SaldoInsuficienteError(ValueError):
-    pass
-
+SaldoInsuficienteError = InsufficientBalanceError

@@ -40,8 +40,7 @@ class AperturaCajaService:
         self._validar_items(caja_items)
 
         with transaction.atomic():
-            if not self.wallet_service.tiene_saldo_suficiente(user, caja.precio):
-                raise SaldoInsuficienteError('Saldo insuficiente')
+            self.wallet_service.debitar(user, caja.precio)
 
             item_obtenido = self._seleccionar_item(caja_items)
             datos_apertura = (
@@ -52,7 +51,6 @@ class AperturaCajaService:
                 .con_costo(caja.precio)
                 .build()
             )
-            self.wallet_service.debitar(user, caja.precio)
             apertura = self.apertura_repository.create_apertura(**datos_apertura)
             inventario_item = self.apertura_repository.create_inventario_item(
                 user=user,
@@ -65,7 +63,7 @@ class AperturaCajaService:
         if not caja_items:
             raise CajaSinItemsError('La caja no tiene items configurados')
         total = sum((caja_item.probabilidad for caja_item in caja_items), Decimal('0.00'))
-        if total != Decimal('100.00'):
+        if any(ci.probabilidad <= 0 for ci in caja_items) or total != Decimal('100.00'):
             raise ProbabilidadesInvalidasError('Las probabilidades de la caja deben sumar 100%')
 
     def _seleccionar_item(self, caja_items):

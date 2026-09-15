@@ -9,11 +9,12 @@ class AbrirCajaSerializer(serializers.Serializer):
 
 
 class ItemInventarioSerializer(serializers.ModelSerializer):
+    caja_nombre = serializers.CharField(source='apertura.caja.nombre', read_only=True)
     item = ItemSerializer()
 
     class Meta:
         model = ItemInventario
-        fields = ['id', 'item', 'estado', 'created_at']
+        fields = ['id', 'item', 'estado', 'created_at', 'caja_nombre']
 
 
 class AperturaCajaSerializer(serializers.ModelSerializer):

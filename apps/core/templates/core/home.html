@@ -7,9 +7,14 @@
   <div
     id="vaultdrop-app"
     data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
+    data-user-id="{{ user.pk|default:'guest' }}"
     data-username="{{ user.username }}"
     data-email="{{ user.email }}"
-    data-balance="{% if user.is_authenticated and user.billetera %}{{ user.billetera.saldo }}{% else %}1000.00{% endif %}"
+    data-balance="{% if user.is_authenticated and user.billetera %}{{ user.billetera.saldo }}{% else %}0.00{% endif %}"
+    data-account-url="{% url 'core:account' %}"
+    data-deposit-url="{% url 'wallet:deposit' %}"
+    data-inventory-url="{% url 'inventory:list' %}"
+    data-profile-url="{% url 'users:profile' %}"
     data-cases-url="{% url 'cases:list' %}"
     data-login-url="{% url 'users:login' %}"
     data-register-url="{% url 'users:register' %}"
@@ -18,5 +23,5 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="{% static 'core/js/vaultdrop.js' %}"></script>
+  <script type="module" src="{% static 'core/js/vaultdrop.js' %}?v=4"></script>
 {% endblock %}

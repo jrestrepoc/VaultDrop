@@ -23,9 +23,29 @@ class IUserRepository(ABC):
         pass
 
 
+    @abstractmethod
+    def save(self, user):
+        pass
+
+    @abstractmethod
+    def update_profile(self, user, username, email, steam_username):
+        pass
+
+
 class DjangoUserRepository(IUserRepository):
     def __init__(self, user_model):
         self.user_model = user_model
+
+    def save(self, user):
+        user.save()
+        return user
+
+    def update_profile(self, user, username, email, steam_username):
+        user.username = username
+        user.email = email
+        user.steam_username = steam_username
+        user.save(update_fields=['username', 'email', 'steam_username'])
+        return user
 
     def create(self, **kwargs):
         return self.user_model.objects.create(**kwargs)

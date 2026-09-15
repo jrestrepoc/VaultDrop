@@ -18,7 +18,7 @@ class AperturaCaja(models.Model):
 
 class ItemInventario(models.Model):
     ESTADO_DISPONIBLE = 'DISPONIBLE'
-    ESTADO_CHOICES = ((ESTADO_DISPONIBLE, 'Disponible'),)
+    ESTADO_CHOICES = ((ESTADO_DISPONIBLE, 'Disponible'), ('VENDIDO', 'Vendido'), ('ENVIADO', 'Enviado (simulación)'))
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='inventario')
     item = models.ForeignKey('cases.Item', on_delete=models.PROTECT, related_name='inventarios')

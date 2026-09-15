@@ -1,0 +1,14 @@
+services:
+  web:
+    build: .
+    ports:
+      - "127.0.0.1:8002:8000"
+    environment:
+      DJANGO_DEBUG: "1"
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1"
+      DJANGO_DB_PATH: "/data/db.sqlite3"
+      NOTIFICACION_MODE: "MOCK"
+    volumes:
+      - vaultdrop-data:/data
+volumes:
+  vaultdrop-data:

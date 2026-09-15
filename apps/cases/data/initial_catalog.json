@@ -1,0 +1,561 @@
+{
+  "items": [
+    {
+      "id": "i2",
+      "nombre": "AWP | Dragon Lore",
+      "descripcion": "Legendary sniper rifle",
+      "valor": 850,
+      "rareza": "contraband",
+      "emoji": "🐉",
+      "image": "/static/core/images/catalog/skin-4f8d99d09ded.png"
+    },
+    {
+      "id": "i3",
+      "nombre": "M4A4 | Howl",
+      "descripcion": "Restricted heavy assault",
+      "valor": 320,
+      "rareza": "covert",
+      "emoji": "🐺",
+      "image": "/static/core/images/catalog/skin-8aacf99e7f2f.png"
+    },
+    {
+      "id": "i6",
+      "nombre": "Karambit | Doppler",
+      "descripcion": "Curved blade with depth",
+      "valor": 280,
+      "rareza": "covert",
+      "emoji": "🗡️",
+      "image": "/static/core/images/catalog/skin-e7fd9a1907bb.png"
+    },
+    {
+      "id": "i1",
+      "nombre": "AK-47 | Redline",
+      "descripcion": "Classic aggressive rifle",
+      "valor": 85,
+      "rareza": "classified",
+      "emoji": "🔫",
+      "image": "/static/core/images/catalog/skin-91a429af4a60.png"
+    },
+    {
+      "id": "i5",
+      "nombre": "Desert Eagle | Blaze",
+      "descripcion": "Fire-tipped magnum",
+      "valor": 42,
+      "rareza": "classified",
+      "emoji": "🔥",
+      "image": "/static/core/images/catalog/skin-e30d23329629.png"
+    },
+    {
+      "id": "i4",
+      "nombre": "Glock-18 | Fade",
+      "descripcion": "Vibrant fading pistol",
+      "valor": 55,
+      "rareza": "restricted",
+      "emoji": "🌈",
+      "image": "/static/core/images/catalog/skin-da5da69785da.png"
+    },
+    {
+      "id": "i8",
+      "nombre": "USP-S | Kill Confirmed",
+      "descripcion": "Confirmed silenced pistol",
+      "valor": 22,
+      "rareza": "milspec",
+      "emoji": "💀",
+      "image": "/static/core/images/catalog/skin-cf4c11689014.png"
+    },
+    {
+      "id": "i10",
+      "nombre": "Nova | Antique",
+      "descripcion": "Vintage shotgun",
+      "valor": 2,
+      "rareza": "consumer",
+      "emoji": "🪨",
+      "image": "/static/core/images/catalog/skin-064fed483cd7.png"
+    },
+    {
+      "id": "i12",
+      "nombre": "Butterfly Knife | Tiger Tooth",
+      "descripcion": "Striped butterfly blade",
+      "valor": 190,
+      "rareza": "classified",
+      "emoji": "🦋",
+      "image": "/static/core/images/catalog/skin-9f5234d3821f.png"
+    },
+    {
+      "id": "i15",
+      "nombre": "CZ75-Auto | Emerald Quartz",
+      "descripcion": "Crystal green pistol",
+      "valor": 28,
+      "rareza": "restricted",
+      "emoji": "💎",
+      "image": "/static/core/images/catalog/skin-f489d119026b.png"
+    },
+    {
+      "id": "i11",
+      "nombre": "MAC-10 | Neon Rider",
+      "descripcion": "Cyberpunk SMG skin",
+      "valor": 18,
+      "rareza": "milspec",
+      "emoji": "🌙",
+      "image": "/static/core/images/catalog/skin-bb6ba9602776.png"
+    },
+    {
+      "id": "i13",
+      "nombre": "SSG 08 | Blue Spruce",
+      "descripcion": "Icy sniper rifle",
+      "valor": 5,
+      "rareza": "industrial",
+      "emoji": "❄️",
+      "image": "/static/core/images/catalog/skin-3ce5120e2b90.png"
+    },
+    {
+      "id": "i14",
+      "nombre": "FAMAS | Mecha Industries",
+      "descripcion": "Robotic assault rifle",
+      "valor": 12,
+      "rareza": "milspec",
+      "emoji": "🤖",
+      "image": "/static/core/images/catalog/skin-ea2876c00b6b.png"
+    },
+    {
+      "id": "i7",
+      "nombre": "P250 | Mehndi",
+      "descripcion": "Ornate pattern pistol",
+      "valor": 8,
+      "rareza": "industrial",
+      "emoji": "🎨",
+      "image": "/static/core/images/catalog/skin-1a7c17796193.png"
+    },
+    {
+      "id": "i9",
+      "nombre": "MP5-SD | Phosphor",
+      "descripcion": "Glowing SMG",
+      "valor": 3,
+      "rareza": "consumer",
+      "emoji": "⚡",
+      "image": "/static/core/images/catalog/skin-aa2d649aeaf6.png"
+    }
+  ],
+  "cases": [
+    {
+      "id": "c1",
+      "nombre": "Fracture Case",
+      "descripcion": "High value covert items. Good chance at classified weapons.",
+      "precio": 45,
+      "emoji": "💥",
+      "image": "/static/core/images/catalog/crate-4698.png",
+      "gradient": "linear-gradient(135deg, #1a0a2e, #2d1b69)",
+      "borderColor": "#8847ff",
+      "items": [
+        {
+          "item": {
+            "id": "i2",
+            "nombre": "AWP | Dragon Lore",
+            "descripcion": "Legendary sniper rifle",
+            "valor": 850,
+            "rareza": "contraband",
+            "emoji": "🐉",
+            "image": "/static/core/images/catalog/skin-4f8d99d09ded.png"
+          },
+          "probabilidad": 0.5
+        },
+        {
+          "item": {
+            "id": "i3",
+            "nombre": "M4A4 | Howl",
+            "descripcion": "Restricted heavy assault",
+            "valor": 320,
+            "rareza": "covert",
+            "emoji": "🐺",
+            "image": "/static/core/images/catalog/skin-8aacf99e7f2f.png"
+          },
+          "probabilidad": 1.5
+        },
+        {
+          "item": {
+            "id": "i6",
+            "nombre": "Karambit | Doppler",
+            "descripcion": "Curved blade with depth",
+            "valor": 280,
+            "rareza": "covert",
+            "emoji": "🗡️",
+            "image": "/static/core/images/catalog/skin-e7fd9a1907bb.png"
+          },
+          "probabilidad": 3
+        },
+        {
+          "item": {
+            "id": "i1",
+            "nombre": "AK-47 | Redline",
+            "descripcion": "Classic aggressive rifle",
+            "valor": 85,
+            "rareza": "classified",
+            "emoji": "🔫",
+            "image": "/static/core/images/catalog/skin-91a429af4a60.png"
+          },
+          "probabilidad": 8
+        },
+        {
+          "item": {
+            "id": "i5",
+            "nombre": "Desert Eagle | Blaze",
+            "descripcion": "Fire-tipped magnum",
+            "valor": 42,
+            "rareza": "classified",
+            "emoji": "🔥",
+            "image": "/static/core/images/catalog/skin-e30d23329629.png"
+          },
+          "probabilidad": 12
+        },
+        {
+          "item": {
+            "id": "i4",
+            "nombre": "Glock-18 | Fade",
+            "descripcion": "Vibrant fading pistol",
+            "valor": 55,
+            "rareza": "restricted",
+            "emoji": "🌈",
+            "image": "/static/core/images/catalog/skin-da5da69785da.png"
+          },
+          "probabilidad": 20
+        },
+        {
+          "item": {
+            "id": "i8",
+            "nombre": "USP-S | Kill Confirmed",
+            "descripcion": "Confirmed silenced pistol",
+            "valor": 22,
+            "rareza": "milspec",
+            "emoji": "💀",
+            "image": "/static/core/images/catalog/skin-cf4c11689014.png"
+          },
+          "probabilidad": 30
+        },
+        {
+          "item": {
+            "id": "i10",
+            "nombre": "Nova | Antique",
+            "descripcion": "Vintage shotgun",
+            "valor": 2,
+            "rareza": "consumer",
+            "emoji": "🪨",
+            "image": "/static/core/images/catalog/skin-064fed483cd7.png"
+          },
+          "probabilidad": 25
+        }
+      ]
+    },
+    {
+      "id": "c2",
+      "nombre": "Operation Riptide",
+      "descripcion": "Ocean-themed skins. Risk the waves for rare finds.",
+      "precio": 25,
+      "emoji": "🌊",
+      "image": "/static/core/images/catalog/crate-4790.png",
+      "gradient": "linear-gradient(135deg, #0a1628, #0e3a6b)",
+      "borderColor": "#22d3ee",
+      "items": [
+        {
+          "item": {
+            "id": "i3",
+            "nombre": "M4A4 | Howl",
+            "descripcion": "Restricted heavy assault",
+            "valor": 320,
+            "rareza": "covert",
+            "emoji": "🐺",
+            "image": "/static/core/images/catalog/skin-8aacf99e7f2f.png"
+          },
+          "probabilidad": 0.8
+        },
+        {
+          "item": {
+            "id": "i12",
+            "nombre": "Butterfly Knife | Tiger Tooth",
+            "descripcion": "Striped butterfly blade",
+            "valor": 190,
+            "rareza": "classified",
+            "emoji": "🦋",
+            "image": "/static/core/images/catalog/skin-9f5234d3821f.png"
+          },
+          "probabilidad": 2.5
+        },
+        {
+          "item": {
+            "id": "i1",
+            "nombre": "AK-47 | Redline",
+            "descripcion": "Classic aggressive rifle",
+            "valor": 85,
+            "rareza": "classified",
+            "emoji": "🔫",
+            "image": "/static/core/images/catalog/skin-91a429af4a60.png"
+          },
+          "probabilidad": 5
+        },
+        {
+          "item": {
+            "id": "i15",
+            "nombre": "CZ75-Auto | Emerald Quartz",
+            "descripcion": "Crystal green pistol",
+            "valor": 28,
+            "rareza": "restricted",
+            "emoji": "💎",
+            "image": "/static/core/images/catalog/skin-f489d119026b.png"
+          },
+          "probabilidad": 10
+        },
+        {
+          "item": {
+            "id": "i11",
+            "nombre": "MAC-10 | Neon Rider",
+            "descripcion": "Cyberpunk SMG skin",
+            "valor": 18,
+            "rareza": "milspec",
+            "emoji": "🌙",
+            "image": "/static/core/images/catalog/skin-bb6ba9602776.png"
+          },
+          "probabilidad": 18
+        },
+        {
+          "item": {
+            "id": "i8",
+            "nombre": "USP-S | Kill Confirmed",
+            "descripcion": "Confirmed silenced pistol",
+            "valor": 22,
+            "rareza": "milspec",
+            "emoji": "💀",
+            "image": "/static/core/images/catalog/skin-cf4c11689014.png"
+          },
+          "probabilidad": 25
+        },
+        {
+          "item": {
+            "id": "i13",
+            "nombre": "SSG 08 | Blue Spruce",
+            "descripcion": "Icy sniper rifle",
+            "valor": 5,
+            "rareza": "industrial",
+            "emoji": "❄️",
+            "image": "/static/core/images/catalog/skin-3ce5120e2b90.png"
+          },
+          "probabilidad": 28
+        },
+        {
+          "item": {
+            "id": "i10",
+            "nombre": "Nova | Antique",
+            "descripcion": "Vintage shotgun",
+            "valor": 2,
+            "rareza": "consumer",
+            "emoji": "🪨",
+            "image": "/static/core/images/catalog/skin-064fed483cd7.png"
+          },
+          "probabilidad": 10.7
+        }
+      ]
+    },
+    {
+      "id": "c3",
+      "nombre": "Recoil Case",
+      "descripcion": "Entry-level case with balanced rarity distribution.",
+      "precio": 12,
+      "emoji": "🎯",
+      "image": "/static/core/images/catalog/crate-4846.png",
+      "gradient": "linear-gradient(135deg, #1a0d00, #3d2000)",
+      "borderColor": "#f59e0b",
+      "items": [
+        {
+          "item": {
+            "id": "i2",
+            "nombre": "AWP | Dragon Lore",
+            "descripcion": "Legendary sniper rifle",
+            "valor": 850,
+            "rareza": "contraband",
+            "emoji": "🐉",
+            "image": "/static/core/images/catalog/skin-4f8d99d09ded.png"
+          },
+          "probabilidad": 0.3
+        },
+        {
+          "item": {
+            "id": "i5",
+            "nombre": "Desert Eagle | Blaze",
+            "descripcion": "Fire-tipped magnum",
+            "valor": 42,
+            "rareza": "classified",
+            "emoji": "🔥",
+            "image": "/static/core/images/catalog/skin-e30d23329629.png"
+          },
+          "probabilidad": 3
+        },
+        {
+          "item": {
+            "id": "i4",
+            "nombre": "Glock-18 | Fade",
+            "descripcion": "Vibrant fading pistol",
+            "valor": 55,
+            "rareza": "restricted",
+            "emoji": "🌈",
+            "image": "/static/core/images/catalog/skin-da5da69785da.png"
+          },
+          "probabilidad": 8
+        },
+        {
+          "item": {
+            "id": "i15",
+            "nombre": "CZ75-Auto | Emerald Quartz",
+            "descripcion": "Crystal green pistol",
+            "valor": 28,
+            "rareza": "restricted",
+            "emoji": "💎",
+            "image": "/static/core/images/catalog/skin-f489d119026b.png"
+          },
+          "probabilidad": 15
+        },
+        {
+          "item": {
+            "id": "i14",
+            "nombre": "FAMAS | Mecha Industries",
+            "descripcion": "Robotic assault rifle",
+            "valor": 12,
+            "rareza": "milspec",
+            "emoji": "🤖",
+            "image": "/static/core/images/catalog/skin-ea2876c00b6b.png"
+          },
+          "probabilidad": 22
+        },
+        {
+          "item": {
+            "id": "i7",
+            "nombre": "P250 | Mehndi",
+            "descripcion": "Ornate pattern pistol",
+            "valor": 8,
+            "rareza": "industrial",
+            "emoji": "🎨",
+            "image": "/static/core/images/catalog/skin-1a7c17796193.png"
+          },
+          "probabilidad": 25
+        },
+        {
+          "item": {
+            "id": "i9",
+            "nombre": "MP5-SD | Phosphor",
+            "descripcion": "Glowing SMG",
+            "valor": 3,
+            "rareza": "consumer",
+            "emoji": "⚡",
+            "image": "/static/core/images/catalog/skin-aa2d649aeaf6.png"
+          },
+          "probabilidad": 26.7
+        }
+      ]
+    },
+    {
+      "id": "c4",
+      "nombre": "Dreams & Nightmares",
+      "descripcion": "Community case with stunning artwork. Very rare drops.",
+      "precio": 65,
+      "emoji": "🌌",
+      "image": "/static/core/images/catalog/crate-4818.png",
+      "gradient": "linear-gradient(135deg, #0a0a1a, #1a0a2e)",
+      "borderColor": "#d32ce6",
+      "items": [
+        {
+          "item": {
+            "id": "i2",
+            "nombre": "AWP | Dragon Lore",
+            "descripcion": "Legendary sniper rifle",
+            "valor": 850,
+            "rareza": "contraband",
+            "emoji": "🐉",
+            "image": "/static/core/images/catalog/skin-4f8d99d09ded.png"
+          },
+          "probabilidad": 0.2
+        },
+        {
+          "item": {
+            "id": "i6",
+            "nombre": "Karambit | Doppler",
+            "descripcion": "Curved blade with depth",
+            "valor": 280,
+            "rareza": "covert",
+            "emoji": "🗡️",
+            "image": "/static/core/images/catalog/skin-e7fd9a1907bb.png"
+          },
+          "probabilidad": 1
+        },
+        {
+          "item": {
+            "id": "i12",
+            "nombre": "Butterfly Knife | Tiger Tooth",
+            "descripcion": "Striped butterfly blade",
+            "valor": 190,
+            "rareza": "classified",
+            "emoji": "🦋",
+            "image": "/static/core/images/catalog/skin-9f5234d3821f.png"
+          },
+          "probabilidad": 3
+        },
+        {
+          "item": {
+            "id": "i1",
+            "nombre": "AK-47 | Redline",
+            "descripcion": "Classic aggressive rifle",
+            "valor": 85,
+            "rareza": "classified",
+            "emoji": "🔫",
+            "image": "/static/core/images/catalog/skin-91a429af4a60.png"
+          },
+          "probabilidad": 6
+        },
+        {
+          "item": {
+            "id": "i5",
+            "nombre": "Desert Eagle | Blaze",
+            "descripcion": "Fire-tipped magnum",
+            "valor": 42,
+            "rareza": "classified",
+            "emoji": "🔥",
+            "image": "/static/core/images/catalog/skin-e30d23329629.png"
+          },
+          "probabilidad": 12
+        },
+        {
+          "item": {
+            "id": "i11",
+            "nombre": "MAC-10 | Neon Rider",
+            "descripcion": "Cyberpunk SMG skin",
+            "valor": 18,
+            "rareza": "milspec",
+            "emoji": "🌙",
+            "image": "/static/core/images/catalog/skin-bb6ba9602776.png"
+          },
+          "probabilidad": 20
+        },
+        {
+          "item": {
+            "id": "i8",
+            "nombre": "USP-S | Kill Confirmed",
+            "descripcion": "Confirmed silenced pistol",
+            "valor": 22,
+            "rareza": "milspec",
+            "emoji": "💀",
+            "image": "/static/core/images/catalog/skin-cf4c11689014.png"
+          },
+          "probabilidad": 27
+        },
+        {
+          "item": {
+            "id": "i10",
+            "nombre": "Nova | Antique",
+            "descripcion": "Vintage shotgun",
+            "valor": 2,
+            "rareza": "consumer",
+            "emoji": "🪨",
+            "image": "/static/core/images/catalog/skin-064fed483cd7.png"
+          },
+          "probabilidad": 30.8
+        }
+      ]
+    }
+  ]
+}

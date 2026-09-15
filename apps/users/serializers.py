@@ -18,7 +18,7 @@ class LoginInputSerializer(serializers.Serializer):
 class UserOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'date_joined')
+        fields = ('id', 'username', 'email', 'date_joined', 'steam_username')
         read_only_fields = fields
 
 
@@ -26,3 +26,8 @@ class AuthResponseSerializer(serializers.Serializer):
     token = serializers.CharField()
     user = UserOutputSerializer()
 
+
+class ProfileInputSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    email = serializers.EmailField()
+    steam_username = serializers.CharField(max_length=100, allow_blank=True, default='')

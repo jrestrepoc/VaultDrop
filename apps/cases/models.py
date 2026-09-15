@@ -6,6 +6,7 @@ from django.db import models
 
 class Caja(models.Model):
     nombre = models.CharField(max_length=120, unique=True)
+    imagen_url = models.CharField(max_length=1000, blank=True, default='')
     descripcion = models.TextField(blank=True)
     precio = models.DecimalField(max_digits=12, decimal_places=2)
     activa = models.BooleanField(default=True)
@@ -32,6 +33,7 @@ class Item(models.Model):
     )
 
     nombre = models.CharField(max_length=120, unique=True)
+    imagen_url = models.CharField(max_length=1000, blank=True, default='')
     rareza = models.CharField(max_length=20, choices=RAREZA_CHOICES, default=RAREZA_COMUN)
     valor_estimado = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0.00'))
 

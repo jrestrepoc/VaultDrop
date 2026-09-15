@@ -6,9 +6,10 @@ from apps.cases.models import Caja, CajaItem, Item
 
 
 class ItemSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Item
-        fields = ['id', 'nombre', 'rareza', 'valor_estimado']
+        fields = ['id', 'nombre', 'imagen_url', 'rareza', 'valor_estimado']
 
 
 class CajaItemSerializer(serializers.ModelSerializer):
@@ -20,11 +21,12 @@ class CajaItemSerializer(serializers.ModelSerializer):
 
 
 class CajaSerializer(serializers.ModelSerializer):
+
     items = CajaItemSerializer(source='caja_items', many=True)
 
     class Meta:
         model = Caja
-        fields = ['id', 'nombre', 'descripcion', 'precio', 'activa', 'items']
+        fields = ['id', 'nombre', 'imagen_url', 'descripcion', 'precio', 'activa', 'items']
 
     def validate(self, attrs):
         caja_items = attrs.get('caja_items', [])

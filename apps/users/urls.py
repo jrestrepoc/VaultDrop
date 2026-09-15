@@ -4,6 +4,7 @@ from . import views, api_views
 app_name = 'users'
 
 urlpatterns = [
+    path('api/v1/auth/profile/', api_views.ProfileAPIView.as_view(), name='profile'),
     # Vistas Web (HTML)
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),

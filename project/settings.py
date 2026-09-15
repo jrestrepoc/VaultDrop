@@ -3,11 +3,11 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'dev-key'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-key')
 
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', '1') == '1'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,testserver').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -57,7 +57,8 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': str(BASE_DIR / 'db.sqlite3'),
+        'NAME': os.environ.get('DJANGO_DB_PATH', str(BASE_DIR / 'db.sqlite3')),
+        'OPTIONS': {'timeout': 20},
     }
 }
 
@@ -76,6 +77,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
 
 STATIC_URL = 'static/'
+
+# Sirve las imagenes de assetsweapons/images (skins/armas) bajo el mismo
+# namespace estatico, ademas de los directorios static/ de cada app.
+STATICFILES_DIRS = [
+    *([BASE_DIR / 'assetsweapons'] if (BASE_DIR / 'assetsweapons').exists() else []),
+]
 
 # Modo de la Factory de notificaciones (patrón Factory, apps/users/infra/factories.py).
 # MOCK: imprime/loguea el mensaje de bienvenida (dev/tests, sin dependencias externas).

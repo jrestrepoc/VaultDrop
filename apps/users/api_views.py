@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from apps.core.domain import ConflictError
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 
@@ -32,12 +33,10 @@ class RegisterAPIView(APIView):
 
         try:
             user = UserService().register(**serializer.validated_data)
+        except ConflictError as exc:
+            return Response({'error': str(exc)}, status=status.HTTP_409_CONFLICT)
         except ValueError as exc:
-            msg = str(exc)
-            # Reglas de negocio de duplicados corresponden a 409 Conflict
-            if 'ya está en uso' in msg or 'ya está registrado' in msg or 'ya están registrados' in msg:
-                return Response({'error': msg}, status=status.HTTP_409_CONFLICT)
-            return Response({'error': msg}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
 
         token, _ = Token.objects.get_or_create(user=user)
         response_data = {
@@ -73,3 +72,14 @@ class LoginAPIView(APIView):
         }
         return Response(response_data, status=status.HTTP_200_OK)
 
+
+class ProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request):
+        from apps.users.serializers import ProfileInputSerializer
+        from apps.core.account import account_snapshot
+        serializer = ProfileInputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = UserService().update_profile(request.user, **serializer.validated_data)
+        return Response({'account': account_snapshot(user)})

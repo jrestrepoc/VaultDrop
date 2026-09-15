@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.contrib.auth.decorators import login_required
 
 from apps.users.forms import RegistrationForm, LoginForm
@@ -12,6 +13,8 @@ def login_view(request):
     if request.method == 'POST' and form.is_valid():
         login(request, form.cleaned_data['user'])
         next_url = request.GET.get('next') or 'core:home'
+        if next_url != 'core:home' and not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+            next_url = 'core:home'
         return redirect(next_url)
     return render(request, 'users/login.html', {'form': form})
 

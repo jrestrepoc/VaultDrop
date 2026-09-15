@@ -1,70 +1,34 @@
 # VaultDrop
 
-VaultDrop es una simulacion academica para EAFIT inspirada en la apertura de cajas
-virtuales. Permite explorar cajas, girar una ruleta para obtener un item, gestionar
-un inventario y consultar una billetera de creditos virtuales. No procesa dinero real,
-no permite retirar ganancias y no es una plataforma de apuestas.
+Simulador académico de cajas con créditos virtuales. Backend Django y DRF; frontend JavaScript modular. No procesa dinero real ni envía objetos a Steam.
 
-## Objetivo del proyecto
+## Ejecutar localmente
 
-El proyecto busca demostrar, en un entorno controlado, el flujo completo de una
-plataforma de cajas: registro e inicio de sesion, creditos iniciales, apertura con
-probabilidades, inventario, ventas simuladas, envios simulados a Steam y movimientos
-de billetera. Tambien sirve como ejercicio de arquitectura por capas, repositorios,
-servicios, builders y factory de notificaciones.
+Con el entorno virtual del proyecto activo:
 
-## Stack
-
-- Python y Django
-- Django REST Framework para el listado y apertura de cajas
-- SQLite para desarrollo
-- HTML, CSS y JavaScript para la interfaz principal
-
-## Ejecucion local
-
-
-```powershell
-python -m venv .venv
-cd .\VaultDrop
-pip install -r requirements.txt
+```sh
 python manage.py migrate
-python manage.py runserver
+python manage.py seed_catalog
+python manage.py runserver 127.0.0.1:8000
 ```
 
-Abre `http://127.0.0.1:8000/` en el navegador. Para ejecutar las pruebas:
+El seed crea registros faltantes sin reemplazar precios o contenido de cajas existentes. No es necesario volver a crear las cuentas. Las imágenes permanecen locales y sus rutas se almacenan en la base de datos.
 
-```powershell
-python manage.py test
+## Validar
+
+```sh
+python manage.py check
+python manage.py test apps --noinput
+node --test tests/frontend.test.mjs
 ```
 
-## Despliegue
+`requirements.lock.txt` captura las versiones probadas; para reproducir el entorno usar `pip install -r requirements.lock.txt` con Python 3.14. Se conserva `requirements.txt` como declaración original de dependencias.
 
-Para un despliegue real se necesita un servidor WSGI/ASGI, una base de datos
-persistente, HTTPS y variables de entorno. Antes de publicar:
+## Documentación
 
-1. Cambia `SECRET_KEY` por un secreto seguro y configura `DEBUG=False`.
-2. Define `ALLOWED_HOSTS` con el dominio real y ejecuta `python manage.py collectstatic`.
-3. Sustituye SQLite por PostgreSQL u otra base de datos administrada para producción.
-4. Configura un backend de correo real si se usa `NOTIFICACION_MODE=REAL`.
-5. Ejecuta `python manage.py migrate` durante el proceso de despliegue.
+- [Arquitectura implementada y SOLID](docs/arquitectura-actual.md)
+- [Secuencia de apertura](docs/wiki-diagrama-secuencia.md)
+- [API y evolución hacia Gateway](docs/wiki-api-gateway.md)
+- [Docker local y alcance de AWS](docs/docker-local.md)
 
-El comando de aplicación de referencia es:
-
-```powershell
-gunicorn project.wsgi:application
-```
-
-Gunicorn no forma parte todavía de `requirements.txt`; debe añadirse al entorno de
-produccion o sustituirse por el servidor WSGI elegido. Las variables disponibles son
-`NOTIFICACION_MODE`, `EMAIL_BACKEND` y las variables habituales de Django para
-secretos, hosts y base de datos.
-
-## Carpeta `figma_export`
-
-`figma_export` es un prototipo independiente generado desde Figma Make. Contiene
-otra interfaz React/Vite, su propio `package.json`, `pnpm-lock.yaml` y punto de
-entrada `src/App.tsx`; Django no la importa ni la sirve. Se puede eliminar del
-despliegue de Django sin afectar la aplicacion actual. Conviene conservarla solo si
-se necesita como referencia visual, prototipo o fuente para una futura migracion de
-la interfaz. Si ya no cumple ninguna de esas funciones, puede eliminarse como parte
-de una limpieza explicita del repositorio.
+La alineación con el curso se basa en los temas compartidos, no en una rúbrica privada. Factory y Builder se mantienen con responsabilidades explícitas. Los servicios coordinan las transacciones y los repositorios contienen las escrituras ORM.
