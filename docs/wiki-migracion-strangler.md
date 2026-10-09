@@ -96,7 +96,7 @@ Alternativas evaluadas:
 - `nginx`: imagen oficial Nginx, monta `nginx.conf`, publica `127.0.0.1:8002:80`.
 - Red interna por defecto de Compose.
 
-`nginx.conf` enruta `/api/v2/catalogo/` a Flask y `/api/v1/` mas el resto de rutas a Django. `proxy_pass` no incluye una URI con barra final, por lo que conserva ruta, query string, metodo y cuerpo.
+`nginx.conf` enruta `/api/v2/catalogo/` a Flask y `/api/v1/` mas el resto de rutas a Django. `proxy_pass` no incluye una URI con barra final, por lo que conserva ruta, query string, metodo y cuerpo. La configuracion usa el resolver interno de Docker (`127.0.0.11`) para re-resolver `catalog` y `web` despues de reinicios de contenedores.
 
 ## Verificaciones ejecutadas
 
@@ -110,7 +110,14 @@ Resultados registrados en esta implementacion:
 | `python -m unittest discover -s services/catalog_service -p "tests.py"` | OK, 7 pruebas. |
 | `docker-compose config` | OK, configuracion valida. |
 | `docker compose config` | No disponible en este entorno: Docker CLI no reconoce el subcomando `compose`. |
-| `docker-compose up --build -d` | Pendiente: el daemon Docker no esta corriendo (`docker_engine` no existe). |
+| `docker-compose up --build -d` | OK, construyo `vaultdrop-web` y `vaultdrop-catalog`, descargo `nginx:1.27-alpine` y levanto `web`, `catalog`, `nginx`. |
+| `docker-compose ps` | OK, tres contenedores `Up`; Nginx publica `127.0.0.1:8002->80/tcp`. |
+| `curl http://127.0.0.1:8002/` | OK, 200 HTML de VaultDrop servido via Nginx hacia Django. |
+| `curl http://127.0.0.1:8002/api/v1/cajas/` | OK, 200 JSON servido via Nginx hacia Django. |
+| `curl http://127.0.0.1:8002/api/v2/catalogo/` | OK, 200 JSON servido via Nginx hacia Flask. |
+| `curl http://127.0.0.1:8002/api/v2/catalogo/999999/` | OK, 404 con `{"error":{"code":"RESOURCE_NOT_FOUND","message":"Caja no encontrada."}}`. |
+| `curl "http://127.0.0.1:8002/api/v2/catalogo/?activa=maybe"` | OK, 400 con `BAD_REQUEST`. |
+| `docker-compose restart` y nueva consulta a `/api/v2/catalogo/` | OK, despues del ajuste de DNS en Nginx la ruta v2 sigue respondiendo 200 y el volumen conserva el catalogo. |
 
 Comandos para repetir la verificacion:
 
@@ -119,14 +126,14 @@ python manage.py check
 python manage.py test apps --noinput
 node --test tests/frontend.test.mjs
 python -m unittest discover -s services/catalog_service -p "tests.py"
-docker compose config
-docker compose up --build -d
-docker compose ps
+docker-compose config
+docker-compose up --build -d
+docker-compose ps
 curl http://127.0.0.1:8002/
 curl http://127.0.0.1:8002/api/v1/cajas/
 curl http://127.0.0.1:8002/api/v2/catalogo/
 curl http://127.0.0.1:8002/api/v2/catalogo/999999/
-docker compose down
+docker-compose down
 ```
 
 ## Limitaciones conocidas

@@ -17,8 +17,8 @@ El seed crea registros faltantes sin reemplazar precios o contenido de cajas exi
 Con Docker Compose, Nginx queda como punto de entrada en `http://127.0.0.1:8002/`: las rutas `/api/v1/` y la web van a Django, y `/api/v2/catalogo/` va al microservicio Flask del catalogo.
 
 ```sh
-docker compose up --build -d
-docker compose down
+docker-compose up --build -d
+docker-compose down
 ```
 
 ## Validar
