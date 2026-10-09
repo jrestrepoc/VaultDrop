@@ -1,14 +1,33 @@
 services:
   web:
     build: .
-    ports:
-      - "127.0.0.1:8002:8000"
     environment:
       DJANGO_DEBUG: "1"
-      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1"
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,web,nginx"
       DJANGO_DB_PATH: "/data/db.sqlite3"
       NOTIFICACION_MODE: "MOCK"
     volumes:
       - vaultdrop-data:/data
+    expose:
+      - "8000"
+  catalog:
+    build: ./services/catalog_service
+    environment:
+      CATALOG_DB_PATH: "/data/db.sqlite3"
+    volumes:
+      - vaultdrop-data:/data
+    depends_on:
+      - web
+    expose:
+      - "5000"
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "127.0.0.1:8002:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - web
+      - catalog
 volumes:
   vaultdrop-data:
