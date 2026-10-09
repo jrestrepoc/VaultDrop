@@ -2,6 +2,10 @@
 
 VaultDrop expone una API versionada desde un único proceso Django. No hay un API Gateway instalado. El frontend usa módulos JavaScript, no React. La API admite autenticación por token y sesión; el navegador utiliza sesión y CSRF.
 
+## Actualizacion Taller 02
+
+La rama `taller-2` agrega Nginx como punto de entrada para una etapa del patron Strangler. Nginx dirige `/api/v2/catalogo/` al microservicio Flask `catalog:5000`; `/api/v1/` y las rutas web siguen llegando al servicio Django `web:8000`.
+
 ## Rutas implementadas
 
 | Método | Ruta | Función |
