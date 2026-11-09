@@ -4,6 +4,15 @@ x-postgres: &postgres
   POSTGRES_USER: ${POSTGRES_USER:?Copia .env.example a .env}
   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en .env}
 
+x-django: &django
+  <<: *postgres
+  DJANGO_DEBUG: "0"
+  DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Define DJANGO_SECRET_KEY en .env}
+  DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:?Copia .env.example a .env}
+  NOTIFICACION_MODE: "MOCK"
+  CATALOG_URL: "/api/v2/catalogo/"
+  CELERY_BROKER_URL: "redis://redis:6379/0"
+
 services:
   db:
     image: postgres:17-alpine
@@ -22,18 +31,24 @@ services:
   web:
     build: .
     restart: unless-stopped
-    environment:
-      <<: *postgres
-      DJANGO_DEBUG: "0"
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Define DJANGO_SECRET_KEY en .env}
-      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:?Copia .env.example a .env}
-      NOTIFICACION_MODE: "MOCK"
-      CATALOG_URL: "/api/v2/catalogo/"
+    environment: *django
     depends_on:
       db:
         condition: service_healthy
     expose:
       - "8000"
+  worker:
+    build: .
+    restart: unless-stopped
+    command: celery -A project worker --loglevel=INFO --concurrency=2
+    environment: *django
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      web:
+        condition: service_started
   catalog:
     build: ./services/catalog_service
     restart: unless-stopped

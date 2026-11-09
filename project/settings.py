@@ -91,6 +91,14 @@ AUTH_PASSWORD_VALIDATORS = [
 # Solo detras de Nginx existe Flask; sin Gateway el frontend usa la ruta de Django.
 CATALOG_URL = os.environ.get('CATALOG_URL', '')
 
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', '')
+# Sin broker (desarrollo sin Docker) las tareas corren en el mismo proceso.
+CELERY_TASK_ALWAYS_EAGER = not CELERY_BROKER_URL
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+# Si Redis cae, publicar debe fallar rapido: ocurre durante la peticion del usuario.
+CELERY_TASK_PUBLISH_RETRY = False
+CELERY_BROKER_TRANSPORT_OPTIONS = {'max_retries': 1, 'interval_start': 0, 'interval_step': 0, 'socket_connect_timeout': 2}
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -127,7 +135,7 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {'console': {'class': 'logging.StreamHandler'}},
-    'loggers': {'django.request': {'handlers': ['console'], 'level': 'ERROR'}},
+    'loggers': {'django': {'handlers': ['console'], 'level': 'ERROR'}},
 }
 
 REST_FRAMEWORK = {

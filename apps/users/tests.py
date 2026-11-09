@@ -1,4 +1,5 @@
 import os
+from smtplib import SMTPException
 from unittest import mock
 
 from django.test import TestCase
@@ -7,6 +8,7 @@ from rest_framework import status
 from apps.users.services import UserService
 from apps.users.domain.builders import UserBuilder
 from apps.users.infra.factories import NotificadorFactory, NotificadorConsola, NotificadorEmail
+from apps.users.tasks import NotificadorEnCola, tarea_bienvenida, tarea_envio_simulado
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from decimal import Decimal
@@ -130,6 +132,28 @@ class UserBuilderTest(TestCase):
                 .con_password('strongpass')
                 .build()
             )
+
+
+class NotificacionesEnColaTest(TestCase):
+    def setUp(self):
+        self.user = UserService().register(username='cola', email='cola@example.com', password='strongpass')
+
+    def test_publica_solo_el_id_para_el_worker(self):
+        with mock.patch('apps.users.tasks.tarea_bienvenida.delay') as delay:
+            NotificadorEnCola().enviar_bienvenida(self.user)
+        delay.assert_called_once_with(self.user.pk)
+
+    def test_tarea_usa_el_notificador_configurado(self):
+        with mock.patch('apps.users.tasks.NotificadorFactory.crear') as crear:
+            tarea_envio_simulado(self.user.pk, 'AK-47')
+        crear.return_value.enviar_envio_simulado.assert_called_once_with(self.user, 'AK-47')
+
+    def test_fallo_de_correo_llega_a_celery_y_se_reintenta(self):
+        with mock.patch('apps.users.infra.factories.send_mail', side_effect=SMTPException('caido')) as enviar, \
+                mock.patch.dict(os.environ, {'NOTIFICACION_MODE': 'REAL'}):
+            resultado = tarea_bienvenida.apply(args=[self.user.pk])
+        self.assertTrue(resultado.failed())
+        self.assertEqual(enviar.call_count, 4)
 
 
 class NotificadorFactoryTest(TestCase):

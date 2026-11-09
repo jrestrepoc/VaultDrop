@@ -31,6 +31,20 @@ class MutationContractTests(APITestCase):
         self.assertEqual(response.status_code, 201, response.data)
         return response
 
+    def test_simulated_send_notifies_after_commit(self):
+        self.open()
+        item = ItemInventario.objects.get()
+        with patch('apps.openings.inventory.NotificadorEnCola') as cola, self.captureOnCommitCallbacks(execute=True):
+            self.assertEqual(self.post(f'/api/v1/inventory/{item.pk}/send/').status_code, 200)
+        cola.return_value.enviar_envio_simulado.assert_called_once_with(self.user, 'Test skin')
+
+    def test_sale_does_not_send_a_shipping_notice(self):
+        self.open()
+        item = ItemInventario.objects.get()
+        with patch('apps.openings.inventory.NotificadorEnCola') as cola, self.captureOnCommitCallbacks(execute=True):
+            self.assertEqual(self.post(f'/api/v1/inventory/{item.pk}/sell/').status_code, 200)
+        cola.return_value.enviar_envio_simulado.assert_not_called()
+
     def test_repeated_open_charges_once_and_returns_same_prize(self):
         key = uuid4()
         first, second = self.open(key), self.open(key)

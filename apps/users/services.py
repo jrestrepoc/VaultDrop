@@ -5,8 +5,8 @@ from decimal import Decimal
 
 from apps.wallet.services import WalletService
 from apps.users.domain.builders import UserBuilder
-from apps.users.infra.factories import NotificadorFactory
 from apps.users.repositories import DjangoUserRepository
+from apps.users.tasks import NotificadorEnCola
 
 
 class UserService:
@@ -14,7 +14,7 @@ class UserService:
         self.user_model = get_user_model()
         self.user_repository = user_repository or DjangoUserRepository(self.user_model)
         self.wallet_service = wallet_service or WalletService()
-        self.notificador = notificador or NotificadorFactory.crear()
+        self.notificador = notificador or NotificadorEnCola()
 
     def register(self, username, email, password, initial_credit=Decimal('1000.00')):
         if self.user_repository.exists_by_username(username):
