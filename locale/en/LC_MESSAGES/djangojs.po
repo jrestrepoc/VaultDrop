@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 19:44+0000\n"
+"POT-Creation-Date: 2026-11-09 16:58-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,14 +42,35 @@ msgstr "Item sale"
 msgid "Inventory"
 msgstr ""
 
+msgid "Upgrade"
+msgstr ""
+
 msgid "Wallet"
 msgstr ""
 
 msgid "Profile"
 msgstr ""
 
+msgid "Historial"
+msgstr "History"
+
 msgid "Cases"
 msgstr ""
+
+msgid "¿Vender los objetos seleccionados? Esta acción no se puede deshacer."
+msgstr "Sell the selected items? This cannot be undone."
+
+msgid "¿Registrar el envío simulado de los objetos seleccionados?"
+msgstr "Record the simulated shipment of the selected items?"
+
+msgid "Objetos vendidos."
+msgstr "Items sold."
+
+msgid "Envíos simulados guardados."
+msgstr "Simulated shipments saved."
+
+msgid "Si la mejora falla, perderás los objetos entregados. ¿Continuar?"
+msgstr "If the upgrade fails, you will lose the items. Continue?"
 
 msgid "¿Vender este objeto? Esta acción no se puede deshacer."
 msgstr "Sell this item? This cannot be undone."
@@ -101,6 +122,9 @@ msgstr "SOLD"
 
 msgid "ENVIADO"
 msgstr "SENT"
+
+msgid "USADO"
+msgstr "USED"
 
 msgid "Salir"
 msgstr "Log out"
@@ -177,6 +201,9 @@ msgstr "Create account"
 msgid "Confirmando apertura..."
 msgstr "Confirming opening..."
 
+msgid "ABRIR GRATIS"
+msgstr "OPEN FOR FREE"
+
 msgid "OPEN CASE"
 msgstr ""
 
@@ -227,6 +254,9 @@ msgstr ""
 
 msgid "Open some cases to fill your inventory"
 msgstr ""
+
+msgid "Mejora"
+msgstr "Upgrade"
 
 msgid "SELL"
 msgstr ""
@@ -321,8 +351,98 @@ msgstr ""
 msgid "SAVE CHANGES"
 msgstr ""
 
+msgid "VER HISTORIAL"
+msgstr "VIEW HISTORY"
+
 msgid "RARITY BREAKDOWN"
 msgstr ""
+
+msgid "Seleccionar"
+msgstr "Select"
+
+msgid "Seleccionar todo"
+msgstr "Select all"
+
+msgid "Seleccionados: %(n)s · ¢%(total)s"
+msgstr "Selected: %(n)s · ¢%(total)s"
+
+msgid "VENDER SELECCIÓN"
+msgstr "SELL SELECTED"
+
+msgid "ENVIAR SELECCIÓN"
+msgstr "SEND SELECTED"
+
+msgid "MEJORAR SELECCIÓN"
+msgstr "UPGRADE SELECTED"
+
+msgid "MEJORAR ARMAS"
+msgstr "UPGRADE WEAPONS"
+
+msgid "Entrega objetos de tu inventario por una oportunidad de obtener uno mejor. Si falla, los pierdes."
+msgstr "Trade items from your inventory for a chance at a better one. If it fails, you lose them."
+
+msgid "Probabilidad: %(p)s"
+msgstr "Chance: %(p)s"
+
+msgid "Entregas ¢%(total)s"
+msgstr "You give ¢%(total)s"
+
+msgid "¡Mejora exitosa! Obtuviste %(item)s."
+msgstr "Upgrade successful! You got %(item)s."
+
+msgid "La mejora falló y perdiste los objetos entregados."
+msgstr "The upgrade failed and you lost the items."
+
+msgid "Puedes entregar máximo 6 objetos por mejora."
+msgstr "You can give at most 6 items per upgrade."
+
+msgid "INTENTAR OTRA"
+msgstr "TRY AGAIN"
+
+msgid "INTENTAR MEJORA"
+msgstr "TRY UPGRADE"
+
+msgid "TUS OBJETOS"
+msgstr "YOUR ITEMS"
+
+msgid "No tienes objetos disponibles."
+msgstr "You have no available items."
+
+msgid "OBJETIVO"
+msgstr "TARGET"
+
+msgid "Selecciona objetos para ver los objetivos posibles."
+msgstr "Select items to see possible targets."
+
+msgid "Cargando historial..."
+msgstr "Loading history..."
+
+msgid "Lograda"
+msgstr "Won"
+
+msgid "Fallida"
+msgstr "Failed"
+
+msgid "HISTORIAL"
+msgstr "HISTORY"
+
+msgid "APERTURAS"
+msgstr "OPENINGS"
+
+msgid "Todavía no hay registros."
+msgstr "No records yet."
+
+msgid "MEJORAS"
+msgstr "UPGRADES"
+
+msgid "Tu caja gratis de hoy está lista. ¡Ábrela!"
+msgstr "Your free case for today is ready. Open it!"
+
+msgid "Ya reclamaste tu caja gratis de hoy. Vuelve mañana."
+msgstr "You already claimed your free case today. Come back tomorrow."
+
+msgid "MEJORES PREMIOS"
+msgstr "TOP DROPS"
 
 msgid "Reintentar carga"
 msgstr "Reload"

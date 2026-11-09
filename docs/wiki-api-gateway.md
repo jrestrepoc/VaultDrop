@@ -22,6 +22,11 @@ La rama `taller-2` agrega Nginx como punto de entrada para una etapa del patron 
 | GET | `/api/v1/inventory/` | Inventario propio |
 | POST | `/api/v1/inventory/{id}/sell/` | Venta virtual |
 | POST | `/api/v1/inventory/{id}/send/` | Envío simulado |
+| POST | `/api/v1/inventory/masivo/` | Vender o enviar varios objetos |
+| POST | `/api/v1/inventory/mejorar/` | Intentar una mejora |
+| GET | `/api/v1/inventory/historial/` | Aperturas y mejoras propias |
+| POST | `/api/v1/cajas/gratis/abrir/` | Caja gratis diaria |
+| GET | `/api/v1/cajas/ranking/` | Mejores premios |
 | POST | `/api/v1/auth/register/` | Registro y token |
 | POST | `/api/v1/auth/login/` | Autenticación por token |
 | PATCH | `/api/v1/auth/profile/` | Actualizar el perfil propio |

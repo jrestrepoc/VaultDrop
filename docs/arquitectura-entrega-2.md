@@ -63,6 +63,13 @@ El panel en `/admin/` usa el admin de Django. Permite gestionar cajas y objetos,
 - Las cuentas no se crean ni se borran desde el panel.
 - El valor entregado usa el valor actual de cada objeto, porque el valor histórico no se guarda.
 
+## Funciones de inventario
+
+- **Selección múltiple:** vende o envía varios objetos en una sola transacción; si uno falla, no cambia ninguno.
+- **Mejorador:** entrega hasta 6 objetos por un objeto de mayor valor. La probabilidad es el valor entregado sobre el valor objetivo, con un máximo de 80 %. El servidor decide el resultado.
+- **Caja gratis diaria:** abre sin costo la caja activa más barata, una vez por día en hora de Colombia.
+- **Historial y clasificación:** cada usuario ve sus últimas aperturas y mejoras; la portada muestra los 10 mejores premios con el nombre de usuario.
+
 ## Resiliencia
 
 Comportamiento comprobado en Docker Compose:

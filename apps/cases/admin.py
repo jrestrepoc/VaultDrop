@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django.contrib import admin
 from django.core.exceptions import ValidationError
-from django.db.models import Count, Sum
+from django.db.models import Count, Q, Sum
 from django.forms import BaseInlineFormSet
 from django.utils.formats import number_format
 from django.utils.html import format_html, format_html_join
@@ -43,7 +43,8 @@ class CajaAdmin(admin.ModelAdmin):
         return super().get_queryset(request).annotate(
             _aperturas=Count('aperturas'),
             _ingresos=Sum('aperturas__costo'),
-            _valor=Sum('aperturas__item__valor_estimado'),
+            # Las aperturas gratis no generan ingresos: contarlas inflaria el retorno.
+            _valor=Sum('aperturas__item__valor_estimado', filter=Q(aperturas__costo__gt=0)),
         )
 
     @admin.display(description=_('Aperturas'), ordering='_aperturas')

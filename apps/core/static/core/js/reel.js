@@ -14,3 +14,13 @@ export async function animateReel(root, caja, winner, reelCard) {
     {duration:4200,easing:'cubic-bezier(0.05, 0.9, 0.25, 1)',fill:'forwards'});
   await animation.finished;
 }
+
+// Solo presentacion: el marcador cae en la zona que corresponde al resultado del servidor.
+export async function animateUpgrade(root, probabilidad, exito) {
+  const marker = root.querySelector('#upgrade-marker');
+  if (!marker) return;
+  const final = exito ? Math.random() * probabilidad : probabilidad + Math.random() * (100 - probabilidad);
+  const left = value => ({left: `${value}%`});
+  await marker.animate([left(0), left(100), left(0), left(100), left(final)],
+    {duration: 3000, easing: 'cubic-bezier(0.2, 0.6, 0.3, 1)', fill: 'forwards'}).finished;
+}

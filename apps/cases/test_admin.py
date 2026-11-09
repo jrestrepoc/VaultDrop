@@ -65,6 +65,12 @@ class CajasEnPanelTest(PanelTestCase):
         self.assertEqual((fila._aperturas, fila._ingresos, fila._valor), (4, Decimal('80'), Decimal('60')))
         self.assertContains(self.client.get(reverse('admin:cases_caja_changelist')), '75,0%')
 
+    def test_aperturas_gratis_no_inflan_el_retorno(self):
+        caja = self.caja_con_aperturas()
+        AperturaCaja.objects.create(user=self.admin, caja=caja, item=self.item, costo=Decimal('0'))
+        fila = self.client.get(reverse('admin:cases_caja_changelist')).context['cl'].result_list[0]
+        self.assertEqual((fila._aperturas, fila._ingresos, fila._valor), (5, Decimal('80'), Decimal('60')))
+
     def test_detalle_compara_probabilidad_configurada_y_real(self):
         caja = self.caja_con_aperturas()
         resp = self.client.get(reverse('admin:cases_caja_change', args=[caja.pk]))

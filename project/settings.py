@@ -108,7 +108,8 @@ LANGUAGES = [('es', 'Español'), ('en', 'English')]
 
 LOCALE_PATHS = [BASE_DIR / 'locale']
 
-TIME_ZONE = 'UTC'
+# La caja gratis se reinicia a medianoche de Colombia.
+TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 

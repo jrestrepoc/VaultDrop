@@ -5,6 +5,7 @@ from unittest import mock
 from django.test import TestCase
 from rest_framework.test import APITestCase
 from rest_framework import status
+from apps.core.domain import ConflictError
 from apps.users.services import UserService
 from apps.users.domain.builders import UserBuilder
 from apps.users.infra.factories import NotificadorFactory, NotificadorConsola, NotificadorEmail
@@ -132,6 +133,32 @@ class UserBuilderTest(TestCase):
                 .con_password('strongpass')
                 .build()
             )
+
+
+class CorreoSinMayusculasTest(TestCase):
+    def test_registro_guarda_minusculas_y_rechaza_la_variante(self):
+        svc = UserService()
+        usuario = svc.register(username='ana', email='Ana@Example.test', password='vault-Test-4821')
+        self.assertEqual(usuario.email, 'ana@example.test')
+        with self.assertRaises(ConflictError):
+            svc.register(username='ana2', email='ANA@example.test', password='vault-Test-4821')
+
+    def test_perfil_no_puede_usar_otro_correo_con_otras_mayusculas(self):
+        svc = UserService()
+        svc.register(username='ana', email='ana@example.test', password='vault-Test-4821')
+        otro = svc.register(username='beto', email='beto@example.test', password='vault-Test-4821')
+        with self.assertRaises(ConflictError):
+            svc.update_profile(otro, 'beto', 'ANA@example.test')
+
+    def test_correo_antiguo_con_mayusculas_tambien_cuenta(self):
+        get_user_model().objects.create_user('vieja', 'Vieja@Example.test', 'vault-Test-4821')
+        with self.assertRaises(ConflictError):
+            UserService().register(username='nueva', email='vieja@example.test', password='vault-Test-4821')
+
+    def test_cambiar_las_mayusculas_del_propio_correo_esta_permitido(self):
+        svc = UserService()
+        usuario = svc.register(username='ana', email='ana@example.test', password='vault-Test-4821')
+        self.assertEqual(svc.update_profile(usuario, 'ana', 'ANA@example.test').email, 'ana@example.test')
 
 
 class FormulariosAccesiblesTest(TestCase):

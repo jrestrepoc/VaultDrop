@@ -1,7 +1,7 @@
 import {ApiClient} from './api.js';
-import {createState, applyAccount, normalizeCase, normalizeItem} from './store.js';
+import {createState, applyAccount, normalizeCase, normalizeItem, resolveRoute, toggleSelection, toggleAll} from './store.js';
 import {createViews} from './views.js';
-import {animateReel} from './reel.js';
+import {animateReel, animateUpgrade} from './reel.js';
 
 const root = document.getElementById('vaultdrop-app');
 if (root) start(root);
@@ -28,14 +28,28 @@ function start(root) {
   function focusMain() { root.querySelector('main')?.focus({preventScroll:true}); }
 
   function route() {
-    const hash=location.hash.slice(1);
-    const caja=hash.startsWith('case-') ? state.cases.find(c=>c.id===hash.slice(5)) : null;
-    state.selectedCase=caja||null;
-    state.page=caja ? 'opening' : ['inventory','wallet','profile'].includes(hash) ? hash : 'cases';
+    const {caja,page}=resolveRoute(location.hash.slice(1),state.cases);
+    state.selectedCase=caja;state.page=page;
     state.wonItem=null;state.openingState='idle';state.contentsOpen=false;state.requestError='';notice='';
-    const titles={inventory:gettext('Inventory'),wallet:gettext('Wallet'),profile:gettext('Profile'),cases:gettext('Cases')};
+    state.upgradeState='idle';state.upgradeResult=null;state.history=null;
+    const titles={inventory:gettext('Inventory'),upgrade:gettext('Upgrade'),wallet:gettext('Wallet'),profile:gettext('Profile'),history:gettext('Historial'),cases:gettext('Cases')};
     document.title=`${caja ? caja.nombre : titles[state.page]} | VaultDrop`;
     render();
+    if(state.page==='history' && state.authenticated) loadHistory();
+  }
+
+  function loadHistory() {
+    api.request(urls.historyUrl).then(data=>{state.history=data;if(state.page==='history'&&!state.busy) render();})
+      .catch(error=>{state.history={aperturas:[],mejoras:[]};state.requestError=error.message;if(!state.busy) render();});
+  }
+
+  function loadRanking() {
+    // Solo actualiza su bloque, igual que la nota de la tasa, para no interrumpir nada.
+    api.request(urls.rankingUrl).then(rows=>{
+      state.ranking=rows;
+      const block=root.querySelector('[data-ranking]');
+      if(block) block.outerHTML=views.rankingHtml();
+    }).catch(()=>{ /* dato decorativo: sin el la portada funciona igual */ });
   }
 
   function go(page) {
@@ -74,13 +88,28 @@ function start(root) {
     finally {state.busy=false;render();focusMain();}
   }
 
-  async function openCase() {
+  async function upgrade() {
+    if(state.busy || !state.accountReady) return;
+    state.busy=true;state.upgradeState='requesting';state.requestError='';notice='';render();
+    try {
+      const data=await api.mutate(urls.upgradeUrl,{ids:state.selection,objetivo:state.upgradeTarget});
+      state.upgradeResult={exito:data.exito,probabilidad:Number(data.probabilidad),objetivo:data.objetivo.nombre};
+      state.upgradeState='spinning';render();
+      // Igual que la ruleta: un fallo visual no cambia el resultado ya guardado.
+      try {await animateUpgrade(root,state.upgradeResult.probabilidad,data.exito);} catch(_) { /* show result directly */ }
+      applyAccount(state,data.account);
+      state.upgradeTarget=null;state.upgradeState='result';
+    } catch(error) {state.upgradeState='idle';state.requestError=error.message;}
+    finally {state.busy=false;render();focusMain();}
+  }
+
+  async function openCase(endpoint) {
     if(state.busy || !state.accountReady || state.openingState!=='idle') return;
     const caja=state.selectedCase;
     if(!state.authenticated) {location.href=urls.loginUrl;return;}
     state.busy=true;state.openingState='requesting';state.requestError='';notice='';render();
     try {
-      const data=await api.mutate(`${urls.casesUrl}${caja.id}/abrir/`);
+      const data=await api.mutate(endpoint);
       applyAccount(state,data.account);
       const winner=normalizeItem(data.item);
       state.openingState='spinning';render();
@@ -98,6 +127,12 @@ function start(root) {
 
   root.addEventListener('change',event=>{
     if(event.target.matches('[data-sort]')){state.sortBy=event.target.value;render();}
+    if(event.target.matches('[data-select]')){
+      const id=event.target.dataset.select;
+      state.selection=toggleSelection(state.selection,id);
+      render();
+      root.querySelector(`[data-select="${id}"]`)?.focus();
+    }
   });
 
   root.addEventListener('click',event=>{
@@ -109,7 +144,26 @@ function start(root) {
     if(el.dataset.caseId){go(`case-${el.dataset.caseId}`);return;}
     if(el.matches('[data-back]')){go('cases');return;}
     if(el.matches('[data-toggle-contents]')){state.contentsOpen=!state.contentsOpen;render();return;}
-    if(el.matches('[data-open]')){openCase();return;}
+    if(el.matches('[data-open]')){openCase(`${urls.casesUrl}${state.selectedCase.id}/abrir/`);return;}
+    if(el.matches('[data-open-free]')){openCase(urls.freeCaseUrl);return;}
+    if(el.matches('[data-select-all]')){
+      const visibles=state.inventario.filter(ii=>ii.estado==='DISPONIBLE'&&(state.filter==='ALL'||ii.estado===state.filter)).map(ii=>ii.id);
+      state.selection=toggleAll(state.selection,visibles);
+      render();return;
+    }
+    if(el.dataset.bulk){
+      const vender=el.dataset.bulk==='VENDIDO';
+      const pregunta=vender ? gettext('¿Vender los objetos seleccionados? Esta acción no se puede deshacer.') : gettext('¿Registrar el envío simulado de los objetos seleccionados?');
+      if(!confirm(pregunta)) return;
+      mutate(()=>api.mutate(urls.bulkUrl,{ids:state.selection,accion:el.dataset.bulk}),vender ? gettext('Objetos vendidos.') : gettext('Envíos simulados guardados.'));
+      return;
+    }
+    if(el.dataset.target){state.upgradeTarget=state.upgradeTarget===el.dataset.target ? null : el.dataset.target;render();return;}
+    if(el.matches('[data-upgrade]')){
+      if(!confirm(gettext('Si la mejora falla, perderás los objetos entregados. ¿Continuar?'))) return;
+      upgrade();return;
+    }
+    if(el.matches('[data-upgrade-reset]')){state.upgradeState='idle';state.upgradeResult=null;render();return;}
     if(el.matches('[data-reset]')){state.openingState='idle';state.wonItem=null;render();return;}
     if(el.dataset.filter){state.filter=el.dataset.filter;render();return;}
     if(el.dataset.sell){if(!confirm(gettext('¿Vender este objeto? Esta acción no se puede deshacer.')))return;mutate(()=>api.mutate(`${urls.inventoryUrl}${el.dataset.sell}/sell/`),gettext('Objeto vendido.'));return;}
@@ -141,4 +195,5 @@ function start(root) {
   });
   load();
   loadRate();
+  loadRanking();
 }

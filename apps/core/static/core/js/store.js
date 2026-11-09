@@ -18,11 +18,30 @@ export function normalizeCase(row) {
     items:row.items.map(ci=>({item:normalizeItem(ci.item), probabilidad:Number(ci.probabilidad)}))};
 }
 
+export function resolveRoute(hash, cases) {
+  const caja = hash.startsWith('case-') ? cases.find(c=>c.id===hash.slice(5)) || null : null;
+  return {caja, page: caja ? 'opening' : ['inventory','upgrade','wallet','profile','history'].includes(hash) ? hash : 'cases'};
+}
+
+export function toggleSelection(selection, id) {
+  return selection.includes(id) ? selection.filter(x=>x!==id) : [...selection, id];
+}
+
+export function toggleAll(selection, ids) {
+  return ids.every(id=>selection.includes(id)) ? [] : ids;
+}
+
+// Solo para mostrar; el servidor calcula la probabilidad que cuenta.
+export function upgradeChance(entregado, objetivo) {
+  return entregado > 0 && objetivo > entregado ? Math.min(entregado / objetivo * 100, 80) : 0;
+}
+
 export function createState(authenticated) {
   return {page:'cases', cases:[], selectedCase:null, authenticated, balance:0, inventario:[], transactions:[], aperturas:0,
     user:{nombreUsuario:'',email:'',steamUsername:'',fechaRegistro:null},
     filter:'ALL', sortBy:'date', contentsOpen:false, openingState:'idle', wonItem:null,
-    loading:true, loadError:'', accountReady:!authenticated, busy:false, requestError:'', profileEditing:false, tasaCop:null};
+    loading:true, loadError:'', accountReady:!authenticated, busy:false, requestError:'', profileEditing:false, tasaCop:null,
+    selection:[], upgradeTarget:null, upgradeState:'idle', upgradeResult:null, ranking:[], history:null, cajaGratis:null};
 }
 
 export function applyAccount(state, account) {
@@ -37,5 +56,7 @@ export function applyAccount(state, account) {
     concepto:kinds[tx.tipo]?.[1] || tx.tipo,monto:Number(tx.monto),saldoAnterior:Number(tx.saldo_anterior),
     saldoPosterior:Number(tx.saldo_posterior),fecha:new Date(tx.created_at)}));
   state.aperturas = account.aperturas;
+  state.cajaGratis = account.caja_gratis;
+  state.selection = state.selection.filter(id=>state.inventario.some(ii=>ii.id===id && ii.estado==='DISPONIBLE'));
   state.accountReady = true;
 }

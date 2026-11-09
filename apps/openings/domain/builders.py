@@ -36,8 +36,8 @@ class AperturaCajaBuilder:
             errores.append(_('El item obtenido es obligatorio'))
         if self._costo is None:
             errores.append(_('El costo es obligatorio'))
-        elif self._costo <= 0:
-            errores.append(_('El costo debe ser mayor a cero'))
+        elif self._costo < 0:
+            errores.append(_('El costo no puede ser negativo'))
         if errores:
             raise ValueError(' / '.join(errores))
         return {

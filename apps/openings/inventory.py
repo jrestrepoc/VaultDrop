@@ -15,18 +15,27 @@ class InventoryService:
         return self.repository.list_inventory(user)
 
     def change_status(self, user, item_id, status):
+        return self.change_status_many(user, [item_id], status)[0]
+
+    def change_status_many(self, user, item_ids, status):
         if status not in ('VENDIDO', 'ENVIADO'):
             raise ConflictError(_('Estado de inventario no permitido.'))
         with transaction.atomic():
-            changed = self.repository.claim_inventory(user, item_id, status)
-            item = self.repository.get_inventory(user, item_id)
-            if item is None:
-                raise NotFoundError(_('Objeto no encontrado en tu inventario.'))
-            if not changed:
-                raise ConflictError(_('Este objeto ya fue vendido o enviado.'))
+            items = self.reclamar(user, item_ids, status)
             if status == 'VENDIDO':
-                self.wallet_service.acreditar(user, item.item.valor_estimado, tipo='VENTA')
+                self.wallet_service.acreditar(user, sum(item.item.valor_estimado for item in items), tipo='VENTA')
             else:
-                nombre = item.item.nombre
-                transaction.on_commit(lambda: self.notificador.enviar_envio_simulado(user, nombre), robust=True)
-            return item
+                nombres = ', '.join(item.item.nombre for item in items)
+                transaction.on_commit(lambda: self.notificador.enviar_envio_simulado(user, nombres), robust=True)
+            return items
+
+    def reclamar(self, user, item_ids, status):
+        """Todo o nada: quien llama debe estar en una transaccion para revertir si falla."""
+        ids = set(item_ids)
+        cambiados = self.repository.claim_inventory(user, ids, status)
+        items = self.repository.get_inventory(user, ids)
+        if len(items) != len(ids):
+            raise NotFoundError(_('Objeto no encontrado en tu inventario.'))
+        if cambiados != len(ids):
+            raise ConflictError(_('Este objeto ya no está disponible.'))
+        return items

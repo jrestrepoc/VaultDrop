@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from apps.cases.models import Caja
+from apps.cases.models import Caja, Item
 
 
 class ICajaRepository(ABC):
@@ -16,6 +16,14 @@ class ICajaRepository(ABC):
     def list_items_for_caja(self, caja):
         pass
 
+    @abstractmethod
+    def get_item(self, item_id):
+        pass
+
+    @abstractmethod
+    def get_caja_gratis(self):
+        pass
+
 
 class DjangoCajaRepository(ICajaRepository):
     def list_activas(self):
@@ -29,4 +37,10 @@ class DjangoCajaRepository(ICajaRepository):
 
     def list_items_for_caja(self, caja):
         return list(caja.caja_items.select_related('item'))
+
+    def get_item(self, item_id):
+        return Item.objects.filter(pk=item_id).first()
+
+    def get_caja_gratis(self):
+        return Caja.objects.filter(activa=True, caja_items__isnull=False).distinct().order_by('precio', 'nombre').first()
 
