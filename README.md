@@ -14,12 +14,17 @@ python manage.py runserver 127.0.0.1:8000
 
 El seed crea registros faltantes sin reemplazar precios o contenido de cajas existentes. No es necesario volver a crear las cuentas. Las imágenes permanecen locales y sus rutas se almacenan en la base de datos.
 
-Con Docker Compose, Nginx queda como punto de entrada en `http://127.0.0.1:8002/`: las rutas `/api/v1/` y la web van a Django, y `/api/v2/catalogo/` va al microservicio Flask del catalogo.
+Con Docker Compose, Nginx queda como punto de entrada en `http://127.0.0.1/` (puerto configurable con `HTTP_PORT`): las rutas `/api/v1/` y la web van a Django, y `/api/v2/catalogo/` va al microservicio Flask del catalogo. Compose usa PostgreSQL; sin Docker se sigue usando SQLite.
+
+Antes de levantar, copiar `.env.example` a `.env` y llenar `DJANGO_SECRET_KEY` y `POSTGRES_PASSWORD` con `openssl rand -hex 32`.
 
 ```sh
-docker-compose up --build -d
-docker-compose down
+cp .env.example .env
+docker compose up --build -d
+docker compose down
 ```
+
+El despliegue en EC2 está en [docs/docker-local.md](docs/docker-local.md).
 
 ## Validar
 

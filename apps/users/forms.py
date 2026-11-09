@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 
 class RegistrationForm(forms.Form):
     username = forms.CharField(max_length=150)
-    email = forms.EmailField()
+    email = forms.EmailField(max_length=254)
     password = forms.CharField(min_length=8, widget=forms.PasswordInput)
 
     def clean_email(self):

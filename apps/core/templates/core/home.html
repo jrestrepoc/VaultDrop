@@ -16,10 +16,13 @@
     data-inventory-url="{% url 'inventory:list' %}"
     data-profile-url="{% url 'users:profile' %}"
     data-cases-url="{% url 'cases:list' %}"
+    data-catalog-url="{{ catalog_url }}"
     data-login-url="{% url 'users:login' %}"
     data-register-url="{% url 'users:register' %}"
-    data-dashboard-url="{% url 'users:dashboard' %}"
   ></div>
+  {% if user.is_authenticated %}
+    <form id="logout-form" method="post" action="{% url 'users:logout' %}">{% csrf_token %}</form>
+  {% endif %}
 {% endblock %}
 
 {% block scripts %}

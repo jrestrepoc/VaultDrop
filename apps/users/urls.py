@@ -1,3 +1,4 @@
+from django.contrib.auth.views import LogoutView
 from django.urls import path
 from . import views, api_views
 
@@ -8,7 +9,7 @@ urlpatterns = [
     # Vistas Web (HTML)
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
-    path('dashboard/', views.dashboard_view, name='dashboard'),
+    path('logout/', LogoutView.as_view(next_page='core:home'), name='logout'),
 
     # Endpoints REST (DRF v1)
     path('api/v1/auth/register/', api_views.RegisterAPIView.as_view(), name='api_register'),

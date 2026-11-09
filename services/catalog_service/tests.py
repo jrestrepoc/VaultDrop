@@ -2,9 +2,10 @@ import os
 import sqlite3
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from app import create_app
-from repository import SQLiteCatalogRepository
+from repository import PostgresCatalogRepository, SQLiteCatalogRepository
 
 
 class BrokenRepository:
@@ -71,6 +72,14 @@ class CatalogServiceTest(unittest.TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.get_json()['error']['code'], 'BAD_REQUEST')
+
+    @patch.dict(os.environ, {'POSTGRES_HOST': 'db', 'POSTGRES_DB': 'v', 'POSTGRES_USER': 'v', 'POSTGRES_PASSWORD': 'x'})
+    def test_postgres_env_selects_postgres_repository(self):
+        self.assertIsInstance(create_app().config['CATALOG_REPOSITORY'], PostgresCatalogRepository)
+
+    def test_http_errors_keep_their_status(self):
+        self.assertEqual(self.client.post('/api/v2/catalogo/').status_code, 405)
+        self.assertEqual(self.client.get('/api/v2/catalogo/1/extra/').status_code, 404)
 
     def test_internal_error_is_controlled(self):
         app = create_app(BrokenRepository())

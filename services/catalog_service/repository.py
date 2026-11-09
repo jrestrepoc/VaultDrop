@@ -3,10 +3,12 @@ from contextlib import contextmanager
 from decimal import Decimal
 from pathlib import Path
 
+import psycopg
+from psycopg.rows import dict_row
 
-class SQLiteCatalogRepository:
-    def __init__(self, db_path):
-        self.db_path = Path(db_path)
+
+class CatalogRepository:
+    placeholder = '?'
 
     def ping(self):
         with self._connect() as connection:
@@ -19,8 +21,8 @@ class SQLiteCatalogRepository:
         '''
         params = []
         if active_filter is not None:
-            query += ' WHERE activa = ?'
-            params.append(1 if active_filter else 0)
+            query += f' WHERE activa = {self.placeholder}'
+            params.append(active_filter)
         query += ' ORDER BY nombre'
         with self._connect() as connection:
             boxes = [self._box_from_row(row) for row in connection.execute(query, params).fetchall()]
@@ -30,10 +32,10 @@ class SQLiteCatalogRepository:
     def get_box(self, box_id):
         with self._connect() as connection:
             row = connection.execute(
-                '''
+                f'''
                 SELECT id, nombre, imagen_url, descripcion, precio, activa
                 FROM cases_caja
-                WHERE id = ?
+                WHERE id = {self.placeholder}
                 ''',
                 [box_id],
             ).fetchone()
@@ -43,23 +45,13 @@ class SQLiteCatalogRepository:
             self._attach_items(connection, [box])
             return box
 
-    @contextmanager
-    def _connect(self):
-        uri = f'file:{self.db_path.as_posix()}?mode=ro'
-        connection = sqlite3.connect(uri, uri=True, timeout=5)
-        connection.row_factory = sqlite3.Row
-        try:
-            yield connection
-        finally:
-            connection.close()
-
     def _attach_items(self, connection, boxes):
         for box in boxes:
             box['items'] = []
         if not boxes:
             return
         boxes_by_id = {box['id']: box for box in boxes}
-        placeholders = ','.join('?' for _ in boxes)
+        placeholders = ','.join(self.placeholder for _ in boxes)
         rows = connection.execute(
             f'''
             SELECT
@@ -98,6 +90,41 @@ class SQLiteCatalogRepository:
             'precio': _decimal_string(row['precio']),
             'activa': bool(row['activa']),
         }
+
+
+class SQLiteCatalogRepository(CatalogRepository):
+    def __init__(self, db_path):
+        self.db_path = Path(db_path)
+
+    @contextmanager
+    def _connect(self):
+        uri = f'file:{self.db_path.as_posix()}?mode=ro'
+        connection = sqlite3.connect(uri, uri=True, timeout=5)
+        connection.row_factory = sqlite3.Row
+        try:
+            yield connection
+        finally:
+            connection.close()
+
+
+class PostgresCatalogRepository(CatalogRepository):
+    placeholder = '%s'
+
+    def __init__(self, **conninfo):
+        self.conninfo = conninfo
+
+    @contextmanager
+    def _connect(self):
+        connection = psycopg.connect(
+            **self.conninfo,
+            connect_timeout=5,
+            options='-c default_transaction_read_only=on',
+            row_factory=dict_row,
+        )
+        try:
+            yield connection
+        finally:
+            connection.close()
 
 
 def _decimal_string(value):

@@ -26,7 +26,9 @@ function start(root) {
   async function load() {
     state.loading=true;state.loadError='';render();
     try {
-      const [cases,account] = await Promise.all([api.request(urls.casesUrl),state.authenticated ? api.request(urls.accountUrl) : null]);
+      // Si el microservicio cae, Django sigue sirviendo el catalogo y la cuenta no se pierde.
+      const catalog = api.request(urls.catalogUrl).catch(()=>api.request(urls.casesUrl));
+      const [cases,account] = await Promise.all([catalog,state.authenticated ? api.request(urls.accountUrl) : null]);
       state.cases=cases.map(normalizeCase);
       if(account) applyAccount(state,account);
     } catch(error) {state.loadError=error.message;}

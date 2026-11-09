@@ -150,6 +150,19 @@ class NotificadorFactoryTest(TestCase):
 
 
 class UserAPITestCase(APITestCase):
+    def test_weak_passwords_are_rejected(self):
+        for password in ('12345678', 'password123', 'weakuser1'):
+            data = {'username': 'weakuser1', 'email': 'weak@example.com', 'password': password}
+            resp = self.client.post(reverse('users:api_register'), data, format='json')
+            self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST, password)
+        self.assertFalse(get_user_model().objects.filter(username='weakuser1').exists())
+
+    def test_email_longer_than_its_column_is_rejected(self):
+        email = 'a' * 60 + '@' + ('b' * 60 + '.') * 4 + 'com'
+        data = {'username': 'longmail', 'email': email, 'password': 'strongpass'}
+        resp = self.client.post(reverse('users:api_register'), data, format='json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_register_api_success_201(self):
         url = reverse('users:api_register')
         payload = {
@@ -170,24 +183,24 @@ class UserAPITestCase(APITestCase):
         self.assertEqual(user.billetera.saldo, Decimal('1000.00'))
 
     def test_register_api_duplicate_username_409(self):
-        UserService().register(username='clon', email='clon1@example.com', password='password123')
+        UserService().register(username='clon', email='clon1@example.com', password='vault-Test-4821')
         url = reverse('users:api_register')
         payload = {
             'username': 'clon',
             'email': 'clon2@example.com',
-            'password': 'password123',
+            'password': 'vault-Test-4821',
         }
         resp = self.client.post(url, data=payload, format='json')
         self.assertEqual(resp.status_code, status.HTTP_409_CONFLICT)
         self.assertIn('error', resp.data)
 
     def test_register_api_duplicate_email_409(self):
-        UserService().register(username='user1', email='repetido@example.com', password='password123')
+        UserService().register(username='user1', email='repetido@example.com', password='vault-Test-4821')
         url = reverse('users:api_register')
         payload = {
             'username': 'user2',
             'email': 'repetido@example.com',
-            'password': 'password123',
+            'password': 'vault-Test-4821',
         }
         resp = self.client.post(url, data=payload, format='json')
         self.assertEqual(resp.status_code, status.HTTP_409_CONFLICT)
@@ -205,11 +218,11 @@ class UserAPITestCase(APITestCase):
         self.assertIn('errors', resp.data)
 
     def test_login_api_success_200(self):
-        UserService().register(username='logintest', email='login@example.com', password='password123')
+        UserService().register(username='logintest', email='login@example.com', password='vault-Test-4821')
         url = reverse('users:api_login')
         payload = {
             'username': 'logintest',
-            'password': 'password123',
+            'password': 'vault-Test-4821',
         }
         resp = self.client.post(url, data=payload, format='json')
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -217,7 +230,7 @@ class UserAPITestCase(APITestCase):
         self.assertEqual(resp.data['user']['username'], 'logintest')
 
     def test_login_api_invalid_credentials_400(self):
-        UserService().register(username='loginbad', email='loginbad@example.com', password='password123')
+        UserService().register(username='loginbad', email='loginbad@example.com', password='vault-Test-4821')
         url = reverse('users:api_login')
         payload = {
             'username': 'loginbad',

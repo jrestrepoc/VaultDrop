@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login
 from django.utils.http import url_has_allowed_host_and_scheme
-from django.contrib.auth.decorators import login_required
 
 from apps.users.forms import RegistrationForm, LoginForm
 from apps.users.services import UserService
@@ -30,14 +29,3 @@ def register_view(request):
             login(request, user)
             return redirect('core:home')
     return render(request, 'users/register.html', {'form': form})
-
-
-@login_required
-def dashboard_view(request):
-    billetera = getattr(request.user, 'billetera', None)
-    transacciones = billetera.transacciones.all().order_by('-created_at') if billetera else []
-    return render(request, 'users/dashboard.html', {
-        'billetera': billetera,
-        'transacciones': transacciones,
-    })
-

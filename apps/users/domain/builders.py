@@ -1,4 +1,6 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 
 class UserBuilder:
@@ -39,6 +41,12 @@ class UserBuilder:
             errores.append('El password es obligatorio')
         elif len(self._password) < 8:
             errores.append('La contraseña debe tener al menos 8 caracteres')
+        else:
+            candidato = self.user_model(username=self._username, email=self._email)
+            try:
+                validate_password(self._password, candidato)
+            except ValidationError as exc:
+                errores.extend(exc.messages)
         if errores:
             raise ValueError(' / '.join(errores))
 

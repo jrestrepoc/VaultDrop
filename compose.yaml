@@ -1,33 +1,59 @@
+x-postgres: &postgres
+  POSTGRES_HOST: db
+  POSTGRES_DB: ${POSTGRES_DB:?Copia .env.example a .env}
+  POSTGRES_USER: ${POSTGRES_USER:?Copia .env.example a .env}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en .env}
+
 services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment: *postgres
+    volumes:
+      - vaultdrop-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
   web:
     build: .
+    restart: unless-stopped
     environment:
-      DJANGO_DEBUG: "1"
-      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,web,nginx"
-      DJANGO_DB_PATH: "/data/db.sqlite3"
+      <<: *postgres
+      DJANGO_DEBUG: "0"
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Define DJANGO_SECRET_KEY en .env}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:?Copia .env.example a .env}
       NOTIFICACION_MODE: "MOCK"
-    volumes:
-      - vaultdrop-data:/data
+      CATALOG_URL: "/api/v2/catalogo/"
+    depends_on:
+      db:
+        condition: service_healthy
     expose:
       - "8000"
   catalog:
     build: ./services/catalog_service
-    environment:
-      CATALOG_DB_PATH: "/data/db.sqlite3"
-    volumes:
-      - vaultdrop-data:/data
+    restart: unless-stopped
+    environment: *postgres
     depends_on:
-      - web
+      db:
+        condition: service_healthy
+      web:
+        condition: service_started
     expose:
       - "5000"
   nginx:
     image: nginx:1.27-alpine
+    restart: unless-stopped
     ports:
-      - "127.0.0.1:8002:80"
+      - "${HTTP_PORT:-80}:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - web
       - catalog
 volumes:
-  vaultdrop-data:
+  vaultdrop-pgdata:
