@@ -3,11 +3,7 @@ export async function animateReel(root, caja, winner, reelCard) {
   const track = root.querySelector('#reel-track');
   const viewport = root.querySelector('.reel-viewport');
   if (!track || !viewport) return;
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    track.innerHTML = reelCard(winner);
-    track.classList.add('result-state');
-    return;
-  }
+  // Corre siempre: Windows con efectos desactivados pide "reducir movimiento" y dejaba la apertura sin ruleta.
   const pool = caja.items.map(ci=>ci.item);
   const cards = Array.from({length:55},(_,i)=>i===44 ? winner : pool[Math.floor(Math.random()*pool.length)]);
   track.innerHTML = cards.map(item=>reelCard(item)).join('');
