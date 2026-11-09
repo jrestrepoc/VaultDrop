@@ -39,6 +39,3 @@ class DjangoAperturaCajaRepository(IAperturaCajaRepository):
 
     def get_inventory(self, user, item_id):
         return self.list_inventory(user).filter(pk=item_id).first()
-
-    def count_openings(self, user):
-        return AperturaCaja.objects.filter(user=user).count()

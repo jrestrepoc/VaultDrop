@@ -1,5 +1,7 @@
 # Migracion a Microservicios (Strangler Pattern)
 
+> Registro histórico del Taller 2: describe esa etapa, con SQLite y el puerto 8002. La arquitectura vigente está en [arquitectura-entrega-2.md](arquitectura-entrega-2.md).
+
 Este archivo prepara la informacion tecnica para crear la pagina de GitHub Wiki titulada **Migracion a Microservicios (Strangler Pattern)**. No reemplaza la Wiki remota.
 
 ## Arquitectura original

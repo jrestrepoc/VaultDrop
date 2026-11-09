@@ -10,7 +10,6 @@ from rest_framework.test import APITestCase
 from apps.cases.models import Caja, CajaItem, Item
 from apps.core.models import Operation
 from apps.openings.models import AperturaCaja, ItemInventario
-from apps.openings.services import AperturaCajaService
 from apps.users.services import UserService
 from apps.wallet.services import WalletService
 

@@ -3,10 +3,6 @@ from abc import ABC, abstractmethod
 
 class IUserRepository(ABC):
     @abstractmethod
-    def create(self, **kwargs):
-        pass
-
-    @abstractmethod
     def get_by_email(self, email):
         pass
 
@@ -46,9 +42,6 @@ class DjangoUserRepository(IUserRepository):
         user.steam_username = steam_username
         user.save(update_fields=['username', 'email', 'steam_username'])
         return user
-
-    def create(self, **kwargs):
-        return self.user_model.objects.create(**kwargs)
 
     def get_by_email(self, email):
         try:

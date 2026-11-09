@@ -11,7 +11,6 @@ from apps.users.serializers import (
     RegisterInputSerializer,
     LoginInputSerializer,
     UserOutputSerializer,
-    AuthResponseSerializer,
 )
 from apps.users.services import UserService
 

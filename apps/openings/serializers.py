@@ -4,10 +4,6 @@ from apps.cases.serializers import CajaSerializer, ItemSerializer
 from apps.openings.models import AperturaCaja, ItemInventario
 
 
-class AbrirCajaSerializer(serializers.Serializer):
-    caja_id = serializers.IntegerField(read_only=True)
-
-
 class ItemInventarioSerializer(serializers.ModelSerializer):
     caja_nombre = serializers.CharField(source='apertura.caja.nombre', read_only=True)
     item = ItemSerializer()

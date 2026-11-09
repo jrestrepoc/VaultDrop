@@ -22,11 +22,6 @@ class UserOutputSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 
-class AuthResponseSerializer(serializers.Serializer):
-    token = serializers.CharField()
-    user = UserOutputSerializer()
-
-
 class ProfileInputSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150)
     email = serializers.EmailField(max_length=254)
