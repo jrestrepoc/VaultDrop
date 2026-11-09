@@ -4,12 +4,25 @@ import {readdirSync, readFileSync} from 'node:fs';
 import {ApiClient} from '../apps/core/static/core/js/api.js';
 import {createState, applyAccount} from '../apps/core/static/core/js/store.js';
 import {createViews} from '../apps/core/static/core/js/views.js';
+import {animateReel} from '../apps/core/static/core/js/reel.js';
 
 globalThis.gettext=text=>text;
 globalThis.interpolate=(format,values)=>format.replace(/%\((\w+)\)s/g,(_,key)=>values[key]);
 globalThis.document={cookie:''};
 globalThis.location={origin:'http://localhost'};
 globalThis.sessionStorage={getItem:()=>null,setItem:()=>{}};
+
+test('reel spins even with reduced motion and lands on the server prize',async()=>{
+  globalThis.matchMedia=()=>({matches:true});
+  globalThis.requestAnimationFrame=callback=>callback();
+  let frames;
+  const track={children:{44:{offsetLeft:1000,offsetWidth:100}},animate:keyframes=>{frames=keyframes;return {finished:Promise.resolve()};}};
+  const root={querySelector:selector=>selector==='#reel-track' ? track : {clientWidth:500}};
+  await animateReel(root,{items:[{item:{id:'x'}}]},{id:'w'},item=>`[${item.id}]`);
+  assert.equal(track.innerHTML.match(/\[.\]/g).length,55);
+  assert.equal(track.innerHTML.match(/\[.\]/g)[44],'[w]');
+  assert.equal(frames[1].transform,'translateX(-800px)');
+});
 
 test('network retry reuses operation key and creates no local prize', async()=>{
   const calls=[];
