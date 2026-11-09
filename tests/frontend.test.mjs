@@ -33,6 +33,15 @@ test('empty catalog stays empty and account is restored from server',()=>{
   assert.equal(state.aperturas,3);
 });
 
+test('rate note shows the reference only when the rate exists',()=>{
+  const state=createState(true);state.balance=100;
+  const views=createViews(state,{});
+  assert.doesNotMatch(views.rateNote(),/COP/);
+  state.tasaCop=3000;
+  assert.match(views.rateNote(),/300.000 COP/);
+  assert.match(views.rateNote(),/Rates By Exchange Rate API/);
+});
+
 test('profile renders while the account is missing',()=>{
   const state=createState(true);state.page='profile';
   assert.match(createViews(state,{}).html(),/profile-avatar">\?</);

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from apps.core.account import account_snapshot
 from apps.core.operations import OperationService
-from apps.wallet.services import WalletService
+from apps.wallet.services import CotizacionService, WalletService
 from apps.wallet.serializers import BilleteraSerializer
 
 class DepositInputSerializer(serializers.Serializer):
@@ -16,6 +16,12 @@ class BilleteraAPIView(APIView):
 
     def get(self, request):
         return Response(BilleteraSerializer(WalletService().get_billetera(request.user)).data)
+
+class TasaCambioAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({'moneda': 'COP', 'tasa': str(CotizacionService().tasa('COP'))})
 
 class DepositAPIView(APIView):
     permission_classes = [IsAuthenticated]

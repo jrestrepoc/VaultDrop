@@ -1,7 +1,34 @@
 from decimal import Decimal, InvalidOperation
+from django.core.cache import cache
 from django.db import transaction
-from apps.core.domain import BusinessError, InsufficientBalanceError, NotFoundError
+from apps.core.domain import BusinessError, ExternalServiceError, InsufficientBalanceError, NotFoundError
+from apps.wallet.infra.exchange_rates import ExchangeRateApiAdapter
 from apps.wallet.repositories import DjangoBilleteraRepository
+
+SIN_TASA = 'no-disponible'
+
+
+class CotizacionService:
+    def __init__(self, proveedor=None):
+        self.proveedor = proveedor or ExchangeRateApiAdapter()
+
+    def tasa(self, moneda):
+        # shortcut: la cache es por proceso, cada worker consulta la API una vez por hora; pasar a Redis si crecen los workers.
+        clave = f'tasa-usd-{moneda}'
+        guardada = cache.get(clave)
+        if guardada == SIN_TASA:
+            raise ExternalServiceError('No se pudo consultar la tasa de cambio.')
+        if guardada is not None:
+            return guardada
+        try:
+            tasa = self.proveedor.obtener_tasa(moneda)
+        except ExternalServiceError:
+            # Evita que cada pagina espere el timeout mientras la API siga caida.
+            cache.set(clave, SIN_TASA, 60)
+            raise
+        cache.set(clave, tasa, 3600)
+        return tasa
+
 
 def positive_amount(value):
     try:

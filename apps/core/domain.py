@@ -13,3 +13,7 @@ class ConflictError(BusinessError):
 
 class InsufficientBalanceError(ConflictError):
     code = 'insufficient_balance'
+
+class ExternalServiceError(BusinessError):
+    code = 'external_service_unavailable'
+    status_code = 503
