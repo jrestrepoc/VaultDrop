@@ -23,7 +23,7 @@ class WalletAPITestCase(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_wallet_api_authorized_200(self):
-        user = UserService().register(username='ricardo', email='ricardo@example.com', password='password123')
+        user = UserService().register(username='ricardo', email='ricardo@example.com', password='vault-Test-4821')
         token, _ = Token.objects.get_or_create(user=user)
 
         url = reverse('wallet:api_billetera_me')

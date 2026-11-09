@@ -33,6 +33,11 @@ test('empty catalog stays empty and account is restored from server',()=>{
   assert.equal(state.aperturas,3);
 });
 
+test('profile renders while the account is missing',()=>{
+  const state=createState(true);state.page='profile';
+  assert.match(createViews(state,{}).html(),/profile-avatar">\?</);
+});
+
 test('profile content is escaped in HTML',()=>{
   const state=createState(true);state.page='profile';state.user.nombreUsuario='<img src=x onerror=alert(1)>';
   const html=createViews(state,{}).html();

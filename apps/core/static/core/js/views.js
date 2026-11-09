@@ -38,7 +38,7 @@ export function createViews(state, urls) {
         <div class="nav-links">
           ${navItems.map(item => `<button class="nav-button ${state.page === item.id || (state.page === 'opening' && item.id === 'cases') ? 'active' : ''}" data-page="${item.id}"><span>${item.icon}</span><span>${item.label}</span></button>`).join('')}
         </div>
-        ${state.authenticated ? `<div class="balance-badge" role="button" tabindex="0" data-page="wallet"><span>¢</span><span class="balance-value">${state.accountReady ? fmtCurrency(state.balance) : '…'}</span></div><div class="user-avatar" role="button" tabindex="0" data-page="profile">${escapeHtml((state.user.nombreUsuario[0] || '?').toUpperCase())}</div>` : `<a class="auth-nav-link" href="${root.dataset.loginUrl}">Ingresar</a>`}
+        ${state.authenticated ? `<div class="balance-badge" role="button" tabindex="0" data-page="wallet"><span>¢</span><span class="balance-value">${state.accountReady ? fmtCurrency(state.balance) : '…'}</span></div><div class="user-avatar" role="button" tabindex="0" data-page="profile">${escapeHtml((state.user.nombreUsuario[0] || '?').toUpperCase())}</div><button class="auth-nav-link logout-button" type="submit" form="logout-form">Salir</button>` : `<a class="auth-nav-link" href="${root.dataset.loginUrl}">Ingresar</a>`}
       </nav>`;
   }
 
@@ -238,7 +238,7 @@ export function createViews(state, urls) {
     ];
     return `<section class="section profile">
       <h1 class="gradient-text section-title" style="margin-bottom:28px">PROFILE</h1>
-      <div class="profile-card"><div class="profile-avatar">${state.user.nombreUsuario[0].toUpperCase()}</div><div style="flex:1"><h2 class="profile-name">${escapeHtml(state.user.nombreUsuario)}</h2><div class="profile-email">${escapeHtml(state.user.email)}</div><div class="profile-facts"><div><span>Steam: </span><strong>${escapeHtml(state.user.steamUsername || 'Sin configurar')}</strong></div><div><span>Joined: </span>${fmtDate(state.user.fechaRegistro)}</div></div></div><button class="edit-button" data-edit>✏️ Edit</button></div>
+      <div class="profile-card"><div class="profile-avatar">${escapeHtml((state.user.nombreUsuario[0] || '?').toUpperCase())}</div><div style="flex:1"><h2 class="profile-name">${escapeHtml(state.user.nombreUsuario)}</h2><div class="profile-email">${escapeHtml(state.user.email)}</div><div class="profile-facts"><div><span>Steam: </span><strong>${escapeHtml(state.user.steamUsername || 'Sin configurar')}</strong></div><div><span>Joined: </span>${fmtDate(state.user.fechaRegistro)}</div></div></div><button class="edit-button" data-edit>✏️ Edit</button></div>
       <div class="profile-edit ${state.profileEditing ? '' : 'hidden'}"><h3 class="panel-title">Edit Profile</h3>${['Username','Email','Steam Username'].map((label, i) => `<div class="form-field"><label>${label}</label><input class="text-input" value="${escapeHtml([state.user.nombreUsuario, state.user.email, state.user.steamUsername][i])}"></div>`).join('')}<button class="primary-action" data-save-profile>SAVE CHANGES</button></div>
       <div class="stats-grid">${stats.map(s => `<div class="stat-card"><div class="stat-value" style="color:${s[2]}">${s[1]}</div><div class="stat-label">${s[0]}</div></div>`).join('')}</div>
       ${renderRarityBreakdown()}

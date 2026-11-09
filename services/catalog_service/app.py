@@ -3,6 +3,7 @@ import sqlite3
 
 import psycopg
 from flask import Flask, jsonify, request
+from werkzeug.exceptions import HTTPException
 
 from errors import BadRequestError, CatalogError, DataAccessError, NotFoundError
 from repository import PostgresCatalogRepository, SQLiteCatalogRepository
@@ -36,6 +37,8 @@ def create_app(repository=None):
 
     @app.errorhandler(Exception)
     def handle_unexpected_error(error):
+        if isinstance(error, HTTPException):
+            return error
         app.logger.exception('Unexpected catalog service failure: %s', error)
         return jsonify({
             'error': {

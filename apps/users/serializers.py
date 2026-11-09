@@ -6,7 +6,7 @@ User = get_user_model()
 
 class RegisterInputSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150, required=True)
-    email = serializers.EmailField(required=True)
+    email = serializers.EmailField(max_length=254, required=True)
     password = serializers.CharField(min_length=8, write_only=True, required=True)
 
 
@@ -29,5 +29,5 @@ class AuthResponseSerializer(serializers.Serializer):
 
 class ProfileInputSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150)
-    email = serializers.EmailField()
+    email = serializers.EmailField(max_length=254)
     steam_username = serializers.CharField(max_length=100, allow_blank=True, default='')

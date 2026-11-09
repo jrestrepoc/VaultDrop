@@ -77,6 +77,10 @@ class CatalogServiceTest(unittest.TestCase):
     def test_postgres_env_selects_postgres_repository(self):
         self.assertIsInstance(create_app().config['CATALOG_REPOSITORY'], PostgresCatalogRepository)
 
+    def test_http_errors_keep_their_status(self):
+        self.assertEqual(self.client.post('/api/v2/catalogo/').status_code, 405)
+        self.assertEqual(self.client.get('/api/v2/catalogo/1/extra/').status_code, 404)
+
     def test_internal_error_is_controlled(self):
         app = create_app(BrokenRepository())
         app.config['TESTING'] = True

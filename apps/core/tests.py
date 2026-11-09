@@ -18,4 +18,11 @@ class HomeViewTest(TestCase):
         resp = self.client.get(reverse('core:home'))
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'hank')
-        self.assertContains(resp, reverse('users:dashboard'))
+        self.assertContains(resp, reverse('users:logout'))
+
+    def test_logout_ends_the_session(self):
+        UserService().register(username='hank', email='hank@example.com', password='strongpass')
+        self.client.login(username='hank', password='strongpass')
+        resp = self.client.post(reverse('users:logout'))
+        self.assertRedirects(resp, reverse('core:home'))
+        self.assertNotIn('_auth_user_id', self.client.session)

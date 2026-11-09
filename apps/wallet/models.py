@@ -25,3 +25,6 @@ class Transaccion(models.Model):
     saldo_anterior = models.DecimalField(max_digits=12, decimal_places=2)
     saldo_posterior = models.DecimalField(max_digits=12, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['id']
