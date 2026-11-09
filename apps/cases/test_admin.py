@@ -81,6 +81,10 @@ class CajasEnPanelTest(PanelTestCase):
         caja.refresh_from_db()
         self.assertFalse(caja.activa)
 
+    def test_listas_con_estadisticas_conservan_el_orden(self):
+        for modelo in (Caja, Item):
+            self.assertTrue(admin.site._registry[modelo].get_queryset(None).ordered)
+
     def test_caja_borrada_no_reaparece_al_arrancar(self):
         call_command('seed_catalog', verbosity=0)
         total = Caja.objects.count()

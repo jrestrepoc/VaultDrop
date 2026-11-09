@@ -33,6 +33,7 @@ class CajaItemInline(admin.TabularInline):
 class CajaAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'precio', 'activa', 'total_aperturas', 'ingresos', 'valor_entregado', 'retorno')
     list_filter = ('activa',)
+    ordering = ('nombre',)
     search_fields = ('nombre',)
     inlines = (CajaItemInline,)
     actions = ('activar', 'desactivar')
@@ -91,6 +92,7 @@ class CajaAdmin(admin.ModelAdmin):
 class ItemAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'rareza', 'valor_estimado', 'veces_obtenido')
     list_filter = ('rareza',)
+    ordering = ('nombre',)
     search_fields = ('nombre',)
 
     def get_queryset(self, request):
