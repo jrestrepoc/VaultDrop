@@ -49,10 +49,12 @@ python manage.py compilemessages
 
 ## Documentación
 
+- [Arquitectura de la Entrega 2](docs/arquitectura-entrega-2.md)
 - [Arquitectura implementada y SOLID](docs/arquitectura-actual.md)
 - [Secuencia de apertura](docs/wiki-diagrama-secuencia.md)
 - [API y evolución hacia Gateway](docs/wiki-api-gateway.md)
 - [Docker local y alcance de AWS](docs/docker-local.md)
 - [Migracion a Microservicios (Strangler Pattern)](docs/wiki-migracion-strangler.md)
+- [Auditoría de UI/UX](docs/auditoria-ui-ux.md)
 
-La alineación con el curso se basa en los temas compartidos, no en una rúbrica privada. Factory y Builder se mantienen con responsabilidades explícitas. Los servicios coordinan las transacciones y los repositorios contienen las escrituras ORM.
+Factory y Builder se mantienen con responsabilidades explícitas. Los servicios coordinan las transacciones y los repositorios contienen las escrituras ORM.

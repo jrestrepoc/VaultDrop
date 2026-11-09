@@ -1,6 +1,6 @@
 celery[redis]>=5.7
 django>=4.0
-djangorestframework>=3.14.0
+djangorestframework>=3.18.2
 gunicorn>=26.0
 psycopg[binary]>=3.3
 whitenoise>=6.12

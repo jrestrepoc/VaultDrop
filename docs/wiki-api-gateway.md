@@ -1,6 +1,6 @@
 # API Gateway: situación actual y evolución
 
-VaultDrop expone una API versionada desde un único proceso Django. No hay un API Gateway instalado. El frontend usa módulos JavaScript, no React. La API admite autenticación por token y sesión; el navegador utiliza sesión y CSRF.
+Nginx es el API Gateway de VaultDrop: dirige `/api/v2/catalogo/` a Flask y el resto del tráfico a Django, y limita los intentos de login y registro. El frontend usa módulos JavaScript, no React. La API admite autenticación por token y sesión; el navegador utiliza sesión y CSRF.
 
 ## Actualizacion Taller 02
 
@@ -15,6 +15,9 @@ La rama `taller-2` agrega Nginx como punto de entrada para una etapa del patron 
 | POST | `/api/v1/cajas/{id}/abrir/` | Apertura autenticada |
 | GET | `/api/v1/account/` | Usuario, saldo, historial e inventario propios |
 | GET | `/api/v1/wallet/me/` | Billetera propia |
+| GET | `/api/v1/wallet/tasa/` | Tasa USD/COP desde la API externa |
+| GET | `/api/v2/catalogo/` | Catálogo servido por Flask |
+| GET | `/api/v2/catalogo/{id}/` | Detalle de caja servido por Flask |
 | POST | `/api/v1/wallet/deposit/` | Recarga virtual entre 0,01 y 10.000 créditos |
 | GET | `/api/v1/inventory/` | Inventario propio |
 | POST | `/api/v1/inventory/{id}/sell/` | Venta virtual |
@@ -29,4 +32,4 @@ Las mutaciones POST de apertura, recarga, venta y envío admiten `Idempotency-Ke
 
 Podría concentrar límites de tráfico, terminación TLS, enrutamiento y observabilidad. No reemplaza la autorización de cada objeto, las transacciones o la validación del negocio. Los serializers facilitan un contrato explícito, pero sus cambios deben versionarse o mantenerse compatibles deliberadamente.
 
-Dividir este monolito en microservicios exigiría resolver transacciones entre servicios, autenticación, propiedad de datos y recuperación de fallos. No basta con cambiar una ruta en una pasarela. Para el alcance actual se conserva un solo backend.
+Dividir el resto del monolito en microservicios exigiría resolver transacciones entre servicios, autenticación, propiedad de datos y recuperación de fallos. No basta con cambiar una ruta en una pasarela. Por eso solo se extrajo la consulta del catálogo.

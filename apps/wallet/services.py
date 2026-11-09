@@ -71,9 +71,6 @@ class WalletService:
             self.billetera_repository.record(wallet, 'DEBITO', monto, wallet.saldo + monto)
             return wallet
 
-    def tiene_saldo_suficiente(self, user, monto):
-        return self.get_billetera(user).saldo >= positive_amount(monto)
-
     def get_billetera(self, user):
         wallet = self.billetera_repository.get_by_user(user)
         if wallet is None:

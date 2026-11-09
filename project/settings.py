@@ -120,12 +120,6 @@ AUTH_USER_MODEL = 'users.User'
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Sirve las imagenes de assetsweapons/images (skins/armas) bajo el mismo
-# namespace estatico, ademas de los directorios static/ de cada app.
-STATICFILES_DIRS = [
-    *([BASE_DIR / 'assetsweapons'] if (BASE_DIR / 'assetsweapons').exists() else []),
-]
-
 # Modo de la Factory de notificaciones (patrón Factory, apps/users/infra/factories.py).
 # MOCK: imprime/loguea el mensaje de bienvenida (dev/tests, sin dependencias externas).
 # REAL: envía un correo de verdad mediante django.core.mail.send_mail.

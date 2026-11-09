@@ -38,7 +38,7 @@ Si el puerto 80 está ocupado, usar por ejemplo `HTTP_PORT=8002` en `.env`.
    nano .env
    ```
 
-   En `.env`, generar los secretos con `openssl rand -hex 32` y agregar la IP elástica a `DJANGO_ALLOWED_HOSTS`.
+   En `.env`, generar los secretos con `openssl rand -hex 32` y agregar la IP elástica a `DJANGO_ALLOWED_HOSTS`. Hacerlo antes del primer `up`: Postgres solo toma la contraseña al crear su volumen.
 
 6. Levantar y verificar:
 

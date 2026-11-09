@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 18:15+0000\n"
+"POT-Creation-Date: 2026-11-09 19:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,8 +39,26 @@ msgstr "Case opening"
 msgid "Venta de objeto"
 msgstr "Item sale"
 
+msgid "Inventory"
+msgstr ""
+
+msgid "Wallet"
+msgstr ""
+
+msgid "Profile"
+msgstr ""
+
+msgid "Cases"
+msgstr ""
+
+msgid "¿Vender este objeto? Esta acción no se puede deshacer."
+msgstr "Sell this item? This cannot be undone."
+
 msgid "Objeto vendido."
 msgstr "Item sold."
+
+msgid "¿Registrar el envío simulado? El objeto dejará de estar disponible."
+msgstr "Record the simulated shipment? The item will no longer be available."
 
 msgid "Envío simulado guardado. No se realizó una transferencia a Steam."
 msgstr "Simulated shipment saved. Nothing was transferred to Steam."
@@ -84,18 +102,6 @@ msgstr "SOLD"
 msgid "ENVIADO"
 msgstr "SENT"
 
-msgid "Cases"
-msgstr ""
-
-msgid "Inventory"
-msgstr ""
-
-msgid "Wallet"
-msgstr ""
-
-msgid "Profile"
-msgstr ""
-
 msgid "Salir"
 msgstr "Log out"
 
@@ -126,7 +132,7 @@ msgstr "Explore cases with weapon skins inspired by real loadouts. Virtual credi
 msgid "EXPLORE CASES"
 msgstr ""
 
-msgid "%(items)s items · %(collections)s collections"
+msgid "Items: %(items)s · Collections: %(collections)s"
 msgstr ""
 
 msgid "Colección"
@@ -198,10 +204,13 @@ msgstr ""
 msgid "INVENTORY"
 msgstr ""
 
-msgid "%(count)s items"
+msgid "Items: %(count)s"
 msgstr ""
 
 msgid "¢%(amount)s available"
+msgstr ""
+
+msgid "Sort by"
 msgstr ""
 
 msgid "Sort: Date"

@@ -11,7 +11,6 @@ from apps.openings.exceptions import (
     CajaNoEncontradaError,
     CajaSinItemsError,
     ProbabilidadesInvalidasError,
-    SaldoInsuficienteError,
 )
 from apps.openings.repositories import DjangoAperturaCajaRepository
 from apps.wallet.services import WalletService

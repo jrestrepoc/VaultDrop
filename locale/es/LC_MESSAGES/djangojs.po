@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 18:15+0000\n"
+"POT-Creation-Date: 2026-11-09 19:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,7 +39,25 @@ msgstr ""
 msgid "Venta de objeto"
 msgstr ""
 
+msgid "Inventory"
+msgstr "Inventario"
+
+msgid "Wallet"
+msgstr "Billetera"
+
+msgid "Profile"
+msgstr "Perfil"
+
+msgid "Cases"
+msgstr "Cajas"
+
+msgid "¿Vender este objeto? Esta acción no se puede deshacer."
+msgstr ""
+
 msgid "Objeto vendido."
+msgstr ""
+
+msgid "¿Registrar el envío simulado? El objeto dejará de estar disponible."
 msgstr ""
 
 msgid "Envío simulado guardado. No se realizó una transferencia a Steam."
@@ -84,18 +102,6 @@ msgstr ""
 msgid "ENVIADO"
 msgstr ""
 
-msgid "Cases"
-msgstr "Cajas"
-
-msgid "Inventory"
-msgstr "Inventario"
-
-msgid "Wallet"
-msgstr "Billetera"
-
-msgid "Profile"
-msgstr "Perfil"
-
 msgid "Salir"
 msgstr ""
 
@@ -126,8 +132,9 @@ msgstr ""
 msgid "EXPLORE CASES"
 msgstr "EXPLORAR CAJAS"
 
-msgid "%(items)s items · %(collections)s collections"
-msgstr "%(items)s objetos · %(collections)s colecciones"
+#| msgid "%(items)s items · %(collections)s collections"
+msgid "Items: %(items)s · Collections: %(collections)s"
+msgstr "Objetos: %(items)s · Colecciones: %(collections)s"
 
 msgid "Colección"
 msgstr ""
@@ -198,11 +205,15 @@ msgstr "Valor del objeto"
 msgid "INVENTORY"
 msgstr "INVENTARIO"
 
-msgid "%(count)s items"
-msgstr "%(count)s objetos"
+#| msgid "Items (Active)"
+msgid "Items: %(count)s"
+msgstr "Objetos: %(count)s"
 
 msgid "¢%(amount)s available"
 msgstr "¢%(amount)s disponibles"
+
+msgid "Sort by"
+msgstr "Ordenar por"
 
 msgid "Sort: Date"
 msgstr "Ordenar: fecha"

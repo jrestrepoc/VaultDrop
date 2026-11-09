@@ -2,9 +2,9 @@
 
 ## Alcance académico
 
-Este documento describe código implementado, no una arquitectura futura. Se tomó como referencia la lista compartida del curso: Django, Factory, Builder, Django REST Framework, API Gateways, Docker y AWS. Los materiales privados de EAFIT y la rúbrica del Entregable 1 no estuvieron disponibles; no se afirma cumplimiento de criterios que no se pudieron leer.
+Este documento describe el código del núcleo Django y sus patrones. La vista completa de despliegue y servicios está en [arquitectura-entrega-2.md](arquitectura-entrega-2.md).
 
-VaultDrop es un **monolito modular con capa de servicios y repositorios**. Un proceso Django atiende web y API, y los módulos comparten una base de datos. No es un conjunto de microservicios ni una arquitectura hexagonal pura: los servicios usan transacciones Django y los repositorios devuelven modelos ORM. Esta dependencia explícita permite una implementación pequeña y comprobable.
+El núcleo de VaultDrop es un **monolito modular con capa de servicios y repositorios**. Un proceso Django atiende la web y la API de operaciones. El catálogo de consulta se extrajo a un microservicio Flask con el patrón Strangler, y las notificaciones corren en un worker de Celery. No es una arquitectura hexagonal pura: los servicios usan transacciones Django y los repositorios devuelven modelos ORM.
 
 ## Responsabilidades
 
@@ -26,7 +26,7 @@ flowchart TD
     API --> HTTP[APIViews y serializers]
     HTTP --> UseCases[Servicios de aplicación]
     UseCases --> Repositories[Repositorios Django]
-    Repositories --> DB[(SQLite local)]
+    Repositories --> DB[(PostgreSQL en Docker / SQLite sin Docker)]
 ```
 
 ### Módulos
@@ -45,7 +45,7 @@ flowchart TD
 
 ### Factory
 
-`NotificadorFactory` selecciona `NotificadorConsola` o `NotificadorEmail`, ambas con el contrato `INotificador`. El servicio puede recibir otro notificador en sus pruebas. La bienvenida se agenda con `transaction.on_commit(..., robust=True)`: solo se intenta después de guardar la cuenta y la billetera. No hay todavía una cola durable para reintentar correos fallidos.
+`NotificadorFactory` selecciona `NotificadorConsola` o `NotificadorEmail`, ambas con el contrato `INotificador`. El servicio puede recibir otro notificador en sus pruebas. La bienvenida se agenda con `transaction.on_commit(..., robust=True)`: solo se intenta después de guardar la cuenta y la billetera. `NotificadorEnCola` publica la tarea en Redis, y el worker de Celery la envía con hasta 3 reintentos. Si Redis está caído, la operación se completa y ese aviso se pierde.
 
 ### SOLID aplicado
 
@@ -65,7 +65,7 @@ Venta y envío usan `UPDATE ... WHERE estado = DISPONIBLE AND user = usuario_act
 
 Los errores de aplicación tienen tipos y códigos estables; el adaptador HTTP los convierte a 400, 404 o 409. Una respuesta fallida jamás genera un premio de respaldo en JavaScript. La interfaz bloquea acciones mientras procesa una mutación. Los errores inesperados siguen siendo 500 para no ocultar defectos.
 
-SQLite sigue siendo la base local. Una escritura puede esperar o fallar por contención bajo carga; la integridad no equivale a disponibilidad ilimitada. PostgreSQL sería una evolución a evaluar junto con pruebas concurrentes específicas de ese motor.
+Con Docker se usa PostgreSQL. Sin Docker se usa SQLite, donde una escritura puede esperar o fallar por contención bajo carga. La integridad no equivale a disponibilidad ilimitada.
 
 ## Catálogo e imágenes
 
@@ -86,7 +86,7 @@ Se prueban registro, Builder, Factory, contratos DRF, saldo, idempotencia, aisla
 
 ## Límites pendientes
 
-No se implementaron microservicios, una pasarela externa, integración Steam ni despliegue AWS. No hay paginación del resumen de cuenta ni política de limpieza de claves idempotentes; conviene definirlas cuando el volumen lo requiera. El resumen de cuenta agrega varias consultas y no promete una instantánea contable aislada frente a todas las operaciones concurrentes. Las dependencias exactas de la instalación probada están en `requirements.lock.txt`.
+No hay integración con Steam. No hay paginación del resumen de cuenta ni política de limpieza de claves idempotentes; conviene definirlas cuando el volumen lo requiera. El resumen de cuenta agrega varias consultas y no promete una instantánea contable aislada frente a todas las operaciones concurrentes. Las dependencias exactas están en `requirements.lock.txt`.
 
 ## Referencias técnicas
 

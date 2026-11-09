@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 18:14+0000\n"
+"POT-Creation-Date: 2026-11-09 19:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -114,6 +114,9 @@ msgstr ""
 msgid "Contraseña"
 msgstr ""
 
+msgid "Mínimo 8 caracteres. No uses contraseñas comunes ni solo números."
+msgstr ""
+
 msgid "Credenciales incorrectas. Verifica tu usuario y contraseña."
 msgstr ""
 
@@ -168,6 +171,9 @@ msgstr "Registro"
 
 msgid "Create your academic simulation account."
 msgstr "Crea tu cuenta de simulación académica."
+
+msgid "Already have an account?"
+msgstr "¿Ya tienes una cuenta?"
 
 msgid "No se pudo consultar la tasa de cambio."
 msgstr ""
