@@ -1,5 +1,7 @@
+import gettext
 import os
 import sqlite3
+from pathlib import Path
 
 import psycopg
 from flask import Flask, jsonify, request
@@ -7,6 +9,16 @@ from werkzeug.exceptions import HTTPException
 
 from errors import BadRequestError, CatalogError, DataAccessError, NotFoundError
 from repository import PostgresCatalogRepository, SQLiteCatalogRepository
+
+
+LOCALE_DIR = Path(__file__).resolve().parent / 'locale'
+
+
+def _traducir(mensaje):
+    idioma = request.cookies.get('django_language') or request.accept_languages.best_match(['es', 'en'])
+    if idioma != 'en':
+        return mensaje
+    return gettext.translation('messages', LOCALE_DIR, ['en'], fallback=True).gettext(mensaje)
 
 
 def _default_repository():
@@ -26,14 +38,14 @@ def create_app(repository=None):
 
     @app.errorhandler(CatalogError)
     def handle_catalog_error(error):
-        return jsonify({'error': {'code': error.code, 'message': error.message}}), error.status_code
+        return jsonify({'error': {'code': error.code, 'message': _traducir(error.message)}}), error.status_code
 
     @app.errorhandler(sqlite3.Error)
     @app.errorhandler(psycopg.Error)
     def handle_data_error(error):
         app.logger.exception('Catalog data access failed: %s', error)
         data_error = DataAccessError()
-        return jsonify({'error': {'code': data_error.code, 'message': data_error.message}}), data_error.status_code
+        return jsonify({'error': {'code': data_error.code, 'message': _traducir(data_error.message)}}), data_error.status_code
 
     @app.errorhandler(Exception)
     def handle_unexpected_error(error):
@@ -43,7 +55,7 @@ def create_app(repository=None):
         return jsonify({
             'error': {
                 'code': 'INTERNAL_ERROR',
-                'message': 'No se pudo completar la consulta del catalogo.',
+                'message': _traducir('No se pudo completar la consulta del catalogo.'),
             }
         }), 500
 
@@ -59,7 +71,7 @@ def create_app(repository=None):
 
     @app.get('/api/v2/catalogo/<case_id>/')
     def get_catalog_detail(case_id):
-        parsed_case_id = _parse_positive_int(case_id, 'id')
+        parsed_case_id = _parse_positive_int(case_id)
         box = app.config['CATALOG_REPOSITORY'].get_box(parsed_case_id)
         if box is None:
             raise NotFoundError('Caja no encontrada.')
@@ -68,13 +80,13 @@ def create_app(repository=None):
     return app
 
 
-def _parse_positive_int(value, field):
+def _parse_positive_int(value):
     try:
         parsed = int(value)
     except (TypeError, ValueError) as exc:
-        raise BadRequestError(f'El parametro {field} debe ser un entero positivo.') from exc
+        raise BadRequestError('El parametro id debe ser un entero positivo.') from exc
     if parsed <= 0:
-        raise BadRequestError(f'El parametro {field} debe ser un entero positivo.')
+        raise BadRequestError('El parametro id debe ser un entero positivo.')
     return parsed
 
 

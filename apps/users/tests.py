@@ -141,12 +141,18 @@ class NotificacionesEnColaTest(TestCase):
     def test_publica_solo_el_id_para_el_worker(self):
         with mock.patch('apps.users.tasks.tarea_bienvenida.delay') as delay:
             NotificadorEnCola().enviar_bienvenida(self.user)
-        delay.assert_called_once_with(self.user.pk)
+        delay.assert_called_once_with(self.user.pk, 'es')
 
     def test_tarea_usa_el_notificador_configurado(self):
         with mock.patch('apps.users.tasks.NotificadorFactory.crear') as crear:
             tarea_envio_simulado(self.user.pk, 'AK-47')
         crear.return_value.enviar_envio_simulado.assert_called_once_with(self.user, 'AK-47')
+
+    def test_correo_sale_en_el_idioma_de_quien_lo_pidio(self):
+        with mock.patch('apps.users.infra.factories.send_mail') as enviar, mock.patch.dict(os.environ, {'NOTIFICACION_MODE': 'REAL'}):
+            tarea_bienvenida(self.user.pk, 'en')
+        self.assertEqual(enviar.call_args.kwargs['subject'], 'Welcome to VaultDrop!')
+        self.assertIn('cola', enviar.call_args.kwargs['message'])
 
     def test_fallo_de_correo_llega_a_celery_y_se_reintenta(self):
         with mock.patch('apps.users.infra.factories.send_mail', side_effect=SMTPException('caido')) as enviar, \

@@ -1,3 +1,6 @@
+from django.utils.translation import gettext as _
+
+
 class AperturaCajaBuilder:
     """Construye una apertura validada sin conocer detalles de persistencia."""
 
@@ -26,15 +29,15 @@ class AperturaCajaBuilder:
     def build(self):
         errores = []
         if self._user is None:
-            errores.append('El usuario es obligatorio')
+            errores.append(_('El usuario es obligatorio'))
         if self._caja is None:
-            errores.append('La caja es obligatoria')
+            errores.append(_('La caja es obligatoria'))
         if self._item is None:
-            errores.append('El item obtenido es obligatorio')
+            errores.append(_('El item obtenido es obligatorio'))
         if self._costo is None:
-            errores.append('El costo es obligatorio')
+            errores.append(_('El costo es obligatorio'))
         elif self._costo <= 0:
-            errores.append('El costo debe ser mayor a cero')
+            errores.append(_('El costo debe ser mayor a cero'))
         if errores:
             raise ValueError(' / '.join(errores))
         return {

@@ -3,6 +3,7 @@ import hashlib
 import json
 from uuid import UUID, uuid4
 from django.db import IntegrityError, transaction
+from django.utils.translation import gettext as _
 from apps.core.domain import BusinessError, ConflictError
 from apps.core.repositories import OperationRepository
 
@@ -14,7 +15,7 @@ class OperationService:
         try:
             key = UUID(str(key)) if key else uuid4()
         except (ValueError, TypeError, AttributeError) as exc:
-            raise BusinessError('Idempotency-Key debe ser un UUID.') from exc
+            raise BusinessError(_('Idempotency-Key debe ser un UUID.')) from exc
         fingerprint = hashlib.sha256(json.dumps([command, payload], sort_keys=True, default=str).encode()).hexdigest()
         try:
             with transaction.atomic():
@@ -28,5 +29,5 @@ class OperationService:
             if previous is None:
                 raise
             if previous.fingerprint != fingerprint:
-                raise ConflictError('Esta clave ya se utilizó para otra operación.')
+                raise ConflictError(_('Esta clave ya se utilizó para otra operación.'))
             return previous.response

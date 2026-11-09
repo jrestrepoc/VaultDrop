@@ -37,6 +37,16 @@ python -m unittest discover -s services/catalog_service -p "tests.py"
 
 `requirements.lock.txt` captura las versiones probadas; para reproducir el entorno usar `pip install -r requirements.lock.txt` con Python 3.14. Se conserva `requirements.txt` como declaración original de dependencias.
 
+## Traducciones
+
+La interfaz está en español e inglés con gettext. Los catálogos compilados (`.mo`) van en el repositorio, así que ejecutar el proyecto no requiere gettext. Después de cambiar textos, con gettext instalado:
+
+```sh
+python manage.py makemessages -l es -l en --ignore="services/*" --ignore="tests/*" --no-location --no-wrap
+python manage.py makemessages -d djangojs -l es -l en --ignore="services/*" --ignore="tests/*" --no-location --no-wrap
+python manage.py compilemessages
+```
+
 ## Documentación
 
 - [Arquitectura implementada y SOLID](docs/arquitectura-actual.md)

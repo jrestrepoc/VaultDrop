@@ -27,5 +27,11 @@
 {% endblock %}
 
 {% block scripts %}
+  <script src="{% url 'javascript-catalog' %}"></script>
+  <script>
+    // Si el catalogo no carga, la interfaz sigue funcionando con su texto original.
+    window.gettext ??= text => text;
+    window.interpolate ??= (format, values) => format.replace(/%\((\w+)\)s/g, (_, key) => values[key]);
+  </script>
   <script type="module" src="{% static 'core/js/vaultdrop.js' %}?v=4"></script>
 {% endblock %}

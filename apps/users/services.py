@@ -2,6 +2,7 @@ from django.db import transaction, IntegrityError
 from apps.core.domain import ConflictError
 from django.contrib.auth import get_user_model
 from decimal import Decimal
+from django.utils.translation import gettext as _
 
 from apps.wallet.services import WalletService
 from apps.users.domain.builders import UserBuilder
@@ -18,9 +19,9 @@ class UserService:
 
     def register(self, username, email, password, initial_credit=Decimal('1000.00')):
         if self.user_repository.exists_by_username(username):
-            raise ConflictError('El nombre de usuario ya está en uso')
+            raise ConflictError(_('El nombre de usuario ya está en uso'))
         if self.user_repository.exists_by_email(email):
-            raise ConflictError('El correo ya está registrado')
+            raise ConflictError(_('El correo ya está registrado'))
 
         try:
             with transaction.atomic():
@@ -39,16 +40,16 @@ class UserService:
             # concurrentes con el mismo username/email pasan las validaciones
             # de arriba y solo chocan al guardar. Se traduce a un error de
             # negocio legible en vez de dejar propagar el 500 de la BD.
-            raise ConflictError('El nombre de usuario o el correo ya están registrados')
+            raise ConflictError(_('El nombre de usuario o el correo ya están registrados'))
         return user
 
     def update_profile(self, user, username, email, steam_username=''):
         username_owner = self.user_repository.get_by_username(username)
         email_owner = self.user_repository.get_by_email(email)
         if (username_owner and username_owner.pk != user.pk) or (email_owner and email_owner.pk != user.pk):
-            raise ConflictError('El nombre de usuario o el correo ya están registrados')
+            raise ConflictError(_('El nombre de usuario o el correo ya están registrados'))
         try:
             with transaction.atomic():
                 return self.user_repository.update_profile(user, username, email, steam_username)
         except IntegrityError as exc:
-            raise ConflictError('El nombre de usuario o el correo ya están registrados') from exc
+            raise ConflictError(_('El nombre de usuario o el correo ya están registrados')) from exc

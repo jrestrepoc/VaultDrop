@@ -1,6 +1,7 @@
 from decimal import Decimal, InvalidOperation
 from django.core.cache import cache
 from django.db import transaction
+from django.utils.translation import gettext as _
 from apps.core.domain import BusinessError, ExternalServiceError, InsufficientBalanceError, NotFoundError
 from apps.wallet.infra.exchange_rates import ExchangeRateApiAdapter
 from apps.wallet.repositories import DjangoBilleteraRepository
@@ -17,7 +18,7 @@ class CotizacionService:
         clave = f'tasa-usd-{moneda}'
         guardada = cache.get(clave)
         if guardada == SIN_TASA:
-            raise ExternalServiceError('No se pudo consultar la tasa de cambio.')
+            raise ExternalServiceError(_('No se pudo consultar la tasa de cambio.'))
         if guardada is not None:
             return guardada
         try:
@@ -34,12 +35,12 @@ def positive_amount(value):
     try:
         amount = Decimal(str(value))
         if not amount.is_finite() or amount <= 0 or amount > Decimal('9999999999.99'):
-            raise BusinessError('El monto debe ser positivo y estar dentro del límite permitido.')
+            raise BusinessError(_('El monto debe ser positivo y estar dentro del límite permitido.'))
         if amount != amount.quantize(Decimal('0.01')):
-            raise BusinessError('El monto admite como máximo dos decimales.')
+            raise BusinessError(_('El monto admite como máximo dos decimales.'))
         return amount
     except (InvalidOperation, TypeError) as exc:
-        raise BusinessError('Monto inválido.') from exc
+        raise BusinessError(_('Monto inválido.')) from exc
 
 class WalletService:
     def __init__(self, billetera_repository=None):
@@ -57,7 +58,7 @@ class WalletService:
         with transaction.atomic():
             wallet = self.billetera_repository.adjust(user, monto)
             if wallet is None:
-                raise BusinessError('No se pudo acreditar: billetera inexistente o límite de saldo alcanzado.')
+                raise BusinessError(_('No se pudo acreditar: billetera inexistente o límite de saldo alcanzado.'))
             self.billetera_repository.record(wallet, tipo, monto, wallet.saldo - monto)
             return wallet
 
@@ -66,7 +67,7 @@ class WalletService:
         with transaction.atomic():
             wallet = self.billetera_repository.adjust(user, -monto)
             if wallet is None:
-                raise InsufficientBalanceError('Saldo insuficiente')
+                raise InsufficientBalanceError(_('Saldo insuficiente'))
             self.billetera_repository.record(wallet, 'DEBITO', monto, wallet.saldo + monto)
             return wallet
 
@@ -76,5 +77,5 @@ class WalletService:
     def get_billetera(self, user):
         wallet = self.billetera_repository.get_by_user(user)
         if wallet is None:
-            raise NotFoundError('El usuario no posee una billetera activa')
+            raise NotFoundError(_('El usuario no posee una billetera activa'))
         return wallet

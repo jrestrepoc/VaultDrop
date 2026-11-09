@@ -1,0 +1,200 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-09 18:14+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Comun"
+msgstr "Common"
+
+msgid "Raro"
+msgstr "Rare"
+
+msgid "Epico"
+msgstr "Epic"
+
+msgid "Legendario"
+msgstr "Legendary"
+
+msgid "La probabilidad debe estar entre 0 y 100."
+msgstr "The probability must be between 0 and 100."
+
+msgid "Las probabilidades de la caja deben sumar 100%"
+msgstr "The case probabilities must add up to 100%"
+
+msgid "Caja no encontrada"
+msgstr "Case not found"
+
+msgid "Idempotency-Key debe ser un UUID."
+msgstr "Idempotency-Key must be a UUID."
+
+msgid "Esta clave ya se utilizó para otra operación."
+msgstr "This key was already used for another operation."
+
+msgid "Saldo insuficiente"
+msgstr "Insufficient balance"
+
+msgid "CREATE ACCOUNT"
+msgstr ""
+
+msgid "El usuario es obligatorio"
+msgstr "The user is required"
+
+msgid "La caja es obligatoria"
+msgstr "The case is required"
+
+msgid "El item obtenido es obligatorio"
+msgstr "The obtained item is required"
+
+msgid "El costo es obligatorio"
+msgstr "The cost is required"
+
+msgid "El costo debe ser mayor a cero"
+msgstr "The cost must be greater than zero"
+
+msgid "Estado de inventario no permitido."
+msgstr "Inventory status not allowed."
+
+msgid "Objeto no encontrado en tu inventario."
+msgstr "Item not found in your inventory."
+
+msgid "Este objeto ya fue vendido o enviado."
+msgstr "This item was already sold or sent."
+
+msgid "Disponible"
+msgstr "Available"
+
+msgid "Vendido"
+msgstr "Sold"
+
+msgid "Enviado (simulación)"
+msgstr "Sent (simulation)"
+
+msgid "La caja no esta disponible"
+msgstr "The case is not available"
+
+msgid "La caja no tiene items configurados"
+msgstr "The case has no items configured"
+
+msgid "Credenciales inválidas"
+msgstr "Invalid credentials"
+
+msgid "El username es obligatorio"
+msgstr "The username is required"
+
+msgid "El email es obligatorio"
+msgstr "The email is required"
+
+msgid "El password es obligatorio"
+msgstr "The password is required"
+
+msgid "La contraseña debe tener al menos 8 caracteres"
+msgstr "The password must have at least 8 characters"
+
+msgid "Usuario"
+msgstr "Username"
+
+msgid "Correo"
+msgstr "Email"
+
+msgid "Contraseña"
+msgstr "Password"
+
+msgid "Credenciales incorrectas. Verifica tu usuario y contraseña."
+msgstr "Incorrect credentials. Check your username and password."
+
+#, python-format
+msgid "[MOCK] Bienvenido/a %(usuario)s, tu billetera inicial ya está lista."
+msgstr "[MOCK] Welcome %(usuario)s, your initial wallet is ready."
+
+#, python-format
+msgid "[MOCK] %(usuario)s, registramos el envío simulado de %(item)s."
+msgstr "[MOCK] %(usuario)s, we recorded the simulated shipment of %(item)s."
+
+msgid "¡Bienvenido/a a VaultDrop!"
+msgstr "Welcome to VaultDrop!"
+
+#, python-format
+msgid "Hola %(usuario)s, tu cuenta fue creada exitosamente y tu billetera inicial ya está disponible."
+msgstr "Hello %(usuario)s, your account was created successfully and your initial wallet is available."
+
+msgid "Envío simulado registrado en VaultDrop"
+msgstr "Simulated shipment recorded in VaultDrop"
+
+#, python-format
+msgid "Hola %(usuario)s, registramos el envío simulado de %(item)s. Es una simulación académica: no se transfirió ningún objeto a Steam."
+msgstr "Hello %(usuario)s, we recorded the simulated shipment of %(item)s. This is an academic simulation: nothing was transferred to Steam."
+
+msgid "El nombre de usuario ya está en uso"
+msgstr "The username is already in use"
+
+msgid "El correo ya está registrado"
+msgstr "The email is already registered"
+
+msgid "El nombre de usuario o el correo ya están registrados"
+msgstr "The username or email is already registered"
+
+msgid "Login"
+msgstr ""
+
+msgid "LOGIN"
+msgstr ""
+
+msgid "Access your academic simulation account."
+msgstr ""
+
+msgid "Need an account?"
+msgstr ""
+
+msgid "REGISTER"
+msgstr ""
+
+msgid "Register"
+msgstr ""
+
+msgid "Create your academic simulation account."
+msgstr ""
+
+msgid "No se pudo consultar la tasa de cambio."
+msgstr "The exchange rate could not be retrieved."
+
+msgid "Inicial"
+msgstr "Initial"
+
+msgid "Recarga"
+msgstr "Top-up"
+
+msgid "Debito"
+msgstr "Debit"
+
+msgid "Venta de objeto"
+msgstr "Item sale"
+
+msgid "El monto debe ser positivo y estar dentro del límite permitido."
+msgstr "The amount must be positive and within the allowed limit."
+
+msgid "El monto admite como máximo dos decimales."
+msgstr "The amount can have at most two decimals."
+
+msgid "Monto inválido."
+msgstr "Invalid amount."
+
+msgid "No se pudo acreditar: billetera inexistente o límite de saldo alcanzado."
+msgstr "Could not credit: the wallet does not exist or the balance limit was reached."
+
+msgid "El usuario no posee una billetera activa"
+msgstr "The user does not have an active wallet"

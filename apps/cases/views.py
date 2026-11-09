@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -25,7 +26,7 @@ class CajaDetailAPIView(APIView):
     def get(self, request, caja_id):
         caja = self.caja_repository_class().get_by_id(caja_id)
         if not caja:
-            return Response({'detail': 'Caja no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'detail': _('Caja no encontrada')}, status=status.HTTP_404_NOT_FOUND)
         serializer = CajaSerializer(caja)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

@@ -5,6 +5,8 @@ from abc import ABC, abstractmethod
 from decimal import Decimal, InvalidOperation
 from urllib.request import urlopen
 
+from django.utils.translation import gettext as _
+
 from apps.core.domain import ExternalServiceError
 
 logger = logging.getLogger(__name__)
@@ -31,5 +33,5 @@ class ExchangeRateApiAdapter(IProveedorTasaCambio):
                 raise ValueError(f'tasa invalida: {tasa}')
         except (OSError, http.client.HTTPException, ValueError, KeyError, TypeError, InvalidOperation) as exc:
             logger.warning('Tasa de cambio no disponible: %s', exc)
-            raise ExternalServiceError('No se pudo consultar la tasa de cambio.') from exc
+            raise ExternalServiceError(_('No se pudo consultar la tasa de cambio.')) from exc
         return tasa

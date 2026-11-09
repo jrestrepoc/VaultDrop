@@ -1,0 +1,322 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-09 18:15+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "No se pudo completar la operación."
+msgstr "The operation could not be completed."
+
+msgid "No hay conexión. Reintenta la misma acción; no se cobrará dos veces."
+msgstr "No connection. Retry the same action; you will not be charged twice."
+
+msgid "El servidor no devolvió una respuesta válida. Reintenta la misma acción."
+msgstr "The server did not return a valid response. Retry the same action."
+
+msgid "Bono de bienvenida"
+msgstr "Welcome bonus"
+
+msgid "Recarga de créditos virtuales"
+msgstr "Virtual credit top-up"
+
+msgid "Apertura de caja"
+msgstr "Case opening"
+
+msgid "Venta de objeto"
+msgstr "Item sale"
+
+msgid "Objeto vendido."
+msgstr "Item sold."
+
+msgid "Envío simulado guardado. No se realizó una transferencia a Steam."
+msgstr "Simulated shipment saved. Nothing was transferred to Steam."
+
+msgid "Créditos virtuales añadidos."
+msgstr "Virtual credits added."
+
+msgid "Perfil guardado."
+msgstr "Profile saved."
+
+msgid "Consumer Grade"
+msgstr ""
+
+msgid "Industrial Grade"
+msgstr ""
+
+msgid "Mil-Spec"
+msgstr ""
+
+msgid "Restricted"
+msgstr ""
+
+msgid "Classified"
+msgstr ""
+
+msgid "Covert"
+msgstr ""
+
+msgid "Contraband ★"
+msgstr ""
+
+msgid "ALL"
+msgstr ""
+
+msgid "DISPONIBLE"
+msgstr "AVAILABLE"
+
+msgid "VENDIDO"
+msgstr "SOLD"
+
+msgid "ENVIADO"
+msgstr "SENT"
+
+msgid "Cases"
+msgstr ""
+
+msgid "Inventory"
+msgstr ""
+
+msgid "Wallet"
+msgstr ""
+
+msgid "Profile"
+msgstr ""
+
+msgid "Salir"
+msgstr "Log out"
+
+msgid "Ingresar"
+msgstr "Log in"
+
+msgid "Cargando catálogo..."
+msgstr "Loading catalog..."
+
+msgid "Reintentar"
+msgstr "Retry"
+
+msgid "Todavía no hay cajas publicadas."
+msgstr "No cases have been published yet."
+
+msgid "VAULTDROP / CURATED ARMORY"
+msgstr ""
+
+msgid "Find the drop"
+msgstr ""
+
+msgid "worth chasing."
+msgstr ""
+
+msgid "Explora cajas con skins de armas inspiradas en loadouts reales. Créditos virtuales, emoción de apertura."
+msgstr "Explore cases with weapon skins inspired by real loadouts. Virtual credits, the thrill of opening."
+
+msgid "EXPLORE CASES"
+msgstr ""
+
+msgid "%(items)s items · %(collections)s collections"
+msgstr ""
+
+msgid "Colección"
+msgstr "Collection"
+
+msgid "SIMULADOR ACADÉMICO"
+msgstr "ACADEMIC SIMULATOR"
+
+msgid "FEATURED DROP"
+msgstr ""
+
+msgid "THE ARMORY"
+msgstr ""
+
+msgid "Open a collection"
+msgstr ""
+
+msgid "Every case hides a different path to your next loadout."
+msgstr ""
+
+msgid "virtual credits"
+msgstr ""
+
+msgid "COLLECTION"
+msgstr ""
+
+msgid "Back to Cases"
+msgstr ""
+
+msgid "Case price"
+msgstr ""
+
+msgid "Balance"
+msgstr ""
+
+msgid "Iniciar sesión para abrir"
+msgstr "Log in to open"
+
+msgid "Crear cuenta"
+msgstr "Create account"
+
+msgid "Confirmando apertura..."
+msgstr "Confirming opening..."
+
+msgid "OPEN CASE"
+msgstr ""
+
+msgid "INSUFFICIENT BALANCE"
+msgstr ""
+
+msgid "SPINNING..."
+msgstr ""
+
+msgid "OPEN AGAIN"
+msgstr ""
+
+msgid "VIEW INVENTORY"
+msgstr ""
+
+msgid "Hide case contents"
+msgstr ""
+
+msgid "View case contents"
+msgstr ""
+
+msgid "Item value"
+msgstr ""
+
+msgid "INVENTORY"
+msgstr ""
+
+msgid "%(count)s items"
+msgstr ""
+
+msgid "¢%(amount)s available"
+msgstr ""
+
+msgid "Sort: Date"
+msgstr ""
+
+msgid "Sort: Value"
+msgstr ""
+
+msgid "Sort: Rarity"
+msgstr ""
+
+msgid "No items found"
+msgstr ""
+
+msgid "Open some cases to fill your inventory"
+msgstr ""
+
+msgid "SELL"
+msgstr ""
+
+msgid "SIMULAR ENVÍO"
+msgstr "SIMULATE SHIPPING"
+
+msgid "Referencia: ≈ $%(cop)s COP si ¢1 = US$1"
+msgstr "Reference: ≈ $%(cop)s COP if ¢1 = US$1"
+
+msgid "Deposit"
+msgstr ""
+
+msgid "Case Purchase"
+msgstr ""
+
+msgid "Item Sale"
+msgstr ""
+
+msgid "Bonus"
+msgstr ""
+
+msgid "WALLET"
+msgstr ""
+
+msgid "AVAILABLE BALANCE"
+msgstr ""
+
+msgid "Virtual credits · Not redeemable for real money"
+msgstr ""
+
+msgid "ADD CREDITS"
+msgstr ""
+
+msgid "Custom amount..."
+msgstr ""
+
+msgid "TRANSACTION HISTORY"
+msgstr ""
+
+msgid "bal"
+msgstr ""
+
+msgid "PROFILE"
+msgstr ""
+
+msgid "Inicia sesión o crea una cuenta para consultar tu perfil."
+msgstr "Log in or create an account to see your profile."
+
+msgid "LOGIN"
+msgstr ""
+
+msgid "REGISTER"
+msgstr ""
+
+msgid "Cases Opened"
+msgstr ""
+
+msgid "Items (Active)"
+msgstr ""
+
+msgid "Items Sold"
+msgstr ""
+
+msgid "Envíos simulados"
+msgstr "Simulated shipments"
+
+msgid "Inventory Value"
+msgstr ""
+
+msgid "Sin configurar"
+msgstr "Not set"
+
+msgid "Joined"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Edit Profile"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Steam Username"
+msgstr ""
+
+msgid "SAVE CHANGES"
+msgstr ""
+
+msgid "RARITY BREAKDOWN"
+msgstr ""
+
+msgid "Reintentar carga"
+msgstr "Reload"
+
+msgid "Simulador académico · Créditos virtuales · Sin dinero real"
+msgstr "Academic simulator · Virtual credits · No real money"

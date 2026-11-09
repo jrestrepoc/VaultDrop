@@ -1,18 +1,20 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Register | VaultDrop{% endblock %}
+{% block title %}{% translate "Register" %} | VaultDrop{% endblock %}
 
 {% block body %}
   <div class="auth-shell">
     <a class="auth-brand" href="{% url 'core:home' %}">⚡ VAULTDROP</a>
     <section class="auth-card">
-      <h1 class="gradient-text auth-title">REGISTER</h1>
-      <p class="auth-subtitle">Create your academic simulation account.</p>
+      <h1 class="gradient-text auth-title">{% translate "REGISTER" %}</h1>
+      <p class="auth-subtitle">{% translate "Create your academic simulation account." %}</p>
       <form method="post" class="auth-form">
         {% csrf_token %}
         {{ form.as_p }}
-        <button class="primary-action" type="submit">CREATE ACCOUNT</button>
+        <button class="primary-action" type="submit">{% translate "CREATE ACCOUNT" %}</button>
       </form>
+      {% include "core/language_switch.html" %}
     </section>
   </div>
 {% endblock %}

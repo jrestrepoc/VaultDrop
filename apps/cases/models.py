@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.translation import gettext as _, gettext_lazy
 
 
 class Caja(models.Model):
@@ -26,10 +27,10 @@ class Item(models.Model):
     RAREZA_LEGENDARIO = 'LEGENDARIO'
 
     RAREZA_CHOICES = (
-        (RAREZA_COMUN, 'Comun'),
-        (RAREZA_RARO, 'Raro'),
-        (RAREZA_EPICO, 'Epico'),
-        (RAREZA_LEGENDARIO, 'Legendario'),
+        (RAREZA_COMUN, gettext_lazy('Comun')),
+        (RAREZA_RARO, gettext_lazy('Raro')),
+        (RAREZA_EPICO, gettext_lazy('Epico')),
+        (RAREZA_LEGENDARIO, gettext_lazy('Legendario')),
     )
 
     nombre = models.CharField(max_length=120, unique=True)
@@ -55,7 +56,7 @@ class CajaItem(models.Model):
 
     def clean(self):
         if self.probabilidad <= 0 or self.probabilidad > 100:
-            raise ValidationError('La probabilidad debe estar entre 0 y 100.')
+            raise ValidationError(_('La probabilidad debe estar entre 0 y 100.'))
 
     def __str__(self):
         return f'{self.caja} - {self.item} ({self.probabilidad}%)'
@@ -69,5 +70,5 @@ class CajaItem(models.Model):
     def validar_probabilidades(cls, caja):
         total = cls.total_probabilidad(caja)
         if total != Decimal('100.00'):
-            raise ValueError('Las probabilidades de la caja deben sumar 100%')
+            raise ValueError(_('Las probabilidades de la caja deben sumar 100%'))
 
