@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 19:44+0000\n"
+"POT-Creation-Date: 2026-11-09 16:46-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -160,7 +160,7 @@ msgstr ""
 msgid "El costo es obligatorio"
 msgstr ""
 
-msgid "El costo debe ser mayor a cero"
+msgid "El costo no puede ser negativo"
 msgstr ""
 
 msgid "Estado de inventario no permitido."
@@ -169,7 +169,7 @@ msgstr ""
 msgid "Objeto no encontrado en tu inventario."
 msgstr ""
 
-msgid "Este objeto ya fue vendido o enviado."
+msgid "Este objeto ya no está disponible."
 msgstr ""
 
 msgid "usuario"
@@ -193,6 +193,9 @@ msgstr ""
 msgid "Enviado (simulación)"
 msgstr ""
 
+msgid "Usado en una mejora"
+msgstr ""
+
 msgid "estado"
 msgstr ""
 
@@ -202,10 +205,46 @@ msgstr ""
 msgid "objetos del inventario"
 msgstr ""
 
+msgid "objetos entregados"
+msgstr ""
+
+msgid "objetivo"
+msgstr ""
+
+msgid "premio"
+msgstr ""
+
+msgid "valor entregado"
+msgstr ""
+
+msgid "valor del objetivo"
+msgstr ""
+
+msgid "éxito"
+msgstr ""
+
+msgid "mejora"
+msgstr ""
+
+msgid "mejoras"
+msgstr ""
+
 msgid "La caja no esta disponible"
 msgstr ""
 
+msgid "Ya reclamaste tu caja gratis de hoy."
+msgstr ""
+
 msgid "La caja no tiene items configurados"
+msgstr ""
+
+msgid "El objetivo debe valer más que lo entregado."
+msgstr ""
+
+msgid "La probabilidad de esta mejora es demasiado baja."
+msgstr ""
+
+msgid "Objeto no encontrado."
 msgstr ""
 
 msgid "Activar cuentas seleccionadas"

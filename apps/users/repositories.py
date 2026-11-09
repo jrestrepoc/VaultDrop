@@ -44,10 +44,7 @@ class DjangoUserRepository(IUserRepository):
         return user
 
     def get_by_email(self, email):
-        try:
-            return self.user_model.objects.get(email=email)
-        except self.user_model.DoesNotExist:
-            return None
+        return self.user_model.objects.filter(email__iexact=email).first()
 
     def get_by_username(self, username):
         try:
@@ -59,5 +56,5 @@ class DjangoUserRepository(IUserRepository):
         return self.user_model.objects.filter(username=username).exists()
 
     def exists_by_email(self, email: str) -> bool:
-        return self.user_model.objects.filter(email=email).exists()
+        return self.user_model.objects.filter(email__iexact=email).exists()
 

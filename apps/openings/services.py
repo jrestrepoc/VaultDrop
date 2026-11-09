@@ -2,9 +2,11 @@ import random
 from decimal import Decimal
 
 from django.db import transaction
+from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from apps.cases.repositories import DjangoCajaRepository
+from apps.core.domain import ConflictError
 from apps.openings.domain.builders import AperturaCajaBuilder
 from apps.openings.exceptions import (
     CajaNoDisponibleError,
@@ -30,6 +32,28 @@ class AperturaCajaService:
         self.randomizer = randomizer or random.SystemRandom()
 
     def abrir(self, user, caja_id):
+        caja, caja_items = self._caja_lista(caja_id)
+        with transaction.atomic():
+            self.wallet_service.debitar(user, caja.precio)
+            return self._registrar(user, caja, caja_items, caja.precio)
+
+    def abrir_gratis(self, user):
+        gratis = self.caja_repository.get_caja_gratis()
+        if gratis is None:
+            raise CajaNoDisponibleError(_('La caja no esta disponible'))
+        caja, caja_items = self._caja_lista(gratis.pk)
+        with transaction.atomic():
+            if not self.apertura_repository.reclamar_caja_gratis(user, timezone.localdate()):
+                raise ConflictError(_('Ya reclamaste tu caja gratis de hoy.'))
+            return self._registrar(user, caja, caja_items, Decimal('0.00'))
+
+    def estado_caja_gratis(self, user):
+        caja = self.caja_repository.get_caja_gratis()
+        if caja is None:
+            return None
+        return {'id': caja.pk, 'disponible': not self.apertura_repository.caja_gratis_reclamada(user, timezone.localdate())}
+
+    def _caja_lista(self, caja_id):
         caja = self.caja_repository.get_by_id(caja_id)
         if caja is None:
             raise CajaNoEncontradaError(_('Caja no encontrada'))
@@ -38,25 +62,24 @@ class AperturaCajaService:
 
         caja_items = self.caja_repository.list_items_for_caja(caja)
         self._validar_items(caja_items)
+        return caja, caja_items
 
-        with transaction.atomic():
-            self.wallet_service.debitar(user, caja.precio)
-
-            item_obtenido = self._seleccionar_item(caja_items)
-            datos_apertura = (
-                AperturaCajaBuilder()
-                .con_usuario(user)
-                .con_caja(caja)
-                .con_item(item_obtenido)
-                .con_costo(caja.precio)
-                .build()
-            )
-            apertura = self.apertura_repository.create_apertura(**datos_apertura)
-            inventario_item = self.apertura_repository.create_inventario_item(
-                user=user,
-                item=item_obtenido,
-                apertura=apertura,
-            )
+    def _registrar(self, user, caja, caja_items, costo):
+        item_obtenido = self._seleccionar_item(caja_items)
+        datos_apertura = (
+            AperturaCajaBuilder()
+            .con_usuario(user)
+            .con_caja(caja)
+            .con_item(item_obtenido)
+            .con_costo(costo)
+            .build()
+        )
+        apertura = self.apertura_repository.create_apertura(**datos_apertura)
+        inventario_item = self.apertura_repository.create_inventario_item(
+            user=user,
+            item=item_obtenido,
+            apertura=apertura,
+        )
         return apertura, inventario_item
 
     def _validar_items(self, caja_items):

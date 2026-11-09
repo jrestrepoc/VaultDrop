@@ -20,6 +20,11 @@
     data-catalog-url="{{ catalog_url }}"
     data-login-url="{% url 'users:login' %}"
     data-register-url="{% url 'users:register' %}"
+    data-bulk-url="{% url 'inventory:bulk' %}"
+    data-upgrade-url="{% url 'inventory:upgrade' %}"
+    data-history-url="{% url 'inventory:history' %}"
+    data-free-case-url="{% url 'cases:free' %}"
+    data-ranking-url="{% url 'cases:ranking' %}"
     data-admin-url="{% if user.is_staff %}{% url 'admin:index' %}{% endif %}"
   ></div>
   <div id="live-status" class="sr-only" aria-live="polite"></div>

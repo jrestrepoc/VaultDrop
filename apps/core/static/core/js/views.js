@@ -1,10 +1,12 @@
+import {upgradeChance} from './store.js';
+
   const rarezaConfig = {
     consumer: { color: '#b0c3d9', bg: 'rgba(176,195,217,0.12)', glow: 'rgba(176,195,217,0.3)' },
     industrial: { color: '#5e98d9', bg: 'rgba(94,152,217,0.12)', glow: 'rgba(94,152,217,0.4)' },
     milspec: { color: '#7a93ff', bg: 'rgba(75,105,255,0.12)', glow: 'rgba(75,105,255,0.5)' },
     restricted: { color: '#a77bff', bg: 'rgba(136,71,255,0.12)', glow: 'rgba(136,71,255,0.5)' },
-    classified: { color: '#d32ce6', bg: 'rgba(211,44,230,0.12)', glow: 'rgba(211,44,230,0.6)' },
-    covert: { color: '#eb4b4b', bg: 'rgba(235,75,75,0.12)', glow: 'rgba(235,75,75,0.7)' },
+    classified: { color: '#e05cf0', bg: 'rgba(211,44,230,0.12)', glow: 'rgba(211,44,230,0.6)' },
+    covert: { color: '#f06a6a', bg: 'rgba(235,75,75,0.12)', glow: 'rgba(235,75,75,0.7)' },
     contraband: { color: '#e4ae39', bg: 'rgba(228,174,57,0.15)', glow: 'rgba(228,174,57,0.8)' },
   };
 
@@ -18,13 +20,14 @@ function imageTag(name, src, loading='lazy') {
   try {const url=new URL(src || IMAGE_PLACEHOLDER,location.origin);if(url.origin===location.origin || url.protocol==='https:') safe=url.href;} catch(_) {}
   return `<img src="${escapeHtml(safe)}" alt="${escapeHtml(name)}" loading="${loading}" decoding="async">`;
 }
+function fmtPercent(n, decimals = 2) {return `${Number(n).toLocaleString(appLocale(),{minimumFractionDigits:decimals,maximumFractionDigits:decimals})}%`;}
 function appLocale() {return document.documentElement?.lang === 'en' ? 'en-US' : 'es-CO';}
 function rarityLabel(key) {
   const labels = {consumer: gettext('Consumer Grade'), industrial: gettext('Industrial Grade'), milspec: gettext('Mil-Spec'), restricted: gettext('Restricted'), classified: gettext('Classified'), covert: gettext('Covert'), contraband: gettext('Contraband ★')};
   return labels[key] || labels.consumer;
 }
 function inventoryStateLabel(key) {
-  return {ALL: gettext('ALL'), DISPONIBLE: gettext('DISPONIBLE'), VENDIDO: gettext('VENDIDO'), ENVIADO: gettext('ENVIADO')}[key];
+  return {ALL: gettext('ALL'), DISPONIBLE: gettext('DISPONIBLE'), VENDIDO: gettext('VENDIDO'), ENVIADO: gettext('ENVIADO'), CONSUMIDO: gettext('USADO')}[key];
 }
 function badge(rareza) {
   const cfg=rarezaConfig[rareza] || rarezaConfig.consumer;
@@ -33,10 +36,12 @@ function badge(rareza) {
 
 export function createViews(state, urls) {
   const root = {dataset:urls};
+  const isActive = id => state.page === id || (state.page === 'opening' && id === 'cases') || (state.page === 'history' && id === 'profile');
   function renderNav() {
     const navItems = [
       { id: 'cases', label: gettext('Cases'), icon: '📦' },
       { id: 'inventory', label: gettext('Inventory'), icon: '🎒' },
+      { id: 'upgrade', label: gettext('Upgrade'), icon: '⬆️' },
       { id: 'wallet', label: gettext('Wallet'), icon: '💰' },
       { id: 'profile', label: gettext('Profile'), icon: '👤' },
     ];
@@ -44,7 +49,7 @@ export function createViews(state, urls) {
       <nav class="top-nav">
         <div class="logo" role="button" tabindex="0" data-page="cases">⚡ VAULTDROP</div>
         <div class="nav-links">
-          ${navItems.map(item => `<button class="nav-button ${state.page === item.id || (state.page === 'opening' && item.id === 'cases') ? 'active' : ''}" ${state.page === item.id || (state.page === 'opening' && item.id === 'cases') ? 'aria-current="page"' : ''} data-page="${item.id}"><span aria-hidden="true">${item.icon}</span><span>${item.label}</span></button>`).join('')}
+          ${navItems.map(item => `<button class="nav-button ${isActive(item.id) ? 'active' : ''}" ${isActive(item.id) ? 'aria-current="page"' : ''} data-page="${item.id}"><span aria-hidden="true">${item.icon}</span><span>${item.label}</span></button>`).join('')}
         </div>
         ${state.authenticated ? `<div class="balance-badge" role="button" tabindex="0" data-page="wallet" aria-label="${gettext('Wallet')}: ${state.accountReady ? fmtCurrency(state.balance) : '…'}"><span>¢</span><span class="balance-value">${state.accountReady ? fmtCurrency(state.balance) : '…'}</span></div><div class="user-avatar" role="button" tabindex="0" data-page="profile" aria-label="${gettext('Profile')}">${escapeHtml((state.user.nombreUsuario[0] || '?').toUpperCase())}</div><button class="auth-nav-link logout-button" type="submit" form="logout-form">${gettext('Salir')}</button>` : `<a class="auth-nav-link" href="${root.dataset.loginUrl}">${gettext('Ingresar')}</a>`}
       </nav>`;
@@ -55,6 +60,8 @@ export function createViews(state, urls) {
     if (state.page === 'inventory') return renderInventory();
     if (state.page === 'wallet') return renderWallet();
     if (state.page === 'profile') return renderProfile();
+    if (state.page === 'upgrade') return renderUpgrade();
+    if (state.page === 'history') return renderHistory();
     return renderCases();
   }
 
@@ -71,6 +78,7 @@ export function createViews(state, urls) {
           <div class="hero-visual"><div class="hero-orbit"></div>${imageTag(featured?.nombre || gettext('Colección'), featured?.image, 'eager')}<div class="hero-tag">${gettext('SIMULADOR ACADÉMICO')}</div><div class="hero-caption"><span>${gettext('FEATURED DROP')}</span><strong>${escapeHtml(featured?.nombre || gettext('Colección'))}</strong><small>${featured ? '¢' + fmtCurrency(featured.valor) : ''}</small></div></div>
         </div>
         <div class="section-head catalog-heading"><div><span class="eyebrow">${gettext('THE ARMORY')}</span><h2 class="section-title">${gettext('Open a collection')}</h2><p class="section-copy">${gettext('Every case hides a different path to your next loadout.')}</p></div><div class="catalog-stat"><strong>100%</strong><span>${gettext('virtual credits')}</span></div></div>
+        ${dailyBanner()}
         <div class="cases-grid">
           ${state.cases.map(caja => `
             <article class="case-card card-hover" role="button" tabindex="0" data-case-id="${caja.id}" style="background:${caja.gradient};border:1px solid ${caja.borderColor}60">
@@ -90,6 +98,7 @@ export function createViews(state, urls) {
               </div></div>
             </article>`).join('')}
         </div>
+        ${rankingHtml()}
       </section>`;
   }
 
@@ -119,6 +128,7 @@ export function createViews(state, urls) {
         <div class="action-row" id="opening-actions">
           ${!state.authenticated ? '<a class="primary-action" href="'+root.dataset.loginUrl+'">'+gettext('Iniciar sesión para abrir')+'</a><a class="secondary-action" href="'+root.dataset.registerUrl+'">'+gettext('Crear cuenta')+'</a>' : ''}
           ${state.openingState === 'requesting' ? '<button class="primary-action" disabled>'+gettext('Confirmando apertura...')+'</button>' : ''}
+          ${state.openingState === 'idle' && state.cajaGratis?.disponible && String(state.cajaGratis.id) === caja.id ? `<button class="primary-action" data-open-free>🎁 ${gettext('ABRIR GRATIS')}</button>` : ''}
           ${state.openingState === 'idle' && state.authenticated ? `<button class="primary-action" data-open ${canOpen ? '' : 'disabled'}>${canOpen ? `🎲 ${gettext('OPEN CASE')} — ¢${fmtCurrency(caja.precio)}` : '⚠️ '+gettext('INSUFFICIENT BALANCE')}</button>` : ''}
           ${state.openingState === 'spinning' ? '<button class="primary-action" disabled>⏳ '+gettext('SPINNING...')+'</button>' : ''}
           ${state.openingState === 'result' ? '<button class="primary-action" data-reset>🎲 '+gettext('OPEN AGAIN')+'</button><button class="secondary-action" data-page="inventory">'+gettext('VIEW INVENTORY')+'</button>' : ''}
@@ -178,10 +188,11 @@ export function createViews(state, urls) {
       <div class="toolbar-head">
         <div><h1 class="gradient-text section-title">${gettext('INVENTORY')}</h1><p class="section-copy">${interpolate(gettext('Items: %(count)s'), {count: state.inventario.length}, true)} · <span style="color:#f59e0b">${interpolate(gettext('¢%(amount)s available'), {amount: fmtCurrency(total)}, true)}</span></p></div>
         <div class="filter-row">
-          ${['ALL','DISPONIBLE','VENDIDO','ENVIADO'].map(f => `<button class="filter-button ${state.filter === f ? 'active' : ''}" aria-pressed="${state.filter === f}" data-filter="${f}">${inventoryStateLabel(f)}</button>`).join('')}
+          ${['ALL','DISPONIBLE','VENDIDO','ENVIADO','CONSUMIDO'].map(f => `<button class="filter-button ${state.filter === f ? 'active' : ''}" aria-pressed="${state.filter === f}" data-filter="${f}">${inventoryStateLabel(f)}</button>`).join('')}
           <select class="sort-select" data-sort aria-label="${gettext('Sort by')}"><option value="date">${gettext('Sort: Date')}</option><option value="value">${gettext('Sort: Value')}</option><option value="rarity">${gettext('Sort: Rarity')}</option></select>
         </div>
       </div>
+      ${bulkBar(filtered)}
       ${filtered.length === 0 ? '<div class="empty-state"><div class="empty-icon">📦</div><div class="empty-title">'+gettext('No items found')+'</div><div class="empty-copy">'+gettext('Open some cases to fill your inventory')+'</div></div>' : `<div class="inventory-grid">${filtered.map(renderInventoryItem).join('')}</div>`}
     </section>`;
   }
@@ -191,10 +202,10 @@ export function createViews(state, urls) {
     const available = ii.estado === 'DISPONIBLE';
     const stateColor = ii.estado === 'DISPONIBLE' ? '#22d3ee' : ii.estado === 'VENDIDO' ? '#f59e0b' : '#a77bff';
     return `<article class="inventory-card ${available ? '' : 'dimmed'}" style="border:1px solid ${available ? c.color + '40' : '#1e2d4a'}">
-      <div class="inventory-visual" style="background:radial-gradient(circle at 50% 60%, ${c.glow}15, ${c.bg});border-bottom:1px solid ${c.color}20">${imageTag(ii.item.nombre, ii.item.image)}<span>${ii.item.emoji}</span></div>
+      <div class="inventory-visual" style="background:radial-gradient(circle at 50% 60%, ${c.glow}15, ${c.bg});border-bottom:1px solid ${c.color}20">${imageTag(ii.item.nombre, ii.item.image)}<span>${ii.item.emoji}</span>${available ? selectBox(ii) : ''}</div>
       <div class="inventory-body">${badge(ii.item.rareza)}<div class="inventory-name">${escapeHtml(ii.item.nombre)}</div>
         <div class="inventory-meta"><div class="inventory-value" style="color:${c.color}">¢${fmtCurrency(ii.item.valor)}</div><div class="state-pill" style="color:${stateColor};background:${stateColor}15">${inventoryStateLabel(ii.estado)}</div></div>
-        <div class="inventory-date">${fmtDate(ii.fechaAdquisicion)} · ${escapeHtml(ii.cajaOrigen)}</div>
+        <div class="inventory-date">${fmtDate(ii.fechaAdquisicion)} · ${escapeHtml(ii.cajaOrigen || gettext('Mejora'))}</div>
         ${available ? `<div class="inventory-actions"><button class="sell-button" data-sell="${ii.id}">${gettext('SELL')}</button><button class="send-button" data-send="${ii.id}">${gettext('SIMULAR ENVÍO')}</button></div>` : ''}
       </div>
     </article>`;
@@ -256,6 +267,7 @@ export function createViews(state, urls) {
       <div class="profile-edit ${state.profileEditing ? '' : 'hidden'}"><h3 class="panel-title">${gettext('Edit Profile')}</h3>${[gettext('Username'),gettext('Email'),gettext('Steam Username')].map((label, i) => `<div class="form-field"><label for="profile-field-${i}">${label}</label><input id="profile-field-${i}" class="text-input" type="${i === 1 ? 'email' : 'text'}" autocomplete="${['username', 'email', 'off'][i]}" value="${escapeHtml([state.user.nombreUsuario, state.user.email, state.user.steamUsername][i])}"></div>`).join('')}<button class="primary-action" data-save-profile>${gettext('SAVE CHANGES')}</button></div>
       <div class="stats-grid">${stats.map(s => `<div class="stat-card"><div class="stat-value" style="color:${s[2]}">${s[1]}</div><div class="stat-label">${s[0]}</div></div>`).join('')}</div>
       ${renderRarityBreakdown()}
+      <div class="action-row"><button class="secondary-action" data-page="history">${gettext('VER HISTORIAL')}</button></div>
     </section>`;
   }
 
@@ -271,11 +283,103 @@ export function createViews(state, urls) {
   }
 
 
+  function selectBox(ii) {
+    return `<label class="select-item"><input type="checkbox" data-select="${ii.id}" ${state.selection.includes(ii.id) ? 'checked' : ''} aria-label="${gettext('Seleccionar')} ${escapeHtml(ii.item.nombre)}"></label>`;
+  }
+
+  function selectedItems() {
+    return state.inventario.filter(ii => state.selection.includes(ii.id));
+  }
+
+  function selectedTotal() {
+    return selectedItems().reduce((s, ii) => s + ii.item.valor, 0);
+  }
+
+  function bulkBar(filtered) {
+    if (!filtered.some(ii => ii.estado === 'DISPONIBLE')) return '';
+    const off = state.selection.length ? '' : 'disabled';
+    return `<div class="bulk-bar">
+      <button class="filter-button" data-select-all>${gettext('Seleccionar todo')}</button>
+      <span class="bulk-summary" role="status">${interpolate(gettext('Seleccionados: %(n)s · ¢%(total)s'), {n: state.selection.length, total: fmtCurrency(selectedTotal())}, true)}</span>
+      <button class="sell-button" data-bulk="VENDIDO" ${off}>${gettext('VENDER SELECCIÓN')}</button>
+      <button class="send-button" data-bulk="ENVIADO" ${off}>${gettext('ENVIAR SELECCIÓN')}</button>
+      <button class="cyan-action" data-page="upgrade" ${off}>${gettext('MEJORAR SELECCIÓN')}</button>
+    </div>`;
+  }
+
+  function upgradeTargets(total) {
+    const unicos = new Map(state.cases.flatMap(c => c.items.map(ci => [ci.item.id, ci.item])));
+    return [...unicos.values()].filter(item => upgradeChance(total, item.valor) >= 1).sort((a, b) => a.valor - b.valor);
+  }
+
+  function renderUpgrade() {
+    if (!state.authenticated) return renderProfile();
+    const disponibles = state.inventario.filter(ii => ii.estado === 'DISPONIBLE');
+    const total = selectedTotal();
+    const objetivos = upgradeTargets(total);
+    const objetivo = objetivos.find(item => item.id === state.upgradeTarget);
+    const excedido = state.selection.length > 6;
+    const chance = state.upgradeResult ? state.upgradeResult.probabilidad : objetivo ? upgradeChance(total, objetivo.valor) : 0;
+    const puede = objetivo && !excedido && state.upgradeState === 'idle';
+    const resultado = state.upgradeState === 'result' ? state.upgradeResult : null;
+    return `<section class="section">
+      <h1 class="gradient-text section-title" style="margin-bottom:8px">${gettext('MEJORAR ARMAS')}</h1>
+      <p class="section-copy">${gettext('Entrega objetos de tu inventario por una oportunidad de obtener uno mejor. Si falla, los pierdes.')}</p>
+      <div class="upgrade-gauge" role="img" aria-label="${interpolate(gettext('Probabilidad: %(p)s'), {p: fmtPercent(chance)}, true)}"><div class="upgrade-zone" style="width:${chance}%"></div><div class="upgrade-marker" id="upgrade-marker"></div></div>
+      <div class="upgrade-chance"><strong>${fmtPercent(chance)}</strong> <span>${interpolate(gettext('Entregas ¢%(total)s'), {total: fmtCurrency(total)}, true)}</span></div>
+      ${resultado ? `<div class="upgrade-result ${resultado.exito ? 'won' : 'lost'}" role="alert">${resultado.exito ? interpolate(gettext('¡Mejora exitosa! Obtuviste %(item)s.'), {item: escapeHtml(resultado.objetivo)}, true) : gettext('La mejora falló y perdiste los objetos entregados.')}</div>` : ''}
+      ${excedido ? `<div class="request-error" role="alert">${gettext('Puedes entregar máximo 6 objetos por mejora.')}</div>` : ''}
+      <div class="action-row">
+        ${state.upgradeState === 'spinning' || state.upgradeState === 'requesting' ? `<button class="primary-action" disabled>⏳ ${gettext('SPINNING...')}</button>` : resultado ? `<button class="primary-action" data-upgrade-reset>${gettext('INTENTAR OTRA')}</button>` : `<button class="primary-action" data-upgrade ${puede ? '' : 'disabled'}>⬆️ ${gettext('INTENTAR MEJORA')}</button>`}
+      </div>
+      <div class="upgrade-columns">
+        <div><h3 class="panel-title">${gettext('TUS OBJETOS')}</h3>
+          ${disponibles.length ? `<div class="upgrade-list">${disponibles.map(ii => `<label class="upgrade-option ${state.selection.includes(ii.id) ? 'chosen' : ''}"><input type="checkbox" data-select="${ii.id}" ${state.selection.includes(ii.id) ? 'checked' : ''}>${imageTag(ii.item.nombre, ii.item.image)}<span>${escapeHtml(ii.item.nombre)}</span><strong>¢${fmtCurrency(ii.item.valor)}</strong></label>`).join('')}</div>` : `<p class="section-copy">${gettext('No tienes objetos disponibles.')}</p>`}
+        </div>
+        <div><h3 class="panel-title">${gettext('OBJETIVO')}</h3>
+          ${objetivos.length ? `<div class="upgrade-list">${objetivos.map(item => `<button class="upgrade-option ${item.id === state.upgradeTarget ? 'chosen' : ''}" data-target="${item.id}" aria-pressed="${item.id === state.upgradeTarget}">${imageTag(item.nombre, item.image)}<span>${escapeHtml(item.nombre)}</span><strong>${fmtPercent(upgradeChance(total, item.valor), 1)}</strong></button>`).join('')}</div>` : `<p class="section-copy">${gettext('Selecciona objetos para ver los objetivos posibles.')}</p>`}
+        </div>
+      </div>
+    </section>`;
+  }
+
+  function historyRow(icon, titulo, detalle, valor) {
+    return `<div class="transaction"><div class="tx-icon" style="color:#d7f36b;border:1px solid #35432c" aria-hidden="true">${icon}</div><div><div class="tx-title">${titulo}</div><div class="tx-meta">${detalle}</div></div><div class="tx-amount"><strong>${valor}</strong></div></div>`;
+  }
+
+  function renderHistory() {
+    if (!state.authenticated) return renderProfile();
+    if (!state.history) return `<section class="section empty-state" role="status">${gettext('Cargando historial...')}</section>`;
+    const aperturas = state.history.aperturas.map(a => historyRow('◇', escapeHtml(a.item.nombre), `${escapeHtml(a.caja_nombre)} · ${fmtDate(a.created_at)}`, `¢${fmtCurrency(a.item.valor_estimado)}`)).join('');
+    const mejoras = state.history.mejoras.map(m => historyRow(m.exito ? '⬆️' : '✕', escapeHtml(m.objetivo.nombre), `${fmtPercent(m.probabilidad)} · ${fmtDate(m.created_at)}`, m.exito ? gettext('Lograda') : gettext('Fallida'))).join('');
+    return `<section class="section narrow">
+      <button class="back-button" data-page="profile">← ${gettext('Profile')}</button>
+      <h1 class="gradient-text section-title" style="margin-bottom:28px">${gettext('HISTORIAL')}</h1>
+      <h3 class="panel-title">${gettext('APERTURAS')}</h3>
+      <div class="transactions">${aperturas || `<p class="section-copy">${gettext('Todavía no hay registros.')}</p>`}</div>
+      <h3 class="panel-title">${gettext('MEJORAS')}</h3>
+      <div class="transactions">${mejoras || `<p class="section-copy">${gettext('Todavía no hay registros.')}</p>`}</div>
+    </section>`;
+  }
+
+  function dailyBanner() {
+    if (!state.cajaGratis) return '';
+    return state.cajaGratis.disponible
+      ? `<button class="daily-banner" data-case-id="${state.cajaGratis.id}">🎁 ${gettext('Tu caja gratis de hoy está lista. ¡Ábrela!')}</button>`
+      : `<div class="daily-banner claimed">🎁 ${gettext('Ya reclamaste tu caja gratis de hoy. Vuelve mañana.')}</div>`;
+  }
+
+  function rankingHtml() {
+    if (!state.ranking.length) return '<div data-ranking></div>';
+    return `<div data-ranking class="ranking"><h2 class="section-title">${gettext('MEJORES PREMIOS')}</h2><ol class="ranking-list">${state.ranking.map(row => `<li>${imageTag(row.item.nombre, row.item.imagen_url)}<span>${escapeHtml(row.item.nombre)}</span><small>${escapeHtml(row.usuario)}</small><strong>¢${fmtCurrency(row.item.valor_estimado)}</strong></li>`).join('')}</ol></div>`;
+  }
+
+
   function html() {
     return `<div class="app-shell">${renderNav()}<main class="app-main" id="main" tabindex="-1">
       ${state.requestError ? '<div class="request-error" role="alert">'+escapeHtml(state.requestError)+'</div>' : ''}
       ${state.loadError && state.page !== 'cases' ? '<div class="request-error" role="alert">'+escapeHtml(state.loadError)+' <button data-retry>'+gettext('Reintentar carga')+'</button></div>' : ''}
       ${renderPage()}</main><footer class="footer"><span class="footer-brand">⚡ VAULTDROP</span><span>${gettext('Simulador académico · Créditos virtuales · Sin dinero real')}</span>${root.dataset.adminUrl ? `<a class="language-button" href="${root.dataset.adminUrl}">${gettext('Administración')}</a>` : ''}<button class="language-button" type="submit" form="language-form" name="language" value="${document.documentElement?.lang === 'en' ? 'es' : 'en'}">${document.documentElement?.lang === 'en' ? 'Español' : 'English'}</button></footer><div class="toast-container"></div></div>`;
   }
-  return {html, reelCard, rateNote};
+  return {html, reelCard, rateNote, rankingHtml};
 }

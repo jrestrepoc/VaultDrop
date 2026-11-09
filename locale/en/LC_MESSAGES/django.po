@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 19:44+0000\n"
+"POT-Creation-Date: 2026-11-09 16:58-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -160,8 +160,8 @@ msgstr "The obtained item is required"
 msgid "El costo es obligatorio"
 msgstr "The cost is required"
 
-msgid "El costo debe ser mayor a cero"
-msgstr "The cost must be greater than zero"
+msgid "El costo no puede ser negativo"
+msgstr "The cost cannot be negative"
 
 msgid "Estado de inventario no permitido."
 msgstr "Inventory status not allowed."
@@ -169,10 +169,9 @@ msgstr "Inventory status not allowed."
 msgid "Objeto no encontrado en tu inventario."
 msgstr "Item not found in your inventory."
 
-msgid "Este objeto ya fue vendido o enviado."
-msgstr "This item was already sold or sent."
+msgid "Este objeto ya no está disponible."
+msgstr "This item is no longer available."
 
-#| msgid "Usuario"
 msgid "usuario"
 msgstr "user"
 
@@ -194,22 +193,59 @@ msgstr "Sold"
 msgid "Enviado (simulación)"
 msgstr "Sent (simulation)"
 
+msgid "Usado en una mejora"
+msgstr "Used in an upgrade"
+
 msgid "estado"
 msgstr "status"
 
-#| msgid "Objeto no encontrado en tu inventario."
 msgid "objeto del inventario"
 msgstr "inventory item"
 
-#| msgid "Objeto no encontrado en tu inventario."
 msgid "objetos del inventario"
 msgstr "inventory items"
+
+msgid "objetos entregados"
+msgstr "items given"
+
+msgid "objetivo"
+msgstr "target"
+
+msgid "premio"
+msgstr "prize"
+
+msgid "valor entregado"
+msgstr "value given"
+
+msgid "valor del objetivo"
+msgstr "target value"
+
+msgid "éxito"
+msgstr "success"
+
+msgid "mejora"
+msgstr "upgrade"
+
+msgid "mejoras"
+msgstr "upgrades"
 
 msgid "La caja no esta disponible"
 msgstr "The case is not available"
 
+msgid "Ya reclamaste tu caja gratis de hoy."
+msgstr "You already claimed your free case today."
+
 msgid "La caja no tiene items configurados"
 msgstr "The case has no items configured"
+
+msgid "El objetivo debe valer más que lo entregado."
+msgstr "The target must be worth more than what you give."
+
+msgid "La probabilidad de esta mejora es demasiado baja."
+msgstr "The chance of this upgrade is too low."
+
+msgid "Objeto no encontrado."
+msgstr "Item not found."
 
 msgid "Activar cuentas seleccionadas"
 msgstr "Activate selected accounts"
@@ -220,7 +256,6 @@ msgstr "Deactivate selected accounts"
 msgid "Credenciales inválidas"
 msgstr "Invalid credentials"
 
-#| msgid "Usuario"
 msgid "Usuarios"
 msgstr "Users"
 

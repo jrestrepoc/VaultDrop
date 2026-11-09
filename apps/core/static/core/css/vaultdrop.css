@@ -670,10 +670,37 @@ h1, h2, h3, h4, h5 {
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .language-button { min-height: 24px; }
 .auth-form .helptext { display: block; color: #94a3b8; font-size: 12px; margin-top: 4px; }
+.inventory-visual { position: relative; }
+.select-item { position: absolute; top: 8px; left: 8px; display: grid; place-items: center; width: 44px; height: 44px; cursor: pointer; }
+.select-item input { width: 22px; height: 22px; accent-color: #d7f36b; }
+.bulk-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 20px; }
+.bulk-summary { color: #94a3b8; font-size: 13px; flex: 1 1 180px; }
+.bulk-bar button:disabled, [data-upgrade]:disabled { opacity: .45; cursor: not-allowed; }
+.daily-banner { display: block; width: 100%; margin: 0 0 24px; padding: 16px; border: 1px solid #35432c; border-radius: 8px; background: #141a14; color: #d7f36b; font: inherit; text-align: center; cursor: pointer; }
+.daily-banner.claimed { color: #94a3b8; cursor: default; }
+.ranking { margin-top: 56px; }
+.ranking-list { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 8px; }
+.ranking-list li { display: grid; grid-template-columns: 48px 1fr auto auto; align-items: center; gap: 12px; padding: 8px 12px; border: 1px solid #242925; border-radius: 8px; }
+.ranking-list img { width: 48px; height: 36px; object-fit: contain; }
+.ranking-list small { color: #94a3b8; }
+.upgrade-gauge { position: relative; height: 24px; margin: 20px 0 8px; border-radius: 6px; background: #241417; overflow: hidden; }
+.upgrade-zone { height: 100%; background: #2d5a33; }
+.upgrade-marker { position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: #d7f36b; }
+.upgrade-chance strong { color: #d7f36b; font-size: 24px; }
+.upgrade-chance span { color: #94a3b8; margin-left: 8px; }
+.upgrade-result { margin: 16px 0; padding: 14px; border-radius: 8px; }
+.upgrade-result.won { background: #132117; color: #d7f36b; }
+.upgrade-result.lost { background: #2a1416; color: #fca5a5; }
+.upgrade-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 28px; }
+.upgrade-list { display: grid; gap: 8px; max-height: 420px; overflow-y: auto; }
+.upgrade-option { display: grid; grid-template-columns: auto 48px 1fr auto; align-items: center; gap: 10px; min-height: 52px; padding: 6px 12px; border: 1px solid #242925; border-radius: 8px; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+button.upgrade-option { grid-template-columns: 48px 1fr auto; }
+.upgrade-option.chosen { border-color: #d7f36b; background: #141a14; }
+.upgrade-option img { width: 48px; height: 36px; object-fit: contain; }
 @media (max-width: 480px) {
-  .logo { min-height: 24px; display: flex; align-items: center; }
+  .top-nav .logo { display: none; }
   .sell-button, .send-button, .amount-button, .filter-button, .cyan-action, .text-input, .sort-select, .edit-button { min-height: 44px; }
 }
 @media (max-width: 360px) {
-  .top-nav .logo { display: none; }
+  .top-nav .balance-badge { display: none; }
 }

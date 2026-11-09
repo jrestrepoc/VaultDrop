@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readdirSync, readFileSync} from 'node:fs';
 import {ApiClient} from '../apps/core/static/core/js/api.js';
-import {createState, applyAccount} from '../apps/core/static/core/js/store.js';
+import {createState, applyAccount, upgradeChance, resolveRoute, toggleSelection, toggleAll} from '../apps/core/static/core/js/store.js';
 import {createViews} from '../apps/core/static/core/js/views.js';
 import {animateReel} from '../apps/core/static/core/js/reel.js';
 
@@ -90,6 +90,88 @@ test('admin link appears only for staff',()=>{
   const state=createState(true);state.loading=false;
   assert.doesNotMatch(createViews(state,{}).html(),/Administración/);
   assert.match(createViews(state,{adminUrl:'/admin/'}).html(),/href="\/admin\/">Administración/);
+});
+
+test('routes resolve known pages and only existing cases',()=>{
+  const cases=[{id:'3',nombre:'C'}];
+  assert.deepEqual(resolveRoute('case-3',cases),{caja:cases[0],page:'opening'});
+  assert.deepEqual(resolveRoute('case-9',cases),{caja:null,page:'cases'});
+  for(const page of ['inventory','upgrade','wallet','profile','history']) assert.equal(resolveRoute(page,cases).page,page);
+  assert.equal(resolveRoute('',cases).page,'cases');
+  assert.equal(resolveRoute('admin',cases).page,'cases');
+});
+
+test('selection toggles one item and all visible items',()=>{
+  assert.deepEqual(toggleSelection(['1'],'2'),['1','2']);
+  assert.deepEqual(toggleSelection(['1','2'],'1'),['2']);
+  assert.deepEqual(toggleAll(['1'],['1','2']),['1','2']);
+  assert.deepEqual(toggleAll(['1','2'],['1','2']),[]);
+});
+
+test('upgrade chance is proportional, capped and needs a better target',()=>{
+  assert.equal(upgradeChance(50,100),50);
+  assert.equal(upgradeChance(99,100),80);
+  assert.equal(upgradeChance(100,100),0);
+  assert.equal(upgradeChance(0,100),0);
+});
+
+const pistola={id:1,nombre:'<b>Pistola</b>',imagen_url:'',rareza:'COMUN',valor_estimado:'25.00'};
+function cuentaCon(estado){
+  return {user:{username:'Ana',email:'a@example.test',date_joined:'2026-01-01'},wallet:{saldo:'10.00',transacciones:[]},aperturas:0,caja_gratis:null,
+    inventory:[{id:7,item:pistola,estado,created_at:'2026-01-01',caja_nombre:''}]};
+}
+
+test('selection only keeps items that are still available',()=>{
+  const state=createState(true);state.selection=['7'];
+  applyAccount(state,cuentaCon('DISPONIBLE'));
+  assert.deepEqual(state.selection,['7']);
+  applyAccount(state,cuentaCon('CONSUMIDO'));
+  assert.deepEqual(state.selection,[]);
+});
+
+test('inventory offers selection and upgraded items show their origin',()=>{
+  const state=createState(true);state.page='inventory';
+  applyAccount(state,cuentaCon('DISPONIBLE'));
+  const html=createViews(state,{}).html();
+  assert.match(html,/data-select="7"/);
+  assert.match(html,/data-bulk="VENDIDO" disabled/);
+  assert.match(html,/· Mejora/);
+  assert.ok(!html.includes('<b>Pistola</b>'));
+});
+
+test('upgrade page offers only better targets and enables after choosing one',()=>{
+  const state=createState(true);state.page='upgrade';
+  applyAccount(state,cuentaCon('DISPONIBLE'));
+  state.selection=['7'];
+  state.cases=[{items:[{item:{id:'2',nombre:'Mejor',valor:50,rareza:'consumer'}},{item:{id:'3',nombre:'Peor',valor:10,rareza:'consumer'}}]}];
+  let html=createViews(state,{}).html();
+  assert.match(html,/data-target="2"/);
+  assert.doesNotMatch(html,/data-target="3"/);
+  assert.match(html,/data-upgrade disabled/);
+  state.upgradeTarget='2';
+  html=createViews(state,{}).html();
+  assert.match(html,/<strong>50,00%<\/strong>/);
+  assert.doesNotMatch(html,/data-upgrade disabled/);
+});
+
+test('free case banner and ranking escape user content',()=>{
+  const state=createState(true);state.loading=false;
+  state.cases=[{id:'1',nombre:'C',descripcion:'',precio:5,image:'',emoji:'',gradient:'',borderColor:'',items:[]}];
+  state.cajaGratis={id:1,disponible:true};
+  state.ranking=[{usuario:'<i>u</i>',item:pistola}];
+  const html=createViews(state,{}).html();
+  assert.match(html,/daily-banner" data-case-id="1"/);
+  assert.ok(!html.includes('<i>u</i>'));
+});
+
+test('upgrade result stays hidden while the marker is moving',()=>{
+  const state=createState(true);state.page='upgrade';
+  applyAccount(state,cuentaCon('DISPONIBLE'));
+  state.upgradeResult={exito:true,probabilidad:50,objetivo:'Mejor'};
+  state.upgradeState='spinning';
+  assert.doesNotMatch(createViews(state,{}).html(),/upgrade-result/);
+  state.upgradeState='result';
+  assert.match(createViews(state,{}).html(),/upgrade-result won/);
 });
 
 test('profile renders while the account is missing',()=>{

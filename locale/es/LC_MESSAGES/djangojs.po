@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 19:44+0000\n"
+"POT-Creation-Date: 2026-11-09 16:58-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,14 +42,35 @@ msgstr ""
 msgid "Inventory"
 msgstr "Inventario"
 
+msgid "Upgrade"
+msgstr "Mejorar"
+
 msgid "Wallet"
 msgstr "Billetera"
 
 msgid "Profile"
 msgstr "Perfil"
 
+msgid "Historial"
+msgstr ""
+
 msgid "Cases"
 msgstr "Cajas"
+
+msgid "¿Vender los objetos seleccionados? Esta acción no se puede deshacer."
+msgstr ""
+
+msgid "¿Registrar el envío simulado de los objetos seleccionados?"
+msgstr ""
+
+msgid "Objetos vendidos."
+msgstr ""
+
+msgid "Envíos simulados guardados."
+msgstr ""
+
+msgid "Si la mejora falla, perderás los objetos entregados. ¿Continuar?"
+msgstr ""
 
 msgid "¿Vender este objeto? Esta acción no se puede deshacer."
 msgstr ""
@@ -100,6 +121,9 @@ msgid "VENDIDO"
 msgstr ""
 
 msgid "ENVIADO"
+msgstr ""
+
+msgid "USADO"
 msgstr ""
 
 msgid "Salir"
@@ -177,6 +201,9 @@ msgstr ""
 msgid "Confirmando apertura..."
 msgstr ""
 
+msgid "ABRIR GRATIS"
+msgstr ""
+
 msgid "OPEN CASE"
 msgstr "ABRIR CAJA"
 
@@ -227,6 +254,9 @@ msgstr "No se encontraron objetos"
 
 msgid "Open some cases to fill your inventory"
 msgstr "Abre algunas cajas para llenar tu inventario"
+
+msgid "Mejora"
+msgstr ""
 
 msgid "SELL"
 msgstr "VENDER"
@@ -321,8 +351,98 @@ msgstr "Usuario de Steam"
 msgid "SAVE CHANGES"
 msgstr "GUARDAR CAMBIOS"
 
+msgid "VER HISTORIAL"
+msgstr ""
+
 msgid "RARITY BREAKDOWN"
 msgstr "DISTRIBUCIÓN POR RAREZA"
+
+msgid "Seleccionar"
+msgstr ""
+
+msgid "Seleccionar todo"
+msgstr ""
+
+msgid "Seleccionados: %(n)s · ¢%(total)s"
+msgstr ""
+
+msgid "VENDER SELECCIÓN"
+msgstr ""
+
+msgid "ENVIAR SELECCIÓN"
+msgstr ""
+
+msgid "MEJORAR SELECCIÓN"
+msgstr ""
+
+msgid "MEJORAR ARMAS"
+msgstr ""
+
+msgid "Entrega objetos de tu inventario por una oportunidad de obtener uno mejor. Si falla, los pierdes."
+msgstr ""
+
+msgid "Probabilidad: %(p)s"
+msgstr ""
+
+msgid "Entregas ¢%(total)s"
+msgstr ""
+
+msgid "¡Mejora exitosa! Obtuviste %(item)s."
+msgstr ""
+
+msgid "La mejora falló y perdiste los objetos entregados."
+msgstr ""
+
+msgid "Puedes entregar máximo 6 objetos por mejora."
+msgstr ""
+
+msgid "INTENTAR OTRA"
+msgstr ""
+
+msgid "INTENTAR MEJORA"
+msgstr ""
+
+msgid "TUS OBJETOS"
+msgstr ""
+
+msgid "No tienes objetos disponibles."
+msgstr ""
+
+msgid "OBJETIVO"
+msgstr ""
+
+msgid "Selecciona objetos para ver los objetivos posibles."
+msgstr ""
+
+msgid "Cargando historial..."
+msgstr ""
+
+msgid "Lograda"
+msgstr ""
+
+msgid "Fallida"
+msgstr ""
+
+msgid "HISTORIAL"
+msgstr ""
+
+msgid "APERTURAS"
+msgstr ""
+
+msgid "Todavía no hay registros."
+msgstr ""
+
+msgid "MEJORAS"
+msgstr ""
+
+msgid "Tu caja gratis de hoy está lista. ¡Ábrela!"
+msgstr ""
+
+msgid "Ya reclamaste tu caja gratis de hoy. Vuelve mañana."
+msgstr ""
+
+msgid "MEJORES PREMIOS"
+msgstr ""
 
 msgid "Reintentar carga"
 msgstr ""

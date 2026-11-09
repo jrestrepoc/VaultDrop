@@ -18,6 +18,7 @@ class UserService:
         self.notificador = notificador or NotificadorEnCola()
 
     def register(self, username, email, password, initial_credit=Decimal('1000.00')):
+        email = email.lower()
         if self.user_repository.exists_by_username(username):
             raise ConflictError(_('El nombre de usuario ya está en uso'))
         if self.user_repository.exists_by_email(email):
@@ -44,6 +45,7 @@ class UserService:
         return user
 
     def update_profile(self, user, username, email, steam_username=''):
+        email = email.lower()
         username_owner = self.user_repository.get_by_username(username)
         email_owner = self.user_repository.get_by_email(email)
         if (username_owner and username_owner.pk != user.pk) or (email_owner and email_owner.pk != user.pk):
