@@ -1,8 +1,8 @@
   const rarezaConfig = {
     consumer: { color: '#b0c3d9', bg: 'rgba(176,195,217,0.12)', glow: 'rgba(176,195,217,0.3)' },
     industrial: { color: '#5e98d9', bg: 'rgba(94,152,217,0.12)', glow: 'rgba(94,152,217,0.4)' },
-    milspec: { color: '#4b69ff', bg: 'rgba(75,105,255,0.12)', glow: 'rgba(75,105,255,0.5)' },
-    restricted: { color: '#8847ff', bg: 'rgba(136,71,255,0.12)', glow: 'rgba(136,71,255,0.5)' },
+    milspec: { color: '#7a93ff', bg: 'rgba(75,105,255,0.12)', glow: 'rgba(75,105,255,0.5)' },
+    restricted: { color: '#a77bff', bg: 'rgba(136,71,255,0.12)', glow: 'rgba(136,71,255,0.5)' },
     classified: { color: '#d32ce6', bg: 'rgba(211,44,230,0.12)', glow: 'rgba(211,44,230,0.6)' },
     covert: { color: '#eb4b4b', bg: 'rgba(235,75,75,0.12)', glow: 'rgba(235,75,75,0.7)' },
     contraband: { color: '#e4ae39', bg: 'rgba(228,174,57,0.15)', glow: 'rgba(228,174,57,0.8)' },
@@ -44,9 +44,9 @@ export function createViews(state, urls) {
       <nav class="top-nav">
         <div class="logo" role="button" tabindex="0" data-page="cases">⚡ VAULTDROP</div>
         <div class="nav-links">
-          ${navItems.map(item => `<button class="nav-button ${state.page === item.id || (state.page === 'opening' && item.id === 'cases') ? 'active' : ''}" data-page="${item.id}"><span>${item.icon}</span><span>${item.label}</span></button>`).join('')}
+          ${navItems.map(item => `<button class="nav-button ${state.page === item.id || (state.page === 'opening' && item.id === 'cases') ? 'active' : ''}" ${state.page === item.id || (state.page === 'opening' && item.id === 'cases') ? 'aria-current="page"' : ''} data-page="${item.id}"><span aria-hidden="true">${item.icon}</span><span>${item.label}</span></button>`).join('')}
         </div>
-        ${state.authenticated ? `<div class="balance-badge" role="button" tabindex="0" data-page="wallet"><span>¢</span><span class="balance-value">${state.accountReady ? fmtCurrency(state.balance) : '…'}</span></div><div class="user-avatar" role="button" tabindex="0" data-page="profile">${escapeHtml((state.user.nombreUsuario[0] || '?').toUpperCase())}</div><button class="auth-nav-link logout-button" type="submit" form="logout-form">${gettext('Salir')}</button>` : `<a class="auth-nav-link" href="${root.dataset.loginUrl}">${gettext('Ingresar')}</a>`}
+        ${state.authenticated ? `<div class="balance-badge" role="button" tabindex="0" data-page="wallet" aria-label="${gettext('Wallet')}: ${state.accountReady ? fmtCurrency(state.balance) : '…'}"><span>¢</span><span class="balance-value">${state.accountReady ? fmtCurrency(state.balance) : '…'}</span></div><div class="user-avatar" role="button" tabindex="0" data-page="profile" aria-label="${gettext('Profile')}">${escapeHtml((state.user.nombreUsuario[0] || '?').toUpperCase())}</div><button class="auth-nav-link logout-button" type="submit" form="logout-form">${gettext('Salir')}</button>` : `<a class="auth-nav-link" href="${root.dataset.loginUrl}">${gettext('Ingresar')}</a>`}
       </nav>`;
   }
 
@@ -67,7 +67,7 @@ export function createViews(state, urls) {
     return `
       <section class="section">
         <div class="catalog-hero">
-          <div class="hero-copy"><span class="eyebrow">${gettext('VAULTDROP / CURATED ARMORY')}</span><h1>${gettext('Find the drop')}<br><em>${gettext('worth chasing.')}</em></h1><p>${gettext('Explora cajas con skins de armas inspiradas en loadouts reales. Créditos virtuales, emoción de apertura.')}</p><div class="hero-actions"><button class="primary-action" data-scroll-cases>${gettext('EXPLORE CASES')} <span>↓</span></button><span class="hero-meta">${interpolate(gettext('%(items)s items · %(collections)s collections'), {items: new Set(items.map(i=>i.id)).size, collections: state.cases.length}, true)}</span></div></div>
+          <div class="hero-copy"><span class="eyebrow">${gettext('VAULTDROP / CURATED ARMORY')}</span><h1>${gettext('Find the drop')}<br><em>${gettext('worth chasing.')}</em></h1><p>${gettext('Explora cajas con skins de armas inspiradas en loadouts reales. Créditos virtuales, emoción de apertura.')}</p><div class="hero-actions"><button class="primary-action" data-scroll-cases>${gettext('EXPLORE CASES')} <span>↓</span></button><span class="hero-meta">${interpolate(gettext('Items: %(items)s · Collections: %(collections)s'), {items: new Set(items.map(i=>i.id)).size, collections: state.cases.length}, true)}</span></div></div>
           <div class="hero-visual"><div class="hero-orbit"></div>${imageTag(featured?.nombre || gettext('Colección'), featured?.image, 'eager')}<div class="hero-tag">${gettext('SIMULADOR ACADÉMICO')}</div><div class="hero-caption"><span>${gettext('FEATURED DROP')}</span><strong>${escapeHtml(featured?.nombre || gettext('Colección'))}</strong><small>${featured ? '¢' + fmtCurrency(featured.valor) : ''}</small></div></div>
         </div>
         <div class="section-head catalog-heading"><div><span class="eyebrow">${gettext('THE ARMORY')}</span><h2 class="section-title">${gettext('Open a collection')}</h2><p class="section-copy">${gettext('Every case hides a different path to your next loadout.')}</p></div><div class="catalog-stat"><strong>100%</strong><span>${gettext('virtual credits')}</span></div></div>
@@ -132,7 +132,7 @@ export function createViews(state, urls) {
                 <div class="content-item-visual">${imageTag(ci.item.nombre, ci.item.image)}</div>
                 <div style="flex:1;min-width:0">
                   <div class="content-item-name">${escapeHtml(ci.item.nombre)}</div>
-                  <div class="content-item-meta"><span style="color:${c.color}">${ci.probabilidad.toFixed(1)}%</span><span style="color:#64748b">¢${fmtCurrency(ci.item.valor)}</span></div>
+                  <div class="content-item-meta"><span style="color:${c.color}">${ci.probabilidad.toFixed(1)}%</span><span style="color:#94a3b8">¢${fmtCurrency(ci.item.valor)}</span></div>
                 </div>
               </div>`;
             }).join('')}
@@ -176,10 +176,10 @@ export function createViews(state, urls) {
     const total = state.inventario.filter(ii => ii.estado === 'DISPONIBLE').reduce((s, ii) => s + ii.item.valor, 0);
     return `<section class="section">
       <div class="toolbar-head">
-        <div><h1 class="gradient-text section-title">${gettext('INVENTORY')}</h1><p class="section-copy">${interpolate(gettext('%(count)s items'), {count: state.inventario.length}, true)} · <span style="color:#f59e0b">${interpolate(gettext('¢%(amount)s available'), {amount: fmtCurrency(total)}, true)}</span></p></div>
+        <div><h1 class="gradient-text section-title">${gettext('INVENTORY')}</h1><p class="section-copy">${interpolate(gettext('Items: %(count)s'), {count: state.inventario.length}, true)} · <span style="color:#f59e0b">${interpolate(gettext('¢%(amount)s available'), {amount: fmtCurrency(total)}, true)}</span></p></div>
         <div class="filter-row">
-          ${['ALL','DISPONIBLE','VENDIDO','ENVIADO'].map(f => `<button class="filter-button ${state.filter === f ? 'active' : ''}" data-filter="${f}">${inventoryStateLabel(f)}</button>`).join('')}
-          <select class="sort-select" data-sort><option value="date">${gettext('Sort: Date')}</option><option value="value">${gettext('Sort: Value')}</option><option value="rarity">${gettext('Sort: Rarity')}</option></select>
+          ${['ALL','DISPONIBLE','VENDIDO','ENVIADO'].map(f => `<button class="filter-button ${state.filter === f ? 'active' : ''}" aria-pressed="${state.filter === f}" data-filter="${f}">${inventoryStateLabel(f)}</button>`).join('')}
+          <select class="sort-select" data-sort aria-label="${gettext('Sort by')}"><option value="date">${gettext('Sort: Date')}</option><option value="value">${gettext('Sort: Value')}</option><option value="rarity">${gettext('Sort: Rarity')}</option></select>
         </div>
       </div>
       ${filtered.length === 0 ? '<div class="empty-state"><div class="empty-icon">📦</div><div class="empty-title">'+gettext('No items found')+'</div><div class="empty-copy">'+gettext('Open some cases to fill your inventory')+'</div></div>' : `<div class="inventory-grid">${filtered.map(renderInventoryItem).join('')}</div>`}
@@ -189,7 +189,7 @@ export function createViews(state, urls) {
   function renderInventoryItem(ii) {
     const c = rarezaConfig[ii.item.rareza];
     const available = ii.estado === 'DISPONIBLE';
-    const stateColor = ii.estado === 'DISPONIBLE' ? '#22d3ee' : ii.estado === 'VENDIDO' ? '#f59e0b' : '#8847ff';
+    const stateColor = ii.estado === 'DISPONIBLE' ? '#22d3ee' : ii.estado === 'VENDIDO' ? '#f59e0b' : '#a77bff';
     return `<article class="inventory-card ${available ? '' : 'dimmed'}" style="border:1px solid ${available ? c.color + '40' : '#1e2d4a'}">
       <div class="inventory-visual" style="background:radial-gradient(circle at 50% 60%, ${c.glow}15, ${c.bg});border-bottom:1px solid ${c.color}20">${imageTag(ii.item.nombre, ii.item.image)}<span>${ii.item.emoji}</span></div>
       <div class="inventory-body">${badge(ii.item.rareza)}<div class="inventory-name">${escapeHtml(ii.item.nombre)}</div>
@@ -218,7 +218,7 @@ export function createViews(state, urls) {
       <h1 class="gradient-text section-title" style="margin-bottom:28px">${gettext('WALLET')}</h1>
       <div class="wallet-balance"><div class="wallet-label">${gettext('AVAILABLE BALANCE')}</div><div class="wallet-amount">¢${fmtCurrency(state.balance)}</div><div class="wallet-note">${gettext('Virtual credits · Not redeemable for real money')}</div>${rateNote()}</div>
       <div class="panel"><h3 class="panel-title">${gettext('ADD CREDITS')}</h3><div class="deposit-row">${[100,250,500,1000,2500].map(v => `<button class="amount-button" data-deposit="${v}">¢${v}</button>`).join('')}</div>
-        <div class="custom-deposit"><input class="text-input" type="number" min="1" placeholder="${gettext('Custom amount...')}" data-custom-amount><button class="cyan-action" data-custom-deposit>+ ${gettext('ADD CREDITS')}</button></div>
+        <div class="custom-deposit"><input class="text-input" type="number" min="0.01" max="10000" step="0.01" aria-label="${gettext('Custom amount...')}" placeholder="${gettext('Custom amount...')}" data-custom-amount><button class="cyan-action" data-custom-deposit>+ ${gettext('ADD CREDITS')}</button></div>
       </div>
       <h3 class="panel-title">${gettext('TRANSACTION HISTORY')}</h3>
       <div class="transactions">${state.transactions.slice().reverse().map(tx => {
@@ -248,12 +248,12 @@ export function createViews(state, urls) {
     const totalValue = state.inventario.filter(ii => ii.estado === 'DISPONIBLE').reduce((s, ii) => s + ii.item.valor, 0);
     const stats = [
       [gettext('Balance'), `¢${fmtCurrency(state.balance)}`, '#f59e0b'], [gettext('Cases Opened'), state.aperturas, '#22d3ee'], [gettext('Items (Active)'), disponibles, '#22d3ee'],
-      [gettext('Items Sold'), vendidos, '#94a3b8'], [gettext('Envíos simulados'), enviados, '#8847ff'], [gettext('Inventory Value'), `¢${fmtCurrency(totalValue)}`, '#f59e0b'],
+      [gettext('Items Sold'), vendidos, '#94a3b8'], [gettext('Envíos simulados'), enviados, '#a77bff'], [gettext('Inventory Value'), `¢${fmtCurrency(totalValue)}`, '#f59e0b'],
     ];
     return `<section class="section profile">
       <h1 class="gradient-text section-title" style="margin-bottom:28px">${gettext('PROFILE')}</h1>
       <div class="profile-card"><div class="profile-avatar">${escapeHtml((state.user.nombreUsuario[0] || '?').toUpperCase())}</div><div style="flex:1"><h2 class="profile-name">${escapeHtml(state.user.nombreUsuario)}</h2><div class="profile-email">${escapeHtml(state.user.email)}</div><div class="profile-facts"><div><span>Steam: </span><strong>${escapeHtml(state.user.steamUsername || gettext('Sin configurar'))}</strong></div><div><span>${gettext('Joined')}: </span>${fmtDate(state.user.fechaRegistro)}</div></div></div><button class="edit-button" data-edit>✏️ ${gettext('Edit')}</button></div>
-      <div class="profile-edit ${state.profileEditing ? '' : 'hidden'}"><h3 class="panel-title">${gettext('Edit Profile')}</h3>${[gettext('Username'),gettext('Email'),gettext('Steam Username')].map((label, i) => `<div class="form-field"><label>${label}</label><input class="text-input" value="${escapeHtml([state.user.nombreUsuario, state.user.email, state.user.steamUsername][i])}"></div>`).join('')}<button class="primary-action" data-save-profile>${gettext('SAVE CHANGES')}</button></div>
+      <div class="profile-edit ${state.profileEditing ? '' : 'hidden'}"><h3 class="panel-title">${gettext('Edit Profile')}</h3>${[gettext('Username'),gettext('Email'),gettext('Steam Username')].map((label, i) => `<div class="form-field"><label for="profile-field-${i}">${label}</label><input id="profile-field-${i}" class="text-input" type="${i === 1 ? 'email' : 'text'}" autocomplete="${['username', 'email', 'off'][i]}" value="${escapeHtml([state.user.nombreUsuario, state.user.email, state.user.steamUsername][i])}"></div>`).join('')}<button class="primary-action" data-save-profile>${gettext('SAVE CHANGES')}</button></div>
       <div class="stats-grid">${stats.map(s => `<div class="stat-card"><div class="stat-value" style="color:${s[2]}">${s[1]}</div><div class="stat-label">${s[0]}</div></div>`).join('')}</div>
       ${renderRarityBreakdown()}
     </section>`;
@@ -266,13 +266,13 @@ export function createViews(state, urls) {
     return `<div class="rarity-breakdown"><h3 class="panel-title">${gettext('RARITY BREAKDOWN')}</h3>${Object.entries(counts).map(([key, count]) => {
       const cfg = rarezaConfig[key];
       const pct = Math.round((count / state.inventario.length) * 100);
-      return `<div class="rarity-row"><div class="rarity-row-head"><span style="color:${cfg.color}">${rarityLabel(key)}</span><span style="color:#475569;font-family:'JetBrains Mono',monospace">${count} (${pct}%)</span></div><div class="rarity-bar"><div class="rarity-fill" style="width:${pct}%;background:${cfg.color};box-shadow:0 0 8px ${cfg.glow}"></div></div></div>`;
+      return `<div class="rarity-row"><div class="rarity-row-head"><span style="color:${cfg.color}">${rarityLabel(key)}</span><span style="color:#94a3b8;font-family:'JetBrains Mono',monospace">${count} (${pct}%)</span></div><div class="rarity-bar"><div class="rarity-fill" style="width:${pct}%;background:${cfg.color};box-shadow:0 0 8px ${cfg.glow}"></div></div></div>`;
     }).join('')}</div>`;
   }
 
 
   function html() {
-    return `<div class="app-shell">${renderNav()}<main class="app-main">
+    return `<div class="app-shell">${renderNav()}<main class="app-main" id="main" tabindex="-1">
       ${state.requestError ? '<div class="request-error" role="alert">'+escapeHtml(state.requestError)+'</div>' : ''}
       ${state.loadError && state.page !== 'cases' ? '<div class="request-error" role="alert">'+escapeHtml(state.loadError)+' <button data-retry>'+gettext('Reintentar carga')+'</button></div>' : ''}
       ${renderPage()}</main><footer class="footer"><span class="footer-brand">⚡ VAULTDROP</span><span>${gettext('Simulador académico · Créditos virtuales · Sin dinero real')}</span><button class="language-button" type="submit" form="language-form" name="language" value="${document.documentElement?.lang === 'en' ? 'es' : 'en'}">${document.documentElement?.lang === 'en' ? 'Español' : 'English'}</button></footer><div class="toast-container"></div></div>`;

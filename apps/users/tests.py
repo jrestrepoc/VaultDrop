@@ -134,6 +134,17 @@ class UserBuilderTest(TestCase):
             )
 
 
+class FormulariosAccesiblesTest(TestCase):
+    def test_registro_ayuda_al_navegador_y_enlaza_con_login(self):
+        resp = self.client.get(reverse('users:register'))
+        self.assertContains(resp, 'autocomplete="new-password"')
+        self.assertContains(resp, 'autocomplete="email"')
+        self.assertContains(resp, f'href="{reverse("users:login")}"')
+
+    def test_login_usa_la_contrasena_guardada(self):
+        self.assertContains(self.client.get(reverse('users:login')), 'autocomplete="current-password"')
+
+
 class NotificacionesEnColaTest(TestCase):
     def setUp(self):
         self.user = UserService().register(username='cola', email='cola@example.com', password='strongpass')

@@ -18,9 +18,30 @@ function start(root) {
     const box = root.querySelector('.toast-container');
     if (notice) { const text=document.createElement('div');text.className='toast';text.setAttribute('role','status');text.textContent=notice;box.append(text); }
     root.querySelectorAll('[data-sort]').forEach(el=>{el.value=state.sortBy;});
+    const live=document.getElementById('live-status');
+    if(live) live.textContent=notice;
     if (state.busy) root.querySelectorAll('button,input,select,[data-case-id],[data-page]').forEach(el=>{
       el.disabled=true;el.setAttribute('aria-disabled','true');
     });
+  }
+
+  function focusMain() { root.querySelector('main')?.focus({preventScroll:true}); }
+
+  function route() {
+    const hash=location.hash.slice(1);
+    const caja=hash.startsWith('case-') ? state.cases.find(c=>c.id===hash.slice(5)) : null;
+    state.selectedCase=caja||null;
+    state.page=caja ? 'opening' : ['inventory','wallet','profile'].includes(hash) ? hash : 'cases';
+    state.wonItem=null;state.openingState='idle';state.contentsOpen=false;state.requestError='';notice='';
+    const titles={inventory:gettext('Inventory'),wallet:gettext('Wallet'),profile:gettext('Profile'),cases:gettext('Cases')};
+    document.title=`${caja ? caja.nombre : titles[state.page]} | VaultDrop`;
+    render();
+  }
+
+  function go(page) {
+    const target=page==='cases' ? '' : page;
+    if(location.hash.slice(1)===target) route();
+    else location.hash=target;
   }
 
   async function load() {
@@ -32,7 +53,7 @@ function start(root) {
       state.cases=cases.map(normalizeCase);
       if(account) applyAccount(state,account);
     } catch(error) {state.loadError=error.message;}
-    finally {state.loading=false;render();}
+    finally {state.loading=false;route();}
   }
 
   function loadRate() {
@@ -50,7 +71,7 @@ function start(root) {
     state.busy=true;state.requestError='';notice='';render();
     try { const data=await action(); applyAccount(state,data.account);notice=message; }
     catch(error) {state.requestError=error.message;}
-    finally {state.busy=false;render();}
+    finally {state.busy=false;render();focusMain();}
   }
 
   async function openCase() {
@@ -67,7 +88,7 @@ function start(root) {
       try {await animateReel(root,caja,winner,views.reelCard);} catch(_) { /* show result directly */ }
       state.wonItem=winner;state.openingState='result';
     } catch(error) {state.openingState='idle';state.requestError=error.message;}
-    finally {state.busy=false;render();}
+    finally {state.busy=false;render();focusMain();}
   }
 
   root.addEventListener('error',event=>{
@@ -84,15 +105,15 @@ function start(root) {
     if(!el || state.busy) return;
     if(el.matches('[data-retry]')){load();return;}
     if(el.matches('[data-scroll-cases]')){root.querySelector('.cases-grid')?.scrollIntoView({behavior:'smooth'});return;}
-    if(el.dataset.page){state.page=el.dataset.page;state.requestError='';notice='';render();return;}
-    if(el.dataset.caseId){state.selectedCase=state.cases.find(c=>c.id===el.dataset.caseId);state.page='opening';state.wonItem=null;state.openingState='idle';state.contentsOpen=false;state.requestError='';render();return;}
-    if(el.matches('[data-back]')){state.page='cases';state.requestError='';render();return;}
+    if(el.dataset.page){go(el.dataset.page);return;}
+    if(el.dataset.caseId){go(`case-${el.dataset.caseId}`);return;}
+    if(el.matches('[data-back]')){go('cases');return;}
     if(el.matches('[data-toggle-contents]')){state.contentsOpen=!state.contentsOpen;render();return;}
     if(el.matches('[data-open]')){openCase();return;}
     if(el.matches('[data-reset]')){state.openingState='idle';state.wonItem=null;render();return;}
     if(el.dataset.filter){state.filter=el.dataset.filter;render();return;}
-    if(el.dataset.sell){mutate(()=>api.mutate(`${urls.inventoryUrl}${el.dataset.sell}/sell/`),gettext('Objeto vendido.'));return;}
-    if(el.dataset.send){mutate(()=>api.mutate(`${urls.inventoryUrl}${el.dataset.send}/send/`),gettext('Envío simulado guardado. No se realizó una transferencia a Steam.'));return;}
+    if(el.dataset.sell){if(!confirm(gettext('¿Vender este objeto? Esta acción no se puede deshacer.')))return;mutate(()=>api.mutate(`${urls.inventoryUrl}${el.dataset.sell}/sell/`),gettext('Objeto vendido.'));return;}
+    if(el.dataset.send){if(!confirm(gettext('¿Registrar el envío simulado? El objeto dejará de estar disponible.')))return;mutate(()=>api.mutate(`${urls.inventoryUrl}${el.dataset.send}/send/`),gettext('Envío simulado guardado. No se realizó una transferencia a Steam.'));return;}
     if(el.dataset.deposit || el.matches('[data-custom-deposit]')){
       const monto=el.dataset.deposit || root.querySelector('[data-custom-amount]').value;
       mutate(()=>api.mutate(urls.depositUrl,{monto}),gettext('Créditos virtuales añadidos.'));return;
@@ -104,7 +125,16 @@ function start(root) {
       mutate(()=>api.request(urls.profileUrl,{method:'PATCH',body}),gettext('Perfil guardado.'));
     }
   });
+  addEventListener('hashchange',()=>{route();focusMain();scrollTo(0,0);});
+
+  // El idioma se cambia recargando; asi se conserva la pantalla actual.
+  document.getElementById('language-form')?.addEventListener('submit',event=>{
+    event.target.elements.next.value=location.pathname+location.hash;
+  });
+
   root.addEventListener('keydown',event=>{
+    if(event.key==='Enter'&&event.target.matches('[data-custom-amount]')){root.querySelector('[data-custom-deposit]').click();return;}
+    if(event.key==='Enter'&&event.target.matches('.profile-edit input')){root.querySelector('[data-save-profile]').click();return;}
     if((event.key==='Enter'||event.key===' ')&&event.target.matches('[data-case-id],[data-page]:not(button)')){
       event.preventDefault();event.target.click();
     }

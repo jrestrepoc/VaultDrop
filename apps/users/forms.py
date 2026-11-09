@@ -4,18 +4,19 @@ from django.utils.translation import gettext_lazy as _
 
 
 class RegistrationForm(forms.Form):
-    username = forms.CharField(label=_('Usuario'), max_length=150)
-    email = forms.EmailField(label=_('Correo'), max_length=254)
-    password = forms.CharField(label=_('Contraseña'), min_length=8, widget=forms.PasswordInput)
-
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        return email
+    username = forms.CharField(label=_('Usuario'), max_length=150, widget=forms.TextInput(attrs={'autocomplete': 'username'}))
+    email = forms.EmailField(label=_('Correo'), max_length=254, widget=forms.EmailInput(attrs={'autocomplete': 'email'}))
+    password = forms.CharField(
+        label=_('Contraseña'),
+        min_length=8,
+        help_text=_('Mínimo 8 caracteres. No uses contraseñas comunes ni solo números.'),
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
+    )
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label=_('Usuario'), max_length=150)
-    password = forms.CharField(label=_('Contraseña'), widget=forms.PasswordInput)
+    username = forms.CharField(label=_('Usuario'), max_length=150, widget=forms.TextInput(attrs={'autocomplete': 'username'}))
+    password = forms.CharField(label=_('Contraseña'), widget=forms.PasswordInput(attrs={'autocomplete': 'current-password'}))
 
     def clean(self):
         cleaned_data = super().clean()

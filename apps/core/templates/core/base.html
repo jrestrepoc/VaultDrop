@@ -16,6 +16,11 @@
       {% csrf_token %}
       <input type="hidden" name="next" value="{{ request.get_full_path }}">
     </form>
+    <script>
+      // Evita el doble envio; pageshow reactiva el boton al volver con Atras.
+      document.addEventListener('submit', event => event.target.querySelector('[type=submit]')?.setAttribute('disabled', ''));
+      addEventListener('pageshow', () => document.querySelectorAll('[type=submit][disabled]').forEach(button => button.removeAttribute('disabled')));
+    </script>
     {% block scripts %}{% endblock %}
   </body>
 </html>

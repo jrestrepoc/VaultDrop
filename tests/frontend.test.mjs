@@ -64,6 +64,15 @@ test('interface text goes through the translation catalog',()=>{
   assert.match(html,/T:Todavía no hay cajas/);
 });
 
+test('navigation and forms expose their state and labels',()=>{
+  const state=createState(true);state.accountReady=true;state.page='profile';state.user.nombreUsuario='Ana';
+  const html=createViews(state,{}).html();
+  assert.match(html,/aria-current="page" data-page="profile"/);
+  assert.match(html,/<label for="profile-field-1">/);
+  assert.match(html,/id="profile-field-1" class="text-input" type="email"/);
+  assert.match(html,/id="main" tabindex="-1"/);
+});
+
 test('profile renders while the account is missing',()=>{
   const state=createState(true);state.page='profile';
   assert.match(createViews(state,{}).html(),/profile-avatar">\?</);
