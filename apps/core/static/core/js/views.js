@@ -192,6 +192,12 @@ export function createViews(state, urls) {
     </article>`;
   }
 
+  function rateNote() {
+    if (!state.tasaCop) return '<div data-rate></div>';
+    const cop = Math.round(state.balance * state.tasaCop).toLocaleString('es-CO');
+    return `<div class="wallet-note" data-rate>Referencia: ≈ $${cop} COP si ¢1 = US$1 · <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener" style="color:inherit">Rates By Exchange Rate API</a></div>`;
+  }
+
   function renderWallet() {
     if (!state.authenticated) return renderProfile();
     const txConfig = {
@@ -202,7 +208,7 @@ export function createViews(state, urls) {
     };
     return `<section class="section narrow">
       <h1 class="gradient-text section-title" style="margin-bottom:28px">WALLET</h1>
-      <div class="wallet-balance"><div class="wallet-label">AVAILABLE BALANCE</div><div class="wallet-amount">¢${fmtCurrency(state.balance)}</div><div class="wallet-note">Virtual credits · Not redeemable for real money</div></div>
+      <div class="wallet-balance"><div class="wallet-label">AVAILABLE BALANCE</div><div class="wallet-amount">¢${fmtCurrency(state.balance)}</div><div class="wallet-note">Virtual credits · Not redeemable for real money</div>${rateNote()}</div>
       <div class="panel"><h3 class="panel-title">ADD CREDITS</h3><div class="deposit-row">${[100,250,500,1000,2500].map(v => `<button class="amount-button" data-deposit="${v}">¢${v}</button>`).join('')}</div>
         <div class="custom-deposit"><input class="text-input" type="number" min="1" placeholder="Custom amount..." data-custom-amount><button class="cyan-action" data-custom-deposit>+ ADD CREDITS</button></div>
       </div>
@@ -263,5 +269,5 @@ export function createViews(state, urls) {
       ${state.loadError && state.page !== 'cases' ? '<div class="request-error" role="alert">'+escapeHtml(state.loadError)+' <button data-retry>Reintentar carga</button></div>' : ''}
       ${renderPage()}</main><footer class="footer"><span class="footer-brand">⚡ VAULTDROP</span><span>Simulador académico · Créditos virtuales · Sin dinero real</span></footer><div class="toast-container"></div></div>`;
   }
-  return {html, reelCard};
+  return {html, reelCard, rateNote};
 }

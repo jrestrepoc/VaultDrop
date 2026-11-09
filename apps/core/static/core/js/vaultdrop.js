@@ -35,6 +35,16 @@ function start(root) {
     finally {state.loading=false;render();}
   }
 
+  function loadRate() {
+    if(!state.authenticated) return;
+    // Solo actualiza su nota: un render completo interrumpiria la ruleta o lo que se este escribiendo.
+    api.request(urls.rateUrl).then(({tasa})=>{
+      state.tasaCop=Number(tasa);
+      const note=root.querySelector('[data-rate]');
+      if(note) note.outerHTML=views.rateNote();
+    }).catch(()=>{ /* dato informativo: sin el la billetera funciona igual */ });
+  }
+
   async function mutate(action, message) {
     if(state.busy || !state.accountReady) return;
     state.busy=true;state.requestError='';notice='';render();
@@ -100,4 +110,5 @@ function start(root) {
     }
   });
   load();
+  loadRate();
 }

@@ -22,7 +22,7 @@ export function createState(authenticated) {
   return {page:'cases', cases:[], selectedCase:null, authenticated, balance:0, inventario:[], transactions:[], aperturas:0,
     user:{nombreUsuario:'',email:'',steamUsername:'',fechaRegistro:null},
     filter:'ALL', sortBy:'date', contentsOpen:false, openingState:'idle', wonItem:null,
-    loading:true, loadError:'', accountReady:!authenticated, busy:false, requestError:'', profileEditing:false};
+    loading:true, loadError:'', accountReady:!authenticated, busy:false, requestError:'', profileEditing:false, tasaCop:null};
 }
 
 export function applyAccount(state, account) {
