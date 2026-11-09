@@ -28,6 +28,7 @@ services:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Define DJANGO_SECRET_KEY en .env}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:?Copia .env.example a .env}
       NOTIFICACION_MODE: "MOCK"
+      CATALOG_URL: "/api/v2/catalogo/"
     depends_on:
       db:
         condition: service_healthy

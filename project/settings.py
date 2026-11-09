@@ -88,6 +88,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+# Solo detras de Nginx existe Flask; sin Gateway el frontend usa la ruta de Django.
+CATALOG_URL = os.environ.get('CATALOG_URL', '')
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
