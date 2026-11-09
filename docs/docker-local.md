@@ -1,6 +1,6 @@
 # Docker y despliegue en AWS Academy
 
-`compose.yaml` levanta Nginx (Gateway), Django con gunicorn, Flask con gunicorn, PostgreSQL y Redis. Django ejecuta las migraciones y el seed no destructivo al arrancar. Los datos quedan en el volumen `vaultdrop-pgdata`, que se conserva al detener los contenedores.
+`compose.yaml` levanta Nginx (Gateway), Django con gunicorn, Flask con gunicorn, PostgreSQL, Redis y un worker de Celery que envía las notificaciones fuera de la petición. Django ejecuta las migraciones y el seed no destructivo al arrancar. Los datos quedan en el volumen `vaultdrop-pgdata`, que se conserva al detener los contenedores.
 
 ## Local
 
