@@ -36,7 +36,7 @@ El consumo del servicio del equipo aliado está pendiente, y su diagrama se comp
 | Componente | Responsabilidad |
 |---|---|
 | Nginx | Punto de entrada, ruteo por URL y límite de intentos de login y registro |
-| Django | Web, autenticación, billetera, aperturas, inventario, migraciones y seed |
+| Django | Web, autenticación, billetera, aperturas, inventario, panel administrador, migraciones y seed |
 | Flask | Consulta pública del catálogo en `/api/v2/catalogo/` |
 | PostgreSQL | Persistencia. Flask se conecta en modo solo lectura |
 | Redis | Broker de mensajes |
@@ -52,6 +52,16 @@ El consumo del servicio del equipo aliado está pendiente, y su diagrama se comp
 | Factory | `apps/users/infra/factories.py` | Elegir el notificador MOCK o REAL |
 | Builder | `apps/users/domain/builders.py`, `apps/openings/domain/builders.py` | Validar y construir objetos sin guardarlos |
 | Repository | `apps/*/repositories.py` | Separar el acceso a datos de los casos de uso |
+
+## Panel administrador
+
+El panel en `/admin/` usa el admin de Django. Permite gestionar cajas y objetos, activar o desactivar cajas y cuentas, y ver aperturas, ingresos, valor entregado y la probabilidad real frente a la configurada.
+
+- Las probabilidades de una caja deben sumar 100.
+- Una caja con aperturas no se puede borrar; se desactiva.
+- Saldos, movimientos, aperturas e inventario son de solo lectura.
+- Las cuentas no se crean ni se borran desde el panel.
+- El valor entregado usa el valor actual de cada objeto, porque el valor histórico no se guarda.
 
 ## Resiliencia
 

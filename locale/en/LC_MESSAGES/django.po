@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 18:48+0000\n"
+"POT-Creation-Date: 2026-11-09 19:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,76 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Las probabilidades de la caja deben sumar 100%"
+msgstr "The case probabilities must add up to 100%"
+
+msgid "Aperturas"
+msgstr "Openings"
+
+msgid "Ingresos"
+msgstr "Revenue"
+
+msgid "Valor entregado"
+msgstr "Value given"
+
+msgid "Retorno"
+msgstr "Return"
+
+msgid "Estadísticas"
+msgstr "Statistics"
+
+msgid "Todavía no hay aperturas."
+msgstr "No openings yet."
+
+msgid "Objeto"
+msgstr "Item"
+
+msgid "Probabilidad configurada"
+msgstr "Configured probability"
+
+msgid "Veces obtenido"
+msgstr "Times obtained"
+
+msgid "Probabilidad real"
+msgstr "Actual probability"
+
+msgid "Activar cajas seleccionadas"
+msgstr "Activate selected cases"
+
+#, python-format
+msgid "Registros actualizados: %(n)s"
+msgstr "Records updated: %(n)s"
+
+msgid "Desactivar cajas seleccionadas"
+msgstr "Deactivate selected cases"
+
+msgid "Catálogo"
+msgstr "Catalog"
+
+msgid "nombre"
+msgstr "name"
+
+msgid "imagen"
+msgstr "image"
+
+msgid "descripción"
+msgstr "description"
+
+msgid "precio"
+msgstr "price"
+
+msgid "activa"
+msgstr "active"
+
+msgid "fecha de creación"
+msgstr "created at"
+
+msgid "caja"
+msgstr "case"
+
+msgid "cajas"
+msgstr "cases"
 
 msgid "Comun"
 msgstr "Common"
@@ -30,14 +100,38 @@ msgstr "Epic"
 msgid "Legendario"
 msgstr "Legendary"
 
+msgid "rareza"
+msgstr "rarity"
+
+msgid "valor estimado"
+msgstr "estimated value"
+
+msgid "objeto"
+msgstr "item"
+
+msgid "objetos"
+msgstr "items"
+
+msgid "probabilidad"
+msgstr "probability"
+
+msgid "objeto de la caja"
+msgstr "case item"
+
+msgid "objetos de la caja"
+msgstr "case items"
+
 msgid "La probabilidad debe estar entre 0 y 100."
 msgstr "The probability must be between 0 and 100."
 
-msgid "Las probabilidades de la caja deben sumar 100%"
-msgstr "The case probabilities must add up to 100%"
-
 msgid "Caja no encontrada"
 msgstr "Case not found"
+
+msgid "Administración de VaultDrop"
+msgstr "VaultDrop administration"
+
+msgid "Administración"
+msgstr "Administration"
 
 msgid "Idempotency-Key debe ser un UUID."
 msgstr "Idempotency-Key must be a UUID."
@@ -50,6 +144,9 @@ msgstr "Insufficient balance"
 
 msgid "CREATE ACCOUNT"
 msgstr ""
+
+msgid "Aperturas e inventario"
+msgstr "Openings and inventory"
 
 msgid "El usuario es obligatorio"
 msgstr "The user is required"
@@ -75,6 +172,19 @@ msgstr "Item not found in your inventory."
 msgid "Este objeto ya fue vendido o enviado."
 msgstr "This item was already sold or sent."
 
+#| msgid "Usuario"
+msgid "usuario"
+msgstr "user"
+
+msgid "costo"
+msgstr "cost"
+
+msgid "apertura"
+msgstr "opening"
+
+msgid "aperturas"
+msgstr "openings"
+
 msgid "Disponible"
 msgstr "Available"
 
@@ -84,14 +194,35 @@ msgstr "Sold"
 msgid "Enviado (simulación)"
 msgstr "Sent (simulation)"
 
+msgid "estado"
+msgstr "status"
+
+#| msgid "Objeto no encontrado en tu inventario."
+msgid "objeto del inventario"
+msgstr "inventory item"
+
+#| msgid "Objeto no encontrado en tu inventario."
+msgid "objetos del inventario"
+msgstr "inventory items"
+
 msgid "La caja no esta disponible"
 msgstr "The case is not available"
 
 msgid "La caja no tiene items configurados"
 msgstr "The case has no items configured"
 
+msgid "Activar cuentas seleccionadas"
+msgstr "Activate selected accounts"
+
+msgid "Desactivar cuentas seleccionadas"
+msgstr "Deactivate selected accounts"
+
 msgid "Credenciales inválidas"
 msgstr "Invalid credentials"
+
+#| msgid "Usuario"
+msgid "Usuarios"
+msgstr "Users"
 
 msgid "El username es obligatorio"
 msgstr "The username is required"
@@ -142,6 +273,9 @@ msgstr "Simulated shipment recorded in VaultDrop"
 msgid "Hola %(usuario)s, registramos el envío simulado de %(item)s. Es una simulación académica: no se transfirió ningún objeto a Steam."
 msgstr "Hello %(usuario)s, we recorded the simulated shipment of %(item)s. This is an academic simulation: nothing was transferred to Steam."
 
+msgid "usuario de Steam"
+msgstr "Steam username"
+
 msgid "El nombre de usuario ya está en uso"
 msgstr "The username is already in use"
 
@@ -175,8 +309,20 @@ msgstr ""
 msgid "Already have an account?"
 msgstr ""
 
+msgid "Billeteras"
+msgstr "Wallets"
+
 msgid "No se pudo consultar la tasa de cambio."
 msgstr "The exchange rate could not be retrieved."
+
+msgid "saldo"
+msgstr "balance"
+
+msgid "billetera"
+msgstr "wallet"
+
+msgid "billeteras"
+msgstr "wallets"
 
 msgid "Inicial"
 msgstr "Initial"
@@ -189,6 +335,24 @@ msgstr "Debit"
 
 msgid "Venta de objeto"
 msgstr "Item sale"
+
+msgid "tipo"
+msgstr "type"
+
+msgid "monto"
+msgstr "amount"
+
+msgid "saldo anterior"
+msgstr "previous balance"
+
+msgid "saldo posterior"
+msgstr "new balance"
+
+msgid "movimiento"
+msgstr "transaction"
+
+msgid "movimientos"
+msgstr "transactions"
 
 msgid "El monto debe ser positivo y estar dentro del límite permitido."
 msgstr "The amount must be positive and within the allowed limit."

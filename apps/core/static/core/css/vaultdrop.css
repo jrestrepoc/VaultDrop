@@ -660,7 +660,7 @@ h1, h2, h3, h4, h5 {
 /* Account feedback and keyboard access. */
 .request-error { max-width: 1100px; margin: 20px auto; padding: 16px; color: #ffb4b4; background: #2a1418; border: 1px solid #71303a; border-radius: 8px; }
 .auth-nav-link { color: #d7f36b; text-decoration: none; font-size: 14px; padding: 8px; }
-.language-button { background: none; border: 0; color: #d7f36b; cursor: pointer; font-family: inherit; font-size: 12px; padding: 4px 8px; }
+.language-button { text-decoration: none; background: none; border: 0; color: #d7f36b; cursor: pointer; font-family: inherit; font-size: 12px; padding: 4px 8px; }
 .logout-button { background: none; border: 0; cursor: pointer; font-family: inherit; flex-shrink: 0; }
 .toast { background: #132117; color: #d7f36b; border: 1px solid #35432c; }
 :focus-visible { outline: 2px solid #d7f36b; outline-offset: 4px; }

@@ -9,7 +9,7 @@ def account_snapshot(user):
     inventory = list(InventoryService().list_for_user(user))
     return {
         'user': UserOutputSerializer(user).data,
-        'wallet': BilleteraSerializer(WalletService().get_billetera(user)).data,
+        'wallet': BilleteraSerializer(WalletService().billetera_de_cuenta(user)).data,
         'inventory': ItemInventarioSerializer(inventory, many=True).data,
         'aperturas': len(inventory),
     }

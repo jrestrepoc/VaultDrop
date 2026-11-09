@@ -73,6 +73,12 @@ test('navigation and forms expose their state and labels',()=>{
   assert.match(html,/id="main" tabindex="-1"/);
 });
 
+test('admin link appears only for staff',()=>{
+  const state=createState(true);state.loading=false;
+  assert.doesNotMatch(createViews(state,{}).html(),/Administración/);
+  assert.match(createViews(state,{adminUrl:'/admin/'}).html(),/href="\/admin\/">Administración/);
+});
+
 test('profile renders while the account is missing',()=>{
   const state=createState(true);state.page='profile';
   assert.match(createViews(state,{}).html(),/profile-avatar">\?</);

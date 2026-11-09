@@ -11,6 +11,9 @@ class IBilleteraRepository(ABC):
     def get_by_user(self, user): ...
 
     @abstractmethod
+    def get_or_create_for_user(self, user): ...
+
+    @abstractmethod
     def adjust(self, user, delta): ...
 
     @abstractmethod
@@ -25,6 +28,9 @@ class DjangoBilleteraRepository(IBilleteraRepository):
 
     def get_by_user(self, user):
         return self.model.objects.filter(user=user).first()
+
+    def get_or_create_for_user(self, user):
+        return self.model.objects.get_or_create(user=user)[0]
 
     def adjust(self, user, delta):
         query = self.model.objects.filter(user=user)

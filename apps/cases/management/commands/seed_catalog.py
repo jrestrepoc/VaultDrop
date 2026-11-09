@@ -9,8 +9,14 @@ from apps.cases.models import Caja, CajaItem, Item
 class Command(BaseCommand):
     help = 'Crea solo las cajas y objetos faltantes del simulador; conserva datos existentes.'
 
+    def add_arguments(self, parser):
+        parser.add_argument('--if-empty', action='store_true', help='No hace nada si ya existe alguna caja.')
+
     @transaction.atomic
     def handle(self, *args, **options):
+        # Al arrancar se usa --if-empty: una caja borrada en el panel no debe reaparecer.
+        if options['if_empty'] and Caja.objects.exists():
+            return
         data = json.loads((Path(__file__).resolve().parents[2] / 'data/initial_catalog.json').read_text(encoding='utf-8'))
         rarity = {'consumer':'COMUN','industrial':'COMUN','milspec':'RARO','restricted':'RARO','classified':'EPICO','covert':'LEGENDARIO','contraband':'LEGENDARIO'}
         objects = {}
