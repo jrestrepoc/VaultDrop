@@ -1,13 +1,56 @@
-# Docker y AWS en el contexto del curso
+# Docker y despliegue en AWS Academy
 
-Se incluye `Dockerfile` y `compose.yaml` para un entorno académico local. Se usa Python 3.14 y las versiones exactas de la instalación comprobada. El contenedor ejecuta migraciones y el seed no destructivo, guarda SQLite en un volumen y expone el puerto 8002 de localhost para no interferir con la sesión habitual en 8000.
+`compose.yaml` levanta Nginx (Gateway), Django con gunicorn, Flask con gunicorn, PostgreSQL y Redis. Django ejecuta las migraciones y el seed no destructivo al arrancar. Los datos quedan en el volumen `vaultdrop-pgdata`, que se conserva al detener los contenedores.
+
+## Local
+
+Copiar `.env.example` a `.env` y llenar `DJANGO_SECRET_KEY` y `POSTGRES_PASSWORD` con `openssl rand -hex 32`. Compose no arranca si están vacíos.
 
 ```sh
-docker compose up --build
+cp .env.example .env
+docker compose up --build -d
 docker compose exec web python manage.py test apps --noinput
 docker compose down
 ```
 
-El volumen se conserva al detener los contenedores. Esta configuración usa `runserver` y DEBUG, por lo que es exclusivamente de desarrollo. No se ejecutó aquí: Docker no está instalado/disponible en esta sesión. El build de la imagen y su arranque siguen pendientes de comprobar en una máquina con Docker.
+Si el puerto 80 está ocupado, usar por ejemplo `HTTP_PORT=8002` en `.env`.
 
-No se creó infraestructura AWS. Una práctica posterior puede separar servidor WSGI, PostgreSQL, archivos estáticos, secretos por entorno, HTTPS, logs y copias de seguridad. Esa práctica necesita conocer la consigna y validar costos y permisos; la arquitectura local no demuestra por sí sola disponibilidad, tolerancia a fallos ni escalabilidad en AWS.
+## EC2
+
+1. En AWS Academy, crear una instancia Ubuntu 24.04 (mínimo 2 GB de RAM, por ejemplo `t3.small`).
+2. En su Security Group, abrir el puerto 22 solo para su IP y el 80 para todos.
+3. Crear una IP elástica y asociarla a la instancia.
+4. Entrar por SSH e instalar Docker:
+
+   ```sh
+   sudo apt-get update
+   sudo apt-get install -y docker.io docker-compose-v2 git
+   sudo systemctl enable --now docker
+   sudo usermod -aG docker ubuntu
+   ```
+
+5. Cerrar y volver a abrir la sesión SSH, y luego clonar y configurar:
+
+   ```sh
+   git clone https://github.com/jrestrepoc/VaultDrop.git
+   cd VaultDrop
+   cp .env.example .env
+   nano .env
+   ```
+
+   En `.env`, generar los secretos con `openssl rand -hex 32` y agregar la IP elástica a `DJANGO_ALLOWED_HOSTS`.
+
+6. Levantar y verificar:
+
+   ```sh
+   docker compose up --build -d
+   docker compose ps
+   curl http://<IP-ELASTICA>/api/v1/cajas/
+   curl http://<IP-ELASTICA>/api/v2/catalogo/
+   ```
+
+Los contenedores usan `restart: unless-stopped`, así que vuelven solos cuando se enciende la instancia. El laboratorio de AWS Academy la apaga al terminar la sesión: debe estar encendida durante la sustentación.
+
+## Límites
+
+El tráfico va por HTTP, sin TLS. Una sola instancia con la base de datos en un contenedor no ofrece alta disponibilidad ni copias de seguridad.

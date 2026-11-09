@@ -1,23 +1,35 @@
 import os
 import sqlite3
 
+import psycopg
 from flask import Flask, jsonify, request
 
 from errors import BadRequestError, CatalogError, DataAccessError, NotFoundError
-from repository import SQLiteCatalogRepository
+from repository import PostgresCatalogRepository, SQLiteCatalogRepository
+
+
+def _default_repository():
+    if os.environ.get('POSTGRES_HOST'):
+        return PostgresCatalogRepository(
+            host=os.environ['POSTGRES_HOST'],
+            dbname=os.environ['POSTGRES_DB'],
+            user=os.environ['POSTGRES_USER'],
+            password=os.environ['POSTGRES_PASSWORD'],
+        )
+    return SQLiteCatalogRepository(os.environ.get('CATALOG_DB_PATH', '/data/db.sqlite3'))
 
 
 def create_app(repository=None):
     app = Flask(__name__)
-    db_path = os.environ.get('CATALOG_DB_PATH', '/data/db.sqlite3')
-    app.config['CATALOG_REPOSITORY'] = repository or SQLiteCatalogRepository(db_path)
+    app.config['CATALOG_REPOSITORY'] = repository or _default_repository()
 
     @app.errorhandler(CatalogError)
     def handle_catalog_error(error):
         return jsonify({'error': {'code': error.code, 'message': error.message}}), error.status_code
 
     @app.errorhandler(sqlite3.Error)
-    def handle_sqlite_error(error):
+    @app.errorhandler(psycopg.Error)
+    def handle_data_error(error):
         app.logger.exception('Catalog data access failed: %s', error)
         data_error = DataAccessError()
         return jsonify({'error': {'code': data_error.code, 'message': data_error.message}}), data_error.status_code

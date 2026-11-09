@@ -7,4 +7,4 @@ COPY . .
 RUN useradd --create-home appuser && chown -R appuser:appuser /service
 USER appuser
 EXPOSE 5000
-CMD ["flask", "--app", "app:app", "run", "--host=0.0.0.0", "--port=5000"]
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000", "--workers", "2"]
