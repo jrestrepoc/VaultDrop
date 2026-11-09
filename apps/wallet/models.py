@@ -2,6 +2,8 @@ from django.db import models
 from django.conf import settings
 from decimal import Decimal
 
+from django.utils.translation import gettext_lazy as _
+
 
 class Billetera(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='billetera')
@@ -14,10 +16,10 @@ class Billetera(models.Model):
 
 class Transaccion(models.Model):
     TIPO_CHOICES = (
-        ('INICIAL', 'Inicial'),
-        ('RECARGA', 'Recarga'),
-        ('DEBITO', 'Debito'),
-        ('VENTA', 'Venta de objeto'),
+        ('INICIAL', _('Inicial')),
+        ('RECARGA', _('Recarga')),
+        ('DEBITO', _('Debito')),
+        ('VENTA', _('Venta de objeto')),
     )
     billetera = models.ForeignKey(Billetera, on_delete=models.CASCADE, related_name='transacciones')
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)

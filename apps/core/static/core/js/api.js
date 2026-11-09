@@ -4,7 +4,7 @@ export class ApiError extends Error {
 
 function errorMessage(data) {
   if (typeof data === 'string') return data;
-  return data?.detail || data?.error || Object.values(data || {}).flat().join(' ') || 'No se pudo completar la operación.';
+  return data?.detail || data?.error || Object.values(data || {}).flat().join(' ') || gettext('No se pudo completar la operación.');
 }
 
 export class ApiClient {
@@ -29,10 +29,10 @@ export class ApiClient {
         ...(body === undefined ? {} : {body: JSON.stringify(body)}),
       });
     } catch (_) {
-      throw new ApiError('No hay conexión. Reintenta la misma acción; no se cobrará dos veces.');
+      throw new ApiError(gettext('No hay conexión. Reintenta la misma acción; no se cobrará dos veces.'));
     }
     let data;
-    try { data = await response.json(); } catch (_) { throw new ApiError('El servidor no devolvió una respuesta válida. Reintenta la misma acción.', response.status >= 500 ? response.status : 0); }
+    try { data = await response.json(); } catch (_) { throw new ApiError(gettext('El servidor no devolvió una respuesta válida. Reintenta la misma acción.'), response.status >= 500 ? response.status : 0); }
     if (!response.ok) throw new ApiError(errorMessage(data), response.status);
     return data;
   }

@@ -2,6 +2,7 @@ import os
 from abc import ABC, abstractmethod
 
 from django.core.mail import send_mail
+from django.utils.translation import gettext as _
 
 
 class INotificador(ABC):
@@ -18,10 +19,10 @@ class NotificadorConsola(INotificador):
     """Modo MOCK: no depende de servicios externos. Ideal para desarrollo y tests."""
 
     def enviar_bienvenida(self, user):
-        self._mostrar(f"[MOCK] Bienvenido/a {user.username}, tu billetera inicial ya está lista.")
+        self._mostrar(_('[MOCK] Bienvenido/a %(usuario)s, tu billetera inicial ya está lista.') % {'usuario': user.username})
 
     def enviar_envio_simulado(self, user, nombre_item):
-        self._mostrar(f"[MOCK] {user.username}, registramos el envío simulado de {nombre_item}.")
+        self._mostrar(_('[MOCK] %(usuario)s, registramos el envío simulado de %(item)s.') % {'usuario': user.username, 'item': nombre_item})
 
     def _mostrar(self, mensaje):
         print(mensaje)
@@ -32,22 +33,16 @@ class NotificadorEmail(INotificador):
 
     def enviar_bienvenida(self, user):
         send_mail(
-            subject='¡Bienvenido/a a VaultDrop!',
-            message=(
-                f'Hola {user.username}, tu cuenta fue creada exitosamente '
-                'y tu billetera inicial ya está disponible.'
-            ),
+            subject=_('¡Bienvenido/a a VaultDrop!'),
+            message=_('Hola %(usuario)s, tu cuenta fue creada exitosamente y tu billetera inicial ya está disponible.') % {'usuario': user.username},
             from_email=None,
             recipient_list=[user.email],
         )
 
     def enviar_envio_simulado(self, user, nombre_item):
         send_mail(
-            subject='Envío simulado registrado en VaultDrop',
-            message=(
-                f'Hola {user.username}, registramos el envío simulado de {nombre_item}. '
-                'Es una simulación académica: no se transfirió ningún objeto a Steam.'
-            ),
+            subject=_('Envío simulado registrado en VaultDrop'),
+            message=_('Hola %(usuario)s, registramos el envío simulado de %(item)s. Es una simulación académica: no se transfirió ningún objeto a Steam.') % {'usuario': user.username, 'item': nombre_item},
             from_email=None,
             recipient_list=[user.email],
         )

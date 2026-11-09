@@ -1,6 +1,6 @@
 {% load static %}
 <!doctype html>
-<html lang="es">
+<html lang="{{ LANGUAGE_CODE }}">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,6 +12,10 @@
     {% block body %}
       {% block content %}{% endblock %}
     {% endblock %}
+    <form id="language-form" method="post" action="{% url 'set_language' %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    </form>
     {% block scripts %}{% endblock %}
   </body>
 </html>

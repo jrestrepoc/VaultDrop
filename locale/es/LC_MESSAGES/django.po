@@ -1,0 +1,200 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-09 18:14+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+msgid "Comun"
+msgstr ""
+
+msgid "Raro"
+msgstr ""
+
+msgid "Epico"
+msgstr ""
+
+msgid "Legendario"
+msgstr ""
+
+msgid "La probabilidad debe estar entre 0 y 100."
+msgstr ""
+
+msgid "Las probabilidades de la caja deben sumar 100%"
+msgstr ""
+
+msgid "Caja no encontrada"
+msgstr ""
+
+msgid "Idempotency-Key debe ser un UUID."
+msgstr ""
+
+msgid "Esta clave ya se utilizó para otra operación."
+msgstr ""
+
+msgid "Saldo insuficiente"
+msgstr ""
+
+msgid "CREATE ACCOUNT"
+msgstr "CREAR CUENTA"
+
+msgid "El usuario es obligatorio"
+msgstr ""
+
+msgid "La caja es obligatoria"
+msgstr ""
+
+msgid "El item obtenido es obligatorio"
+msgstr ""
+
+msgid "El costo es obligatorio"
+msgstr ""
+
+msgid "El costo debe ser mayor a cero"
+msgstr ""
+
+msgid "Estado de inventario no permitido."
+msgstr ""
+
+msgid "Objeto no encontrado en tu inventario."
+msgstr ""
+
+msgid "Este objeto ya fue vendido o enviado."
+msgstr ""
+
+msgid "Disponible"
+msgstr ""
+
+msgid "Vendido"
+msgstr ""
+
+msgid "Enviado (simulación)"
+msgstr ""
+
+msgid "La caja no esta disponible"
+msgstr ""
+
+msgid "La caja no tiene items configurados"
+msgstr ""
+
+msgid "Credenciales inválidas"
+msgstr ""
+
+msgid "El username es obligatorio"
+msgstr ""
+
+msgid "El email es obligatorio"
+msgstr ""
+
+msgid "El password es obligatorio"
+msgstr ""
+
+msgid "La contraseña debe tener al menos 8 caracteres"
+msgstr ""
+
+msgid "Usuario"
+msgstr ""
+
+msgid "Correo"
+msgstr ""
+
+msgid "Contraseña"
+msgstr ""
+
+msgid "Credenciales incorrectas. Verifica tu usuario y contraseña."
+msgstr ""
+
+#, python-format
+msgid "[MOCK] Bienvenido/a %(usuario)s, tu billetera inicial ya está lista."
+msgstr ""
+
+#, python-format
+msgid "[MOCK] %(usuario)s, registramos el envío simulado de %(item)s."
+msgstr ""
+
+msgid "¡Bienvenido/a a VaultDrop!"
+msgstr ""
+
+#, python-format
+msgid "Hola %(usuario)s, tu cuenta fue creada exitosamente y tu billetera inicial ya está disponible."
+msgstr ""
+
+msgid "Envío simulado registrado en VaultDrop"
+msgstr ""
+
+#, python-format
+msgid "Hola %(usuario)s, registramos el envío simulado de %(item)s. Es una simulación académica: no se transfirió ningún objeto a Steam."
+msgstr ""
+
+msgid "El nombre de usuario ya está en uso"
+msgstr ""
+
+msgid "El correo ya está registrado"
+msgstr ""
+
+msgid "El nombre de usuario o el correo ya están registrados"
+msgstr ""
+
+msgid "Login"
+msgstr "Ingresar"
+
+msgid "LOGIN"
+msgstr "INGRESAR"
+
+msgid "Access your academic simulation account."
+msgstr "Accede a tu cuenta de simulación académica."
+
+msgid "Need an account?"
+msgstr "¿Necesitas una cuenta?"
+
+msgid "REGISTER"
+msgstr "REGISTRARSE"
+
+msgid "Register"
+msgstr "Registro"
+
+msgid "Create your academic simulation account."
+msgstr "Crea tu cuenta de simulación académica."
+
+msgid "No se pudo consultar la tasa de cambio."
+msgstr ""
+
+msgid "Inicial"
+msgstr ""
+
+msgid "Recarga"
+msgstr ""
+
+msgid "Debito"
+msgstr ""
+
+msgid "Venta de objeto"
+msgstr ""
+
+msgid "El monto debe ser positivo y estar dentro del límite permitido."
+msgstr ""
+
+msgid "El monto admite como máximo dos decimales."
+msgstr ""
+
+msgid "Monto inválido."
+msgstr ""
+
+msgid "No se pudo acreditar: billetera inexistente o límite de saldo alcanzado."
+msgstr ""
+
+msgid "El usuario no posee una billetera activa"
+msgstr ""

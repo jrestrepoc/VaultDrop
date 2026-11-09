@@ -31,8 +31,8 @@ export function applyAccount(state, account) {
     steamUsername:account.user.steam_username || '', fechaRegistro:account.user.date_joined};
   state.inventario = account.inventory.map(row=>({id:String(row.id),item:normalizeItem(row.item),estado:row.estado,
     fechaAdquisicion:new Date(row.created_at),cajaOrigen:row.caja_nombre}));
-  const kinds = {INICIAL:['BONIFICACION','Bono de bienvenida'],RECARGA:['RECARGA','Recarga de créditos virtuales'],
-    DEBITO:['COMPRA_CAJA','Apertura de caja'],VENTA:['VENTA_ITEM','Venta de objeto']};
+  const kinds = {INICIAL:['BONIFICACION',gettext('Bono de bienvenida')],RECARGA:['RECARGA',gettext('Recarga de créditos virtuales')],
+    DEBITO:['COMPRA_CAJA',gettext('Apertura de caja')],VENTA:['VENTA_ITEM',gettext('Venta de objeto')]};
   state.transactions = account.wallet.transacciones.map(tx=>({id:tx.id,tipo:kinds[tx.tipo]?.[0] || 'RECARGA',
     concepto:kinds[tx.tipo]?.[1] || tx.tipo,monto:Number(tx.monto),saldoAnterior:Number(tx.saldo_anterior),
     saldoPosterior:Number(tx.saldo_posterior),fecha:new Date(tx.created_at)}));

@@ -2,6 +2,7 @@ import random
 from decimal import Decimal
 
 from django.db import transaction
+from django.utils.translation import gettext as _
 
 from apps.cases.repositories import DjangoCajaRepository
 from apps.openings.domain.builders import AperturaCajaBuilder
@@ -32,9 +33,9 @@ class AperturaCajaService:
     def abrir(self, user, caja_id):
         caja = self.caja_repository.get_by_id(caja_id)
         if caja is None:
-            raise CajaNoEncontradaError('Caja no encontrada')
+            raise CajaNoEncontradaError(_('Caja no encontrada'))
         if not caja.activa:
-            raise CajaNoDisponibleError('La caja no esta disponible')
+            raise CajaNoDisponibleError(_('La caja no esta disponible'))
 
         caja_items = self.caja_repository.list_items_for_caja(caja)
         self._validar_items(caja_items)
@@ -61,10 +62,10 @@ class AperturaCajaService:
 
     def _validar_items(self, caja_items):
         if not caja_items:
-            raise CajaSinItemsError('La caja no tiene items configurados')
+            raise CajaSinItemsError(_('La caja no tiene items configurados'))
         total = sum((caja_item.probabilidad for caja_item in caja_items), Decimal('0.00'))
         if any(ci.probabilidad <= 0 for ci in caja_items) or total != Decimal('100.00'):
-            raise ProbabilidadesInvalidasError('Las probabilidades de la caja deben sumar 100%')
+            raise ProbabilidadesInvalidasError(_('Las probabilidades de la caja deben sumar 100%'))
 
     def _seleccionar_item(self, caja_items):
         acumulado = Decimal('0.00')

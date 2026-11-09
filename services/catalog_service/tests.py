@@ -81,6 +81,15 @@ class CatalogServiceTest(unittest.TestCase):
         self.assertEqual(self.client.post('/api/v2/catalogo/').status_code, 405)
         self.assertEqual(self.client.get('/api/v2/catalogo/1/extra/').status_code, 404)
 
+    def test_errors_follow_the_requested_language(self):
+        url = '/api/v2/catalogo/999/'
+        self.assertEqual(self.client.get(url).get_json()['error']['message'], 'Caja no encontrada.')
+        english = self.client.get(url, headers={'Accept-Language': 'en-US,en;q=0.9'})
+        self.assertEqual(english.get_json()['error']['message'], 'Case not found.')
+        self.client.set_cookie('django_language', 'es')
+        spanish = self.client.get(url, headers={'Accept-Language': 'en'})
+        self.assertEqual(spanish.get_json()['error']['message'], 'Caja no encontrada.')
+
     def test_internal_error_is_controlled(self):
         app = create_app(BrokenRepository())
         app.config['TESTING'] = True

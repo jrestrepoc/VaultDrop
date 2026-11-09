@@ -1,7 +1,32 @@
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from django.utils import translation
+from django.utils.translation import gettext
 
 from apps.users.services import UserService
+
+
+class TraduccionesTest(TestCase):
+    def test_catalogo_ingles_compilado_traduce_el_backend(self):
+        with translation.override('en'):
+            self.assertEqual(gettext('Saldo insuficiente'), 'Insufficient balance')
+
+    def test_catalogo_espanol_compilado_traduce_las_plantillas(self):
+        with translation.override('es'):
+            self.assertEqual(gettext('CREATE ACCOUNT'), 'CREAR CUENTA')
+
+    def test_pagina_respeta_el_idioma_del_navegador(self):
+        resp = self.client.get(reverse('users:register'), HTTP_ACCEPT_LANGUAGE='en')
+        self.assertContains(resp, 'CREATE ACCOUNT')
+        self.assertContains(resp, '<html lang="en">')
+
+    def test_selector_guarda_el_idioma(self):
+        resp = self.client.post(reverse('set_language'), {'language': 'en', 'next': '/'})
+        self.assertEqual(resp.cookies['django_language'].value, 'en')
+
+    def test_catalogo_javascript_entrega_la_traduccion(self):
+        resp = self.client.get(reverse('javascript-catalog'), HTTP_ACCEPT_LANGUAGE='en')
+        self.assertContains(resp, 'Loading catalog...')
 
 
 class HomeViewTest(TestCase):

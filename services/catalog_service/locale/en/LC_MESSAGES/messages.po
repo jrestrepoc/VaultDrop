@@ -1,0 +1,28 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en\n"
+
+msgid "No se pudo completar la operacion."
+msgstr "The operation could not be completed."
+
+msgid "La solicitud no es valida."
+msgstr "The request is not valid."
+
+msgid "El recurso solicitado no existe."
+msgstr "The requested resource does not exist."
+
+msgid "No se pudo leer el catalogo."
+msgstr "The catalog could not be read."
+
+msgid "Caja no encontrada."
+msgstr "Case not found."
+
+msgid "El parametro id debe ser un entero positivo."
+msgstr "The id parameter must be a positive integer."
+
+msgid "El parametro activa debe ser true, false o all."
+msgstr "The activa parameter must be true, false or all."
+
+msgid "No se pudo completar la consulta del catalogo."
+msgstr "The catalog query could not be completed."

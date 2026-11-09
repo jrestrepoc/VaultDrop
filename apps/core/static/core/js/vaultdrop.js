@@ -91,17 +91,17 @@ function start(root) {
     if(el.matches('[data-open]')){openCase();return;}
     if(el.matches('[data-reset]')){state.openingState='idle';state.wonItem=null;render();return;}
     if(el.dataset.filter){state.filter=el.dataset.filter;render();return;}
-    if(el.dataset.sell){mutate(()=>api.mutate(`${urls.inventoryUrl}${el.dataset.sell}/sell/`),'Objeto vendido.');return;}
-    if(el.dataset.send){mutate(()=>api.mutate(`${urls.inventoryUrl}${el.dataset.send}/send/`),'Envío simulado guardado. No se realizó una transferencia a Steam.');return;}
+    if(el.dataset.sell){mutate(()=>api.mutate(`${urls.inventoryUrl}${el.dataset.sell}/sell/`),gettext('Objeto vendido.'));return;}
+    if(el.dataset.send){mutate(()=>api.mutate(`${urls.inventoryUrl}${el.dataset.send}/send/`),gettext('Envío simulado guardado. No se realizó una transferencia a Steam.'));return;}
     if(el.dataset.deposit || el.matches('[data-custom-deposit]')){
       const monto=el.dataset.deposit || root.querySelector('[data-custom-amount]').value;
-      mutate(()=>api.mutate(urls.depositUrl,{monto}),'Créditos virtuales añadidos.');return;
+      mutate(()=>api.mutate(urls.depositUrl,{monto}),gettext('Créditos virtuales añadidos.'));return;
     }
     if(el.matches('[data-edit]')){state.profileEditing=!state.profileEditing;render();return;}
     if(el.matches('[data-save-profile]')){
       const inputs=[...root.querySelectorAll('.profile-edit input')];
       const body={username:inputs[0].value,email:inputs[1].value,steam_username:inputs[2].value};
-      mutate(()=>api.request(urls.profileUrl,{method:'PATCH',body}),'Perfil guardado.');
+      mutate(()=>api.request(urls.profileUrl,{method:'PATCH',body}),gettext('Perfil guardado.'));
     }
   });
   root.addEventListener('keydown',event=>{

@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from django.utils.translation import gettext as _
 from rest_framework import serializers
 
 from apps.cases.models import Caja, CajaItem, Item
@@ -32,6 +33,6 @@ class CajaSerializer(serializers.ModelSerializer):
         caja_items = attrs.get('caja_items', [])
         total = sum((item['probabilidad'] for item in caja_items), Decimal('0.00'))
         if caja_items and total != Decimal('100.00'):
-            raise serializers.ValidationError('Las probabilidades de la caja deben sumar 100%')
+            raise serializers.ValidationError(_('Las probabilidades de la caja deben sumar 100%'))
         return attrs
 

@@ -1,9 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readdirSync, readFileSync} from 'node:fs';
 import {ApiClient} from '../apps/core/static/core/js/api.js';
 import {createState, applyAccount} from '../apps/core/static/core/js/store.js';
 import {createViews} from '../apps/core/static/core/js/views.js';
 
+globalThis.gettext=text=>text;
+globalThis.interpolate=(format,values)=>format.replace(/%\((\w+)\)s/g,(_,key)=>values[key]);
 globalThis.document={cookie:''};
 globalThis.location={origin:'http://localhost'};
 globalThis.sessionStorage={getItem:()=>null,setItem:()=>{}};
@@ -40,6 +43,25 @@ test('rate note shows the reference only when the rate exists',()=>{
   state.tasaCop=3000;
   assert.match(views.rateNote(),/300.000 COP/);
   assert.match(views.rateNote(),/Rates By Exchange Rate API/);
+});
+
+test('every gettext call exists in the catalog',()=>{
+  const folder=new URL('../apps/core/static/core/js/',import.meta.url);
+  const source=readdirSync(folder).map(file=>readFileSync(new URL(file,folder),'utf8')).join('');
+  const catalog=readFileSync(new URL('../locale/en/LC_MESSAGES/djangojs.po',import.meta.url),'utf8');
+  const texts=[...source.matchAll(/gettext\('([^']*)'\)/g)].map(match=>match[1]);
+  assert.ok(texts.length>0);
+  assert.deepEqual(texts.filter(text=>!catalog.includes(`msgid "${text}"`)),[]);
+});
+
+test('interface text goes through the translation catalog',()=>{
+  const original=globalThis.gettext;
+  globalThis.gettext=text=>`T:${text}`;
+  const state=createState(true);state.loading=false;
+  const html=createViews(state,{}).html();
+  globalThis.gettext=original;
+  assert.match(html,/T:Cases/);
+  assert.match(html,/T:Todavía no hay cajas/);
 });
 
 test('profile renders while the account is missing',()=>{

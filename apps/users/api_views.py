@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from apps.core.domain import ConflictError
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
+from django.utils.translation import gettext
 
 from apps.users.serializers import (
     RegisterInputSerializer,
@@ -61,7 +62,7 @@ class LoginAPIView(APIView):
 
         if not user:
             return Response(
-                {'error': 'Credenciales inválidas'},
+                {'error': gettext('Credenciales inválidas')},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
