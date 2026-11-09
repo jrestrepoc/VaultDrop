@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 19:02+0000\n"
+"POT-Creation-Date: 2026-11-09 19:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,76 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+msgid "Las probabilidades de la caja deben sumar 100%"
+msgstr ""
+
+msgid "Aperturas"
+msgstr ""
+
+msgid "Ingresos"
+msgstr ""
+
+msgid "Valor entregado"
+msgstr ""
+
+msgid "Retorno"
+msgstr ""
+
+msgid "Estadísticas"
+msgstr ""
+
+msgid "Todavía no hay aperturas."
+msgstr ""
+
+msgid "Objeto"
+msgstr ""
+
+msgid "Probabilidad configurada"
+msgstr ""
+
+msgid "Veces obtenido"
+msgstr ""
+
+msgid "Probabilidad real"
+msgstr ""
+
+msgid "Activar cajas seleccionadas"
+msgstr ""
+
+#, python-format
+msgid "Registros actualizados: %(n)s"
+msgstr ""
+
+msgid "Desactivar cajas seleccionadas"
+msgstr ""
+
+msgid "Catálogo"
+msgstr ""
+
+msgid "nombre"
+msgstr ""
+
+msgid "imagen"
+msgstr ""
+
+msgid "descripción"
+msgstr ""
+
+msgid "precio"
+msgstr ""
+
+msgid "activa"
+msgstr ""
+
+msgid "fecha de creación"
+msgstr ""
+
+msgid "caja"
+msgstr ""
+
+msgid "cajas"
+msgstr ""
 
 msgid "Comun"
 msgstr ""
@@ -30,13 +100,37 @@ msgstr ""
 msgid "Legendario"
 msgstr ""
 
+msgid "rareza"
+msgstr ""
+
+msgid "valor estimado"
+msgstr ""
+
+msgid "objeto"
+msgstr ""
+
+msgid "objetos"
+msgstr ""
+
+msgid "probabilidad"
+msgstr ""
+
+msgid "objeto de la caja"
+msgstr ""
+
+msgid "objetos de la caja"
+msgstr ""
+
 msgid "La probabilidad debe estar entre 0 y 100."
 msgstr ""
 
-msgid "Las probabilidades de la caja deben sumar 100%"
+msgid "Caja no encontrada"
 msgstr ""
 
-msgid "Caja no encontrada"
+msgid "Administración de VaultDrop"
+msgstr ""
+
+msgid "Administración"
 msgstr ""
 
 msgid "Idempotency-Key debe ser un UUID."
@@ -50,6 +144,9 @@ msgstr ""
 
 msgid "CREATE ACCOUNT"
 msgstr "CREAR CUENTA"
+
+msgid "Aperturas e inventario"
+msgstr ""
 
 msgid "El usuario es obligatorio"
 msgstr ""
@@ -75,6 +172,18 @@ msgstr ""
 msgid "Este objeto ya fue vendido o enviado."
 msgstr ""
 
+msgid "usuario"
+msgstr ""
+
+msgid "costo"
+msgstr ""
+
+msgid "apertura"
+msgstr ""
+
+msgid "aperturas"
+msgstr ""
+
 msgid "Disponible"
 msgstr ""
 
@@ -84,13 +193,31 @@ msgstr ""
 msgid "Enviado (simulación)"
 msgstr ""
 
+msgid "estado"
+msgstr ""
+
+msgid "objeto del inventario"
+msgstr ""
+
+msgid "objetos del inventario"
+msgstr ""
+
 msgid "La caja no esta disponible"
 msgstr ""
 
 msgid "La caja no tiene items configurados"
 msgstr ""
 
+msgid "Activar cuentas seleccionadas"
+msgstr ""
+
+msgid "Desactivar cuentas seleccionadas"
+msgstr ""
+
 msgid "Credenciales inválidas"
+msgstr ""
+
+msgid "Usuarios"
 msgstr ""
 
 msgid "El username es obligatorio"
@@ -142,6 +269,9 @@ msgstr ""
 msgid "Hola %(usuario)s, registramos el envío simulado de %(item)s. Es una simulación académica: no se transfirió ningún objeto a Steam."
 msgstr ""
 
+msgid "usuario de Steam"
+msgstr ""
+
 msgid "El nombre de usuario ya está en uso"
 msgstr ""
 
@@ -175,7 +305,19 @@ msgstr "Crea tu cuenta de simulación académica."
 msgid "Already have an account?"
 msgstr "¿Ya tienes una cuenta?"
 
+msgid "Billeteras"
+msgstr ""
+
 msgid "No se pudo consultar la tasa de cambio."
+msgstr ""
+
+msgid "saldo"
+msgstr ""
+
+msgid "billetera"
+msgstr ""
+
+msgid "billeteras"
 msgstr ""
 
 msgid "Inicial"
@@ -188,6 +330,24 @@ msgid "Debito"
 msgstr ""
 
 msgid "Venta de objeto"
+msgstr ""
+
+msgid "tipo"
+msgstr ""
+
+msgid "monto"
+msgstr ""
+
+msgid "saldo anterior"
+msgstr ""
+
+msgid "saldo posterior"
+msgstr ""
+
+msgid "movimiento"
+msgstr ""
+
+msgid "movimientos"
 msgstr ""
 
 msgid "El monto debe ser positivo y estar dentro del límite permitido."

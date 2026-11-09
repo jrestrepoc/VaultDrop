@@ -7,4 +7,4 @@ COPY . .
 RUN python manage.py collectstatic --noinput && useradd --create-home appuser && chown -R appuser:appuser /app
 USER appuser
 EXPOSE 8000
-CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py seed_catalog && exec gunicorn project.wsgi:application --bind 0.0.0.0:8000 --workers 2"]
+CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py seed_catalog --if-empty && exec gunicorn project.wsgi:application --bind 0.0.0.0:8000 --workers 2"]

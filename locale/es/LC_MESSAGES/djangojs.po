@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 19:02+0000\n"
+"POT-Creation-Date: 2026-11-09 19:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -132,7 +132,6 @@ msgstr ""
 msgid "EXPLORE CASES"
 msgstr "EXPLORAR CAJAS"
 
-#| msgid "%(items)s items · %(collections)s collections"
 msgid "Items: %(items)s · Collections: %(collections)s"
 msgstr "Objetos: %(items)s · Colecciones: %(collections)s"
 
@@ -205,7 +204,6 @@ msgstr "Valor del objeto"
 msgid "INVENTORY"
 msgstr "INVENTARIO"
 
-#| msgid "Items (Active)"
 msgid "Items: %(count)s"
 msgstr "Objetos: %(count)s"
 
@@ -330,4 +328,7 @@ msgid "Reintentar carga"
 msgstr ""
 
 msgid "Simulador académico · Créditos virtuales · Sin dinero real"
+msgstr ""
+
+msgid "Administración"
 msgstr ""

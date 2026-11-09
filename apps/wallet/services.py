@@ -71,6 +71,10 @@ class WalletService:
             self.billetera_repository.record(wallet, 'DEBITO', monto, wallet.saldo + monto)
             return wallet
 
+    def billetera_de_cuenta(self, user):
+        # Las cuentas de createsuperuser no pasan por el registro y empiezan sin saldo.
+        return self.billetera_repository.get_or_create_for_user(user)
+
     def get_billetera(self, user):
         wallet = self.billetera_repository.get_by_user(user)
         if wallet is None:

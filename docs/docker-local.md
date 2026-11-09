@@ -49,6 +49,12 @@ Si el puerto 80 está ocupado, usar por ejemplo `HTTP_PORT=8002` en `.env`.
    curl http://<IP-ELASTICA>/api/v2/catalogo/
    ```
 
+Para entrar al panel en `http://<IP-ELASTICA>/admin/`, crear un administrador con:
+
+```sh
+docker compose exec web python manage.py createsuperuser
+```
+
 Los contenedores usan `restart: unless-stopped`, así que vuelven solos cuando se enciende la instancia. El laboratorio de AWS Academy la apaga al terminar la sesión: debe estar encendida durante la sustentación.
 
 ## Límites
