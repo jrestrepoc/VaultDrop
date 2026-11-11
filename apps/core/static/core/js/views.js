@@ -354,7 +354,7 @@ export function createViews(state, urls) {
   function renderHistory() {
     if (!state.authenticated) return renderProfile();
     if (!state.history) return `<section class="section empty-state" role="status">${gettext('Cargando historial...')}</section>`;
-    const aperturas = state.history.aperturas.map(a => historyRow('◇', escapeHtml(a.item.nombre), `${escapeHtml(a.caja_nombre)} · ${fmtDate(a.created_at)}`, `¢${fmtCurrency(a.item.valor_estimado)}`)).join('');
+    const aperturas = state.history.aperturas.map(a => historyRow('◇', escapeHtml(a.item.nombre), `${escapeHtml(a.caja_nombre)} · ${fmtDate(a.created_at)}`, interpolate(gettext('Paid: ¢%(cost)s'), {cost: fmtCurrency(a.costo)}, true))).join('');
     const mejoras = state.history.mejoras.map(m => historyRow(m.exito ? '⬆️' : '✕', escapeHtml(m.objetivo.nombre), `${fmtPercent(m.probabilidad)} · ${fmtDate(m.created_at)}`, m.exito ? gettext('Lograda') : gettext('Fallida'))).join('');
     return `<section class="section narrow">
       <button class="back-button" data-page="profile">← ${gettext('Profile')}</button>

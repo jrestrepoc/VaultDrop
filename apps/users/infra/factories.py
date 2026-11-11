@@ -34,7 +34,7 @@ class NotificadorEmail(INotificador):
     def enviar_bienvenida(self, user):
         send_mail(
             subject=_('¡Bienvenido/a a VaultDrop!'),
-            message=_('Hola %(usuario)s, tu cuenta fue creada exitosamente y tu billetera inicial ya está disponible.') % {'usuario': user.username},
+            message=_('Hola %(usuario)s, tu cuenta fue creada exitosamente y tu billetera inicial ya está disponible. VaultDrop es una simulación académica sin dinero ni bienes reales.') % {'usuario': user.username},
             from_email=None,
             recipient_list=[user.email],
         )

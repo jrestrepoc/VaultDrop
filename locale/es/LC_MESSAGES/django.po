@@ -424,3 +424,13 @@ msgstr ""
 "Hola %(usuario)s, registramos el envío simulado de %(item)s. Usuario de "
 "Steam: %(steam)s. Es una simulación académica: no se transfirió ningún "
 "objeto a Steam."
+
+#, python-format
+msgid ""
+"Hola %(usuario)s, tu cuenta fue creada exitosamente y tu billetera inicial "
+"ya está disponible. VaultDrop es una simulación académica sin dinero ni "
+"bienes reales."
+msgstr ""
+"Hola %(usuario)s, tu cuenta fue creada exitosamente y tu billetera inicial "
+"ya está disponible. VaultDrop es una simulación académica sin dinero ni "
+"bienes reales."

@@ -464,3 +464,7 @@ msgstr "Balance after"
 
 msgid "No transactions found"
 msgstr "No transactions found"
+
+#, python-format
+msgid "Paid: ¢%(cost)s"
+msgstr "Paid: ¢%(cost)s"
