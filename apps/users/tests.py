@@ -47,6 +47,14 @@ class UserRegistrationViewTest(TestCase):
         self.assertEqual(resp.status_code, 302)
         self.assertTrue(resp.url.endswith(reverse('core:home')))
 
+    def test_login_view_accepts_case_insensitive_email(self):
+        user = UserService().register(username='ana', email='ana@example.com', password='vault-Test-4821')
+        response = self.client.post(reverse('users:login'), {
+            'username': 'ANA@EXAMPLE.COM', 'password': 'vault-Test-4821',
+        })
+        self.assertRedirects(response, reverse('core:home'))
+        self.assertEqual(self.client.session['_auth_user_id'], str(user.pk))
+
     def test_register_view_short_password(self):
         url = reverse('users:register')
         resp = self.client.post(url, data={
@@ -191,6 +199,16 @@ class NotificacionesEnColaTest(TestCase):
             tarea_bienvenida(self.user.pk, 'en')
         self.assertEqual(enviar.call_args.kwargs['subject'], 'Welcome to VaultDrop!')
         self.assertIn('cola', enviar.call_args.kwargs['message'])
+
+    def test_correo_de_envio_incluye_el_usuario_de_steam(self):
+        self.user.steam_username = 'steam-vault'
+        self.user.save(update_fields=['steam_username'])
+        with mock.patch('apps.users.infra.factories.send_mail') as enviar, mock.patch.dict(os.environ, {'NOTIFICACION_MODE': 'REAL'}):
+            tarea_envio_simulado(self.user.pk, 'AK-47', 'en')
+        mensaje = enviar.call_args.kwargs['message']
+        self.assertIn('AK-47', mensaje)
+        self.assertIn('Steam username: steam-vault', mensaje)
+        self.assertIn('academic simulation', mensaje)
 
     def test_fallo_de_correo_llega_a_celery_y_se_reintenta(self):
         with mock.patch('apps.users.infra.factories.send_mail', side_effect=SMTPException('caido')) as enviar, \

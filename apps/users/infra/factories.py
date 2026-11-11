@@ -42,7 +42,7 @@ class NotificadorEmail(INotificador):
     def enviar_envio_simulado(self, user, nombre_item):
         send_mail(
             subject=_('Envío simulado registrado en VaultDrop'),
-            message=_('Hola %(usuario)s, registramos el envío simulado de %(item)s. Es una simulación académica: no se transfirió ningún objeto a Steam.') % {'usuario': user.username, 'item': nombre_item},
+            message=_('Hola %(usuario)s, registramos el envío simulado de %(item)s. Usuario de Steam: %(steam)s. Es una simulación académica: no se transfirió ningún objeto a Steam.') % {'usuario': user.username, 'item': nombre_item, 'steam': user.steam_username or _('Sin configurar')},
             from_email=None,
             recipient_list=[user.email],
         )

@@ -1,6 +1,7 @@
 from django import forms
-from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
+
+from apps.users.authentication import authenticate_identifier
 
 
 class RegistrationForm(forms.Form):
@@ -15,7 +16,7 @@ class RegistrationForm(forms.Form):
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label=_('Usuario'), max_length=150, widget=forms.TextInput(attrs={'autocomplete': 'username'}))
+    username = forms.CharField(label=_('Usuario o correo'), max_length=254, widget=forms.TextInput(attrs={'autocomplete': 'username'}))
     password = forms.CharField(label=_('Contraseña'), widget=forms.PasswordInput(attrs={'autocomplete': 'current-password'}))
 
     def clean(self):
@@ -24,8 +25,8 @@ class LoginForm(forms.Form):
         password = cleaned_data.get('password')
 
         if username and password:
-            user = authenticate(username=username, password=password)
+            user = authenticate_identifier(username, password)
             if user is None:
-                raise forms.ValidationError(_('Credenciales incorrectas. Verifica tu usuario y contraseña.'))
+                raise forms.ValidationError(_('Credenciales incorrectas. Verifica tu usuario o correo y tu contraseña.'))
             cleaned_data['user'] = user
         return cleaned_data

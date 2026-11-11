@@ -403,3 +403,24 @@ msgstr ""
 
 msgid "El usuario no posee una billetera activa"
 msgstr ""
+
+msgid "Usuario o correo"
+msgstr "Usuario o correo"
+
+msgid ""
+"Credenciales incorrectas. Verifica tu usuario o correo y tu contraseña."
+msgstr ""
+"Credenciales incorrectas. Verifica tu usuario o correo y tu contraseña."
+
+msgid "Sin configurar"
+msgstr "Sin configurar"
+
+#, python-format
+msgid ""
+"Hola %(usuario)s, registramos el envío simulado de %(item)s. Usuario de "
+"Steam: %(steam)s. Es una simulación académica: no se transfirió ningún "
+"objeto a Steam."
+msgstr ""
+"Hola %(usuario)s, registramos el envío simulado de %(item)s. Usuario de "
+"Steam: %(steam)s. Es una simulación académica: no se transfirió ningún "
+"objeto a Steam."
