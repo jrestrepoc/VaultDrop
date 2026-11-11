@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 
 from apps.cases.repositories import DjangoCajaRepository
 from apps.core.domain import BusinessError, NotFoundError
-from apps.openings.inventory import InventoryService
+from apps.openings.composition import crear_servicio_inventario
 from apps.openings.repositories import DjangoAperturaCajaRepository
 
 PROBABILIDAD_MINIMA = Decimal('1.00')
@@ -26,7 +26,7 @@ class MejoraService:
     def __init__(self, repository=None, caja_repository=None, inventory_service=None, randomizer=None):
         self.repository = repository or DjangoAperturaCajaRepository()
         self.caja_repository = caja_repository or DjangoCajaRepository()
-        self.inventory_service = inventory_service or InventoryService()
+        self.inventory_service = inventory_service or crear_servicio_inventario()
         self.randomizer = randomizer or random.SystemRandom()
 
     def mejorar(self, user, item_ids, objetivo_id):

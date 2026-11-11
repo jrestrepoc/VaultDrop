@@ -15,6 +15,8 @@ docker compose down
 
 Si el puerto 80 está ocupado, usar por ejemplo `HTTP_PORT=8002` en `.env`.
 
+Compose usa el modo `SIMULADO` para las notificaciones. Celery genera el correo y lo escribe en los logs del worker mediante el backend de consola de Django. Para verificar un envío simulado, revisar `docker compose logs worker` y la sección **Notificaciones de envío** de `/admin/`, que muestra fecha, usuario y objetos procesados. El historial empieza al aplicar la migración y solo registra notificaciones procesadas con éxito.
+
 ## EC2
 
 1. En AWS Academy, crear una instancia Ubuntu 24.04 (mínimo 2 GB de RAM, por ejemplo `t3.small`).

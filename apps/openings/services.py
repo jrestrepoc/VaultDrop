@@ -1,12 +1,14 @@
 import random
+from collections.abc import Callable
 from decimal import Decimal
 
-from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from apps.cases.repositories import DjangoCajaRepository
+from apps.cases.services import validar_distribucion
 from apps.core.domain import ConflictError
+from apps.core.unit_of_work import IUnidadDeTrabajo, UnidadDeTrabajoDjango
 from apps.openings.domain.builders import AperturaCajaBuilder
 from apps.openings.exceptions import (
     CajaNoDisponibleError,
@@ -25,15 +27,17 @@ class AperturaCajaService:
         apertura_repository=None,
         wallet_service=None,
         randomizer=None,
+        unidad_de_trabajo: Callable[[], IUnidadDeTrabajo] = UnidadDeTrabajoDjango,
     ):
         self.caja_repository = caja_repository or DjangoCajaRepository()
         self.apertura_repository = apertura_repository or DjangoAperturaCajaRepository()
         self.wallet_service = wallet_service or WalletService()
+        self.unidad_de_trabajo = unidad_de_trabajo
         self.randomizer = randomizer or random.SystemRandom()
 
     def abrir(self, user, caja_id):
         caja, caja_items = self._caja_lista(caja_id)
-        with transaction.atomic():
+        with self.unidad_de_trabajo():
             self.wallet_service.debitar(user, caja.precio)
             return self._registrar(user, caja, caja_items, caja.precio)
 
@@ -42,7 +46,7 @@ class AperturaCajaService:
         if gratis is None:
             raise CajaNoDisponibleError(_('La caja no esta disponible'))
         caja, caja_items = self._caja_lista(gratis.pk)
-        with transaction.atomic():
+        with self.unidad_de_trabajo():
             if not self.apertura_repository.reclamar_caja_gratis(user, timezone.localdate()):
                 raise ConflictError(_('Ya reclamaste tu caja gratis de hoy.'))
             return self._registrar(user, caja, caja_items, Decimal('0.00'))
@@ -85,8 +89,11 @@ class AperturaCajaService:
     def _validar_items(self, caja_items):
         if not caja_items:
             raise CajaSinItemsError(_('La caja no tiene items configurados'))
-        total = sum((caja_item.probabilidad for caja_item in caja_items), Decimal('0.00'))
-        if any(ci.probabilidad <= 0 for ci in caja_items) or total != Decimal('100.00'):
+        try:
+            validar_distribucion(caja_item.probabilidad for caja_item in caja_items)
+        except ValueError as error:
+            raise ProbabilidadesInvalidasError(str(error)) from error
+        if any(caja_item.probabilidad <= 0 for caja_item in caja_items):
             raise ProbabilidadesInvalidasError(_('Las probabilidades de la caja deben sumar 100%'))
 
     def _seleccionar_item(self, caja_items):

@@ -434,3 +434,15 @@ msgstr ""
 "Hello %(usuario)s, your account was created successfully and your initial "
 "wallet is available. VaultDrop is an academic simulation with no real money "
 "or goods."
+
+msgid "Fecha"
+msgstr "Date"
+
+msgid "Objetos"
+msgstr "Items"
+
+msgid "Notificación de envío"
+msgstr "Shipping notification"
+
+msgid "Notificaciones de envío"
+msgstr "Shipping notifications"

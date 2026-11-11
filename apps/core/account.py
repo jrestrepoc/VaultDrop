@@ -2,12 +2,12 @@
 from apps.users.serializers import UserOutputSerializer
 from apps.wallet.services import WalletService
 from apps.wallet.serializers import BilleteraSerializer
-from apps.openings.inventory import InventoryService
+from apps.openings.composition import crear_servicio_inventario
 from apps.openings.serializers import ItemInventarioSerializer
 from apps.openings.services import AperturaCajaService
 
 def account_snapshot(user):
-    inventory = list(InventoryService().list_for_user(user))
+    inventory = list(crear_servicio_inventario().list_for_user(user))
     return {
         'user': UserOutputSerializer(user).data,
         'wallet': BilleteraSerializer(WalletService().billetera_de_cuenta(user)).data,

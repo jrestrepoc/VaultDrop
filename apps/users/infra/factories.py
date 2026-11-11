@@ -1,18 +1,9 @@
 import os
-from abc import ABC, abstractmethod
 
-from django.core.mail import send_mail
+from django.core.mail import get_connection, send_mail
 from django.utils.translation import gettext as _
 
-
-class INotificador(ABC):
-    @abstractmethod
-    def enviar_bienvenida(self, user):
-        pass
-
-    @abstractmethod
-    def enviar_envio_simulado(self, user, nombre_item):
-        pass
+from apps.users.notifications import INotificador
 
 
 class NotificadorConsola(INotificador):
@@ -29,10 +20,18 @@ class NotificadorConsola(INotificador):
 
 
 class NotificadorEmail(INotificador):
-    """Modo REAL: envía un correo real usando django.core.mail.send_mail."""
+    """Genera el correo con el backend de Django seleccionado."""
+
+    def __init__(self, backend=None):
+        self.backend = backend
+
+    def _enviar(self, **mensaje):
+        if self.backend:
+            mensaje['connection'] = get_connection(self.backend)
+        return send_mail(**mensaje)
 
     def enviar_bienvenida(self, user):
-        send_mail(
+        return self._enviar(
             subject=_('¡Bienvenido/a a VaultDrop!'),
             message=_('Hola %(usuario)s, tu cuenta fue creada exitosamente y tu billetera inicial ya está disponible. VaultDrop es una simulación académica sin dinero ni bienes reales.') % {'usuario': user.username},
             from_email=None,
@@ -40,7 +39,7 @@ class NotificadorEmail(INotificador):
         )
 
     def enviar_envio_simulado(self, user, nombre_item):
-        send_mail(
+        return self._enviar(
             subject=_('Envío simulado registrado en VaultDrop'),
             message=_('Hola %(usuario)s, registramos el envío simulado de %(item)s. Usuario de Steam: %(steam)s. Es una simulación académica: no se transfirió ningún objeto a Steam.') % {'usuario': user.username, 'item': nombre_item, 'steam': user.steam_username or _('Sin configurar')},
             from_email=None,
@@ -50,11 +49,13 @@ class NotificadorEmail(INotificador):
 
 class NotificadorFactory:
     """Factory que decide, según la variable de entorno NOTIFICACION_MODE,
-    qué implementación de INotificador instanciar (MOCK vs REAL)."""
+    qué implementación de INotificador instanciar (MOCK, SIMULADO o REAL)."""
 
     @staticmethod
     def crear(modo=None):
         modo = (modo or os.environ.get('NOTIFICACION_MODE', 'MOCK')).upper()
+        if modo == 'SIMULADO':
+            return NotificadorEmail('django.core.mail.backends.console.EmailBackend')
         if modo == 'REAL':
             return NotificadorEmail()
         return NotificadorConsola()

@@ -1,8 +1,9 @@
+from collections.abc import Callable
 from decimal import Decimal, InvalidOperation
 from django.core.cache import cache
-from django.db import transaction
 from django.utils.translation import gettext as _
 from apps.core.domain import BusinessError, ExternalServiceError, InsufficientBalanceError, NotFoundError
+from apps.core.unit_of_work import IUnidadDeTrabajo, UnidadDeTrabajoDjango
 from apps.wallet.infra.exchange_rates import ExchangeRateApiAdapter
 from apps.wallet.repositories import DjangoBilleteraRepository
 
@@ -43,19 +44,20 @@ def positive_amount(value):
         raise BusinessError(_('Monto inválido.')) from exc
 
 class WalletService:
-    def __init__(self, billetera_repository=None):
+    def __init__(self, billetera_repository=None, unidad_de_trabajo: Callable[[], IUnidadDeTrabajo] = UnidadDeTrabajoDjango):
+        self.unidad_de_trabajo = unidad_de_trabajo
         self.billetera_repository = billetera_repository or DjangoBilleteraRepository()
 
     def create_initial_wallet(self, user, amount: Decimal):
         amount = positive_amount(amount)
-        with transaction.atomic():
+        with self.unidad_de_trabajo():
             wallet = self.billetera_repository.create_for_user(user, amount)
             self.billetera_repository.record(wallet, 'INICIAL', amount, Decimal('0.00'))
             return wallet
 
     def acreditar(self, user, monto, tipo='RECARGA'):
         monto = positive_amount(monto)
-        with transaction.atomic():
+        with self.unidad_de_trabajo():
             wallet = self.billetera_repository.adjust(user, monto)
             if wallet is None:
                 raise BusinessError(_('No se pudo acreditar: billetera inexistente o límite de saldo alcanzado.'))
@@ -64,7 +66,7 @@ class WalletService:
 
     def debitar(self, user, monto):
         monto = positive_amount(monto)
-        with transaction.atomic():
+        with self.unidad_de_trabajo():
             wallet = self.billetera_repository.adjust(user, -monto)
             if wallet is None:
                 raise InsufficientBalanceError(_('Saldo insuficiente'))

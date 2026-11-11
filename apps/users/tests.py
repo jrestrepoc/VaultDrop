@@ -1,11 +1,13 @@
 import os
 from smtplib import SMTPException
 from unittest import mock
+from uuid import uuid4
 
 from django.test import TestCase
 from rest_framework.test import APITestCase
 from rest_framework import status
 from apps.core.domain import ConflictError
+from apps.users.models import NotificacionEnvio
 from apps.users.services import UserService
 from apps.users.domain.builders import UserBuilder
 from apps.users.infra.factories import NotificadorFactory, NotificadorConsola, NotificadorEmail
@@ -209,6 +211,20 @@ class NotificacionesEnColaTest(TestCase):
         self.assertIn('AK-47', mensaje)
         self.assertIn('Steam username: steam-vault', mensaje)
         self.assertIn('academic simulation', mensaje)
+
+    def test_una_tarea_reentregada_no_repite_el_correo(self):
+        tarea_id = str(uuid4())
+        with mock.patch('apps.users.infra.factories.send_mail', return_value=1) as enviar, mock.patch.dict(os.environ, {'NOTIFICACION_MODE': 'REAL'}):
+            for _ in range(2):
+                tarea_envio_simulado.apply(args=[self.user.pk, 'AK-47'], task_id=tarea_id, throw=True)
+        self.assertEqual(enviar.call_count, 1)
+        self.assertEqual(NotificacionEnvio.objects.filter(tarea_id=tarea_id).count(), 1)
+
+    def test_un_correo_rechazado_no_aparece_en_el_historial(self):
+        with mock.patch('apps.users.infra.factories.send_mail', return_value=0), mock.patch.dict(os.environ, {'NOTIFICACION_MODE': 'REAL'}):
+            resultado = tarea_envio_simulado.apply(args=[self.user.pk, 'AK-47'])
+        self.assertTrue(resultado.failed())
+        self.assertFalse(NotificacionEnvio.objects.exists())
 
     def test_fallo_de_correo_llega_a_celery_y_se_reintenta(self):
         with mock.patch('apps.users.infra.factories.send_mail', side_effect=SMTPException('caido')) as enviar, \

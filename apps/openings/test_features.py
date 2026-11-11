@@ -73,7 +73,7 @@ class AccionMasivaTest(BaseInventario):
 
     def test_envio_masivo_notifica_una_vez_tras_confirmar(self):
         ids = [self.objeto().pk, self.objeto().pk]
-        with patch('apps.openings.inventory.NotificadorEnCola') as cola, self.captureOnCommitCallbacks(execute=True):
+        with patch('apps.openings.composition.NotificadorEnCola') as cola, self.captureOnCommitCallbacks(execute=True):
             self.post('inventory:bulk', {'ids': ids, 'accion': 'ENVIADO'})
         cola.return_value.enviar_envio_simulado.assert_called_once()
 

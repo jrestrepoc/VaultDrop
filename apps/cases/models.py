@@ -5,6 +5,8 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext as _, gettext_lazy
 
+from apps.cases.services import validar_distribucion
+
 
 class Caja(models.Model):
     nombre = models.CharField(max_length=120, unique=True, verbose_name=gettext_lazy('nombre'))
@@ -75,7 +77,5 @@ class CajaItem(models.Model):
 
     @classmethod
     def validar_probabilidades(cls, caja):
-        total = cls.total_probabilidad(caja)
-        if total != Decimal('100.00'):
-            raise ValueError(_('Las probabilidades de la caja deben sumar 100%'))
+        validar_distribucion((cls.total_probabilidad(caja),))
 

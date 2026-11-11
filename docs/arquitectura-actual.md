@@ -82,7 +82,9 @@ python manage.py test apps --noinput
 node --test tests/frontend.test.mjs
 ```
 
-Se prueban registro, Builder, Factory, contratos DRF, saldo, idempotencia, aislamiento del inventario, rollback, perfil, catálogo y comportamiento del cliente ante errores. Las pruebas no sustituyen una evaluación de carga o un despliegue real.
+Se prueban registro, Builder, Factory, contratos DRF, saldo, idempotencia, aislamiento del inventario, rollback, perfil, catálogo y comportamiento del cliente ante errores.
+
+La prueba `FlujoCriticoTests` en `apps/core/test_architecture.py` encadena registro, acceso por correo, edición del perfil, catálogo, recarga, apertura, venta y envío simulado con credenciales reales de la API. Comprueba el saldo final, el correo generado en consola y el registro visible en el panel. Ejecuta Celery en modo eager con SQLite. Las pruebas de contrato de ese archivo cubren también repetición de peticiones, aislamiento de usuarios y reversión ante fallos. Las pruebas de navegador de la auditoría de UI/UX están descritas en [auditoria-ui-ux.md](auditoria-ui-ux.md). Las pruebas no sustituyen una evaluación de carga o un despliegue real.
 
 ## Límites pendientes
 
