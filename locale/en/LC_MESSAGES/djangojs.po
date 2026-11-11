@@ -452,3 +452,19 @@ msgstr "Academic simulator · Virtual credits · No real money"
 
 msgid "Administración"
 msgstr "Administration"
+
+msgid "Filter transactions"
+msgstr "Filter transactions"
+
+msgid "Balance before"
+msgstr "Balance before"
+
+msgid "Balance after"
+msgstr "Balance after"
+
+msgid "No transactions found"
+msgstr "No transactions found"
+
+#, python-format
+msgid "Paid: ¢%(cost)s"
+msgstr "Paid: ¢%(cost)s"

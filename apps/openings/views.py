@@ -14,7 +14,7 @@ from apps.openings.serializers import (
     RankingSerializer,
 )
 from apps.openings.services import AperturaCajaService
-from apps.openings.inventory import InventoryService
+from apps.openings.composition import crear_servicio_inventario
 from apps.openings.upgrades import MejoraService
 
 class AbrirCajaAPIView(APIView):
@@ -33,7 +33,7 @@ class InventoryAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response(ItemInventarioSerializer(InventoryService().list_for_user(request.user), many=True).data)
+        return Response(ItemInventarioSerializer(crear_servicio_inventario().list_for_user(request.user), many=True).data)
 
 class InventoryActionAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -41,7 +41,7 @@ class InventoryActionAPIView(APIView):
 
     def post(self, request, item_id):
         def action():
-            item = InventoryService().change_status(request.user, item_id, self.target_status)
+            item = crear_servicio_inventario().change_status(request.user, item_id, self.target_status)
             return dict(ItemInventarioSerializer(item).data)
         data = OperationService().execute(request.user, request.headers.get('Idempotency-Key'),
                                           self.target_status, {'item_id': item_id}, action)
@@ -71,7 +71,7 @@ class AccionMasivaAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         ids, accion = sorted(set(serializer.validated_data['ids'])), serializer.validated_data['accion']
         def action():
-            return {'cantidad': len(InventoryService().change_status_many(request.user, ids, accion))}
+            return {'cantidad': len(crear_servicio_inventario().change_status_many(request.user, ids, accion))}
         data = OperationService().execute(request.user, request.headers.get('Idempotency-Key'),
                                           'bulk', {'ids': ids, 'accion': accion}, action)
         return Response({**data, 'account': account_snapshot(request.user)})

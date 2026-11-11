@@ -1,11 +1,13 @@
 import os
 from smtplib import SMTPException
 from unittest import mock
+from uuid import uuid4
 
 from django.test import TestCase
 from rest_framework.test import APITestCase
 from rest_framework import status
 from apps.core.domain import ConflictError
+from apps.users.models import NotificacionEnvio
 from apps.users.services import UserService
 from apps.users.domain.builders import UserBuilder
 from apps.users.infra.factories import NotificadorFactory, NotificadorConsola, NotificadorEmail
@@ -46,6 +48,14 @@ class UserRegistrationViewTest(TestCase):
         })
         self.assertEqual(resp.status_code, 302)
         self.assertTrue(resp.url.endswith(reverse('core:home')))
+
+    def test_login_view_accepts_case_insensitive_email(self):
+        user = UserService().register(username='ana', email='ana@example.com', password='vault-Test-4821')
+        response = self.client.post(reverse('users:login'), {
+            'username': 'ANA@EXAMPLE.COM', 'password': 'vault-Test-4821',
+        })
+        self.assertRedirects(response, reverse('core:home'))
+        self.assertEqual(self.client.session['_auth_user_id'], str(user.pk))
 
     def test_register_view_short_password(self):
         url = reverse('users:register')
@@ -191,6 +201,30 @@ class NotificacionesEnColaTest(TestCase):
             tarea_bienvenida(self.user.pk, 'en')
         self.assertEqual(enviar.call_args.kwargs['subject'], 'Welcome to VaultDrop!')
         self.assertIn('cola', enviar.call_args.kwargs['message'])
+
+    def test_correo_de_envio_incluye_el_usuario_de_steam(self):
+        self.user.steam_username = 'steam-vault'
+        self.user.save(update_fields=['steam_username'])
+        with mock.patch('apps.users.infra.factories.send_mail') as enviar, mock.patch.dict(os.environ, {'NOTIFICACION_MODE': 'REAL'}):
+            tarea_envio_simulado(self.user.pk, 'AK-47', 'en')
+        mensaje = enviar.call_args.kwargs['message']
+        self.assertIn('AK-47', mensaje)
+        self.assertIn('Steam username: steam-vault', mensaje)
+        self.assertIn('academic simulation', mensaje)
+
+    def test_una_tarea_reentregada_no_repite_el_correo(self):
+        tarea_id = str(uuid4())
+        with mock.patch('apps.users.infra.factories.send_mail', return_value=1) as enviar, mock.patch.dict(os.environ, {'NOTIFICACION_MODE': 'REAL'}):
+            for _ in range(2):
+                tarea_envio_simulado.apply(args=[self.user.pk, 'AK-47'], task_id=tarea_id, throw=True)
+        self.assertEqual(enviar.call_count, 1)
+        self.assertEqual(NotificacionEnvio.objects.filter(tarea_id=tarea_id).count(), 1)
+
+    def test_un_correo_rechazado_no_aparece_en_el_historial(self):
+        with mock.patch('apps.users.infra.factories.send_mail', return_value=0), mock.patch.dict(os.environ, {'NOTIFICACION_MODE': 'REAL'}):
+            resultado = tarea_envio_simulado.apply(args=[self.user.pk, 'AK-47'])
+        self.assertTrue(resultado.failed())
+        self.assertFalse(NotificacionEnvio.objects.exists())
 
     def test_fallo_de_correo_llega_a_celery_y_se_reintenta(self):
         with mock.patch('apps.users.infra.factories.send_mail', side_effect=SMTPException('caido')) as enviar, \

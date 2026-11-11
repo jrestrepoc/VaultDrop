@@ -225,6 +225,7 @@ export function createViews(state, urls) {
       VENTA_ITEM: { icon: '↑', color: '#22d3ee', label: gettext('Item Sale') },
       BONIFICACION: { icon: '★', color: '#f59e0b', label: gettext('Bonus') },
     };
+    const transactions = state.transactions.filter(tx => state.transactionFilter === 'ALL' || tx.tipo === state.transactionFilter);
     return `<section class="section narrow">
       <h1 class="gradient-text section-title" style="margin-bottom:28px">${gettext('WALLET')}</h1>
       <div class="wallet-balance"><div class="wallet-label">${gettext('AVAILABLE BALANCE')}</div><div class="wallet-amount">¢${fmtCurrency(state.balance)}</div><div class="wallet-note">${gettext('Virtual credits · Not redeemable for real money')}</div>${rateNote()}</div>
@@ -232,11 +233,14 @@ export function createViews(state, urls) {
         <div class="custom-deposit"><input class="text-input" type="number" min="0.01" max="10000" step="0.01" aria-label="${gettext('Custom amount...')}" placeholder="${gettext('Custom amount...')}" data-custom-amount><button class="cyan-action" data-custom-deposit>+ ${gettext('ADD CREDITS')}</button></div>
       </div>
       <h3 class="panel-title">${gettext('TRANSACTION HISTORY')}</h3>
-      <div class="transactions">${state.transactions.slice().reverse().map(tx => {
+      <div class="filter-row" role="group" aria-label="${gettext('Filter transactions')}">
+        ${['ALL', ...Object.keys(txConfig)].map(type => `<button type="button" class="filter-button ${state.transactionFilter === type ? 'active' : ''}" data-transaction-filter="${type}" aria-pressed="${state.transactionFilter === type}">${txConfig[type]?.label ?? gettext('ALL')}</button>`).join('')}
+      </div>
+      <div class="transactions">${transactions.reverse().map(tx => {
         const cfg = txConfig[tx.tipo];
         const credit = tx.tipo !== 'COMPRA_CAJA';
-        return `<div class="transaction"><div class="tx-icon" style="color:${cfg.color};background:${cfg.color}15;border:1px solid ${cfg.color}40">${cfg.icon}</div><div><div class="tx-title">${escapeHtml(tx.concepto)}</div><div class="tx-meta">${cfg.label} · ${fmtDate(tx.fecha)}</div></div><div class="tx-amount"><strong style="color:${credit ? '#22d3ee' : '#eb4b4b'}">${credit ? '+' : '-'}¢${fmtCurrency(Math.abs(tx.monto))}</strong><div class="tx-balance">${gettext('bal')}: ¢${fmtCurrency(tx.saldoPosterior)}</div></div></div>`;
-      }).join('')}</div>
+        return `<div class="transaction"><div class="tx-icon" style="color:${cfg.color};background:${cfg.color}15;border:1px solid ${cfg.color}40">${cfg.icon}</div><div><div class="tx-title">${escapeHtml(tx.concepto)}</div><div class="tx-meta">${cfg.label} · ${fmtDate(tx.fecha)}</div></div><div class="tx-amount"><strong style="color:${credit ? '#22d3ee' : '#eb4b4b'}">${credit ? '+' : '-'}¢${fmtCurrency(Math.abs(tx.monto))}</strong><div class="tx-balance">${gettext('Balance before')}: ¢${fmtCurrency(tx.saldoAnterior)} · ${gettext('Balance after')}: ¢${fmtCurrency(tx.saldoPosterior)}</div></div></div>`;
+      }).join('') || `<p>${gettext('No transactions found')}</p>`}</div>
     </section>`;
   }
 
@@ -350,7 +354,7 @@ export function createViews(state, urls) {
   function renderHistory() {
     if (!state.authenticated) return renderProfile();
     if (!state.history) return `<section class="section empty-state" role="status">${gettext('Cargando historial...')}</section>`;
-    const aperturas = state.history.aperturas.map(a => historyRow('◇', escapeHtml(a.item.nombre), `${escapeHtml(a.caja_nombre)} · ${fmtDate(a.created_at)}`, `¢${fmtCurrency(a.item.valor_estimado)}`)).join('');
+    const aperturas = state.history.aperturas.map(a => historyRow('◇', escapeHtml(a.item.nombre), `${escapeHtml(a.caja_nombre)} · ${fmtDate(a.created_at)}`, interpolate(gettext('Paid: ¢%(cost)s'), {cost: fmtCurrency(a.costo)}, true))).join('');
     const mejoras = state.history.mejoras.map(m => historyRow(m.exito ? '⬆️' : '✕', escapeHtml(m.objetivo.nombre), `${fmtPercent(m.probabilidad)} · ${fmtDate(m.created_at)}`, m.exito ? gettext('Lograda') : gettext('Fallida'))).join('');
     return `<section class="section narrow">
       <button class="back-button" data-page="profile">← ${gettext('Profile')}</button>

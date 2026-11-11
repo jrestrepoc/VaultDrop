@@ -452,3 +452,19 @@ msgstr ""
 
 msgid "Administración"
 msgstr ""
+
+msgid "Filter transactions"
+msgstr "Filtrar movimientos"
+
+msgid "Balance before"
+msgstr "Saldo anterior"
+
+msgid "Balance after"
+msgstr "Saldo posterior"
+
+msgid "No transactions found"
+msgstr "No se encontraron movimientos"
+
+#, python-format
+msgid "Paid: ¢%(cost)s"
+msgstr "Pagado: ¢%(cost)s"

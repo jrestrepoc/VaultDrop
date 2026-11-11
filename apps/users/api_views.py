@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from apps.core.domain import ConflictError
 from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
+from apps.users.authentication import authenticate_identifier
 from django.utils.translation import gettext
 
 from apps.users.serializers import (
@@ -57,7 +57,7 @@ class LoginAPIView(APIView):
 
         username = serializer.validated_data['username']
         password = serializer.validated_data['password']
-        user = authenticate(request, username=username, password=password)
+        user = authenticate_identifier(username, password, request=request)
 
         if not user:
             return Response(

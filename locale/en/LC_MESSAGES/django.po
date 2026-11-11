@@ -403,3 +403,46 @@ msgstr "Could not credit: the wallet does not exist or the balance limit was rea
 
 msgid "El usuario no posee una billetera activa"
 msgstr "The user does not have an active wallet"
+
+msgid "Usuario o correo"
+msgstr "Username or email"
+
+msgid ""
+"Credenciales incorrectas. Verifica tu usuario o correo y tu contraseña."
+msgstr ""
+"Incorrect credentials. Check your username or email and your password."
+
+msgid "Sin configurar"
+msgstr "Not configured"
+
+#, python-format
+msgid ""
+"Hola %(usuario)s, registramos el envío simulado de %(item)s. Usuario de "
+"Steam: %(steam)s. Es una simulación académica: no se transfirió ningún "
+"objeto a Steam."
+msgstr ""
+"Hello %(usuario)s, we recorded the simulated shipment of %(item)s. Steam "
+"username: %(steam)s. This is an academic simulation: nothing was transferred"
+" to Steam."
+
+#, python-format
+msgid ""
+"Hola %(usuario)s, tu cuenta fue creada exitosamente y tu billetera inicial "
+"ya está disponible. VaultDrop es una simulación académica sin dinero ni "
+"bienes reales."
+msgstr ""
+"Hello %(usuario)s, your account was created successfully and your initial "
+"wallet is available. VaultDrop is an academic simulation with no real money "
+"or goods."
+
+msgid "Fecha"
+msgstr "Date"
+
+msgid "Objetos"
+msgstr "Items"
+
+msgid "Notificación de envío"
+msgstr "Shipping notification"
+
+msgid "Notificaciones de envío"
+msgstr "Shipping notifications"

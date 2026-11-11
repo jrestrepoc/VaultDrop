@@ -1,5 +1,3 @@
-from decimal import Decimal
-
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.db.models import Count, Q, Sum
@@ -9,6 +7,7 @@ from django.utils.html import format_html, format_html_join
 from django.utils.translation import gettext, gettext_lazy as _
 
 from apps.cases.models import Caja, CajaItem, Item
+from apps.cases.services import validar_distribucion
 from apps.openings.models import AperturaCaja
 
 
@@ -18,8 +17,10 @@ class CajaItemFormSet(BaseInlineFormSet):
         if any(self.errors):
             return
         activos = [form.cleaned_data for form in self.forms if form.cleaned_data and not form.cleaned_data.get('DELETE')]
-        if sum((datos['probabilidad'] for datos in activos), Decimal('0')) != Decimal('100'):
-            raise ValidationError(gettext('Las probabilidades de la caja deben sumar 100%'))
+        try:
+            validar_distribucion(datos['probabilidad'] for datos in activos)
+        except ValueError as error:
+            raise ValidationError(str(error)) from error
 
 
 class CajaItemInline(admin.TabularInline):

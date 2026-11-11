@@ -5,6 +5,8 @@ from django.contrib.auth.models import Group
 from django.utils.translation import gettext, gettext_lazy as _
 from rest_framework.authtoken.models import TokenProxy
 
+from apps.users.models import NotificacionEnvio
+
 # Los tokens dan acceso a las cuentas: no deben verse en una lista.
 admin.site.unregister(TokenProxy)
 admin.site.unregister(Group)
@@ -32,3 +34,21 @@ class VaultDropUserAdmin(UserAdmin):
     def desactivar(self, request, queryset):
         cambiados = queryset.exclude(pk=request.user.pk).update(is_active=False)
         self.message_user(request, gettext('Registros actualizados: %(n)s') % {'n': cambiados})
+
+
+@admin.register(NotificacionEnvio)
+class NotificacionEnvioAdmin(admin.ModelAdmin):
+    list_display = ('fecha', 'usuario', 'objetos')
+    list_select_related = ('usuario',)
+    search_fields = ('usuario__username', 'objetos')
+    date_hierarchy = 'fecha'
+    list_display_links = None
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False

@@ -2,14 +2,14 @@ from django.db import transaction
 from django.utils.translation import gettext as _
 from apps.core.domain import ConflictError, NotFoundError
 from apps.openings.repositories import DjangoAperturaCajaRepository
-from apps.users.tasks import NotificadorEnCola
+from apps.users.notifications import INotificador
 from apps.wallet.services import WalletService
 
 class InventoryService:
-    def __init__(self, repository=None, wallet_service=None, notificador=None):
+    def __init__(self, repository=None, wallet_service=None, *, notificador: INotificador):
         self.repository = repository or DjangoAperturaCajaRepository()
         self.wallet_service = wallet_service or WalletService()
-        self.notificador = notificador or NotificadorEnCola()
+        self.notificador = notificador
 
     def list_for_user(self, user):
         return self.repository.list_inventory(user)

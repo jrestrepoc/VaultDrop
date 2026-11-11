@@ -9,7 +9,7 @@ x-django: &django
   DJANGO_DEBUG: "0"
   DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Define DJANGO_SECRET_KEY en .env}
   DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:?Copia .env.example a .env}
-  NOTIFICACION_MODE: "MOCK"
+  NOTIFICACION_MODE: "SIMULADO"
   CATALOG_URL: "/api/v2/catalogo/"
   CELERY_BROKER_URL: "redis://redis:6379/0"
 

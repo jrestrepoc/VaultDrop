@@ -9,11 +9,15 @@ Copiar `.env.example` a `.env` y llenar `DJANGO_SECRET_KEY` y `POSTGRES_PASSWORD
 ```sh
 cp .env.example .env
 docker compose up --build -d
-docker compose exec web python manage.py test apps --noinput
+docker compose exec -T -e CELERY_BROKER_URL= -e NOTIFICACION_MODE=MOCK web python manage.py test apps --noinput
 docker compose down
 ```
 
+La suite usa una base PostgreSQL de pruebas y ejecuta las tareas en el proceso de pruebas para aislarlas del worker del entorno local.
+
 Si el puerto 80 está ocupado, usar por ejemplo `HTTP_PORT=8002` en `.env`.
+
+Compose usa el modo `SIMULADO` para las notificaciones. Celery genera el correo y lo escribe en los logs del worker mediante el backend de consola de Django. Para verificar un envío simulado, revisar `docker compose logs worker` y la sección **Notificaciones de envío** de `/admin/`, que muestra fecha, usuario y objetos procesados. El historial empieza al aplicar la migración y solo registra notificaciones procesadas con éxito.
 
 ## EC2
 

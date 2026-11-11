@@ -1,7 +1,11 @@
+from contextlib import redirect_stdout
 from decimal import Decimal
+from io import StringIO
 from unittest.mock import Mock, patch
 from uuid import uuid4
 
+from django.contrib.auth import get_user_model
+from django.urls import reverse
 from django.core.management import call_command
 from django.db import transaction
 from django.test import TestCase
@@ -10,6 +14,7 @@ from rest_framework.test import APITestCase
 from apps.cases.models import Caja, CajaItem, Item
 from apps.core.models import Operation
 from apps.openings.models import AperturaCaja, ItemInventario
+from apps.users.models import NotificacionEnvio
 from apps.users.services import UserService
 from apps.wallet.services import WalletService
 
@@ -33,14 +38,14 @@ class MutationContractTests(APITestCase):
     def test_simulated_send_notifies_after_commit(self):
         self.open()
         item = ItemInventario.objects.get()
-        with patch('apps.openings.inventory.NotificadorEnCola') as cola, self.captureOnCommitCallbacks(execute=True):
+        with patch('apps.openings.composition.NotificadorEnCola') as cola, self.captureOnCommitCallbacks(execute=True):
             self.assertEqual(self.post(f'/api/v1/inventory/{item.pk}/send/').status_code, 200)
         cola.return_value.enviar_envio_simulado.assert_called_once_with(self.user, 'Test skin')
 
     def test_sale_does_not_send_a_shipping_notice(self):
         self.open()
         item = ItemInventario.objects.get()
-        with patch('apps.openings.inventory.NotificadorEnCola') as cola, self.captureOnCommitCallbacks(execute=True):
+        with patch('apps.openings.composition.NotificadorEnCola') as cola, self.captureOnCommitCallbacks(execute=True):
             self.assertEqual(self.post(f'/api/v1/inventory/{item.pk}/sell/').status_code, 200)
         cola.return_value.enviar_envio_simulado.assert_not_called()
 
@@ -149,3 +154,43 @@ class TransactionBoundaryTests(TestCase):
         case.refresh_from_db()
         self.assertEqual(case.precio, Decimal('123'))
         self.assertEqual(list(case.caja_items.values_list('item_id',flat=True)),[custom.pk])
+
+
+class FlujoCriticoTests(APITestCase):
+    def test_registro_recarga_apertura_venta_y_envio_simulado(self):
+        caso = Caja.objects.create(nombre='Prueba E2E', precio=Decimal('25'))
+        premio = Item.objects.create(nombre='Premio E2E', valor_estimado=Decimal('10'))
+        CajaItem.objects.create(caja=caso, item=premio, probabilidad=Decimal('100'))
+        datos = {'username': 'e2e', 'email': 'e2e@example.test', 'password': 'vault-Test-4821'}
+        self.assertEqual(self.client.post(reverse('users:api_register'), datos).status_code, 201)
+        acceso = self.client.post(reverse('users:api_login'), {**datos, 'username': datos['email']})
+        self.assertEqual(acceso.status_code, 200)
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {acceso.data['token']}")
+        perfil = self.client.patch(reverse('users:profile'), {
+            'username': datos['username'], 'email': datos['email'], 'steam_username': 'steam-e2e',
+        })
+        self.assertEqual(perfil.status_code, 200)
+        self.assertEqual(self.client.get('/api/v1/cajas/').status_code, 200)
+        self.assertEqual(self.client.post('/api/v1/wallet/deposit/', {'monto': '100.00'}).status_code, 200)
+
+        for accion in ('sell', 'send'):
+            apertura = self.client.post(f'/api/v1/cajas/{caso.pk}/abrir/')
+            self.assertEqual(apertura.status_code, 201)
+            item_id = apertura.data['inventario_item']['id']
+            correo = StringIO()
+            with patch.dict('os.environ', {'NOTIFICACION_MODE': 'SIMULADO'}), redirect_stdout(correo):
+                with self.captureOnCommitCallbacks(execute=True):
+                    respuesta = self.client.post(f'/api/v1/inventory/{item_id}/{accion}/')
+            self.assertEqual(respuesta.status_code, 200)
+        self.assertIn('steam-e2e', correo.getvalue())
+        registro = NotificacionEnvio.objects.get()
+        self.assertEqual(registro.usuario.username, datos['username'])
+        self.assertEqual(registro.objetos, premio.nombre)
+        self.assertEqual(respuesta.data['account']['wallet']['saldo'], '1060.00')
+        self.assertEqual(respuesta.data['item']['estado'], 'ENVIADO')
+
+        self.client.credentials()
+        admin = get_user_model().objects.create_superuser('admin-e2e', 'admin@example.test', 'vault-Test-4821')
+        self.client.force_login(admin)
+        historial = self.client.get(reverse('admin:users_notificacionenvio_changelist'))
+        self.assertContains(historial, premio.nombre)

@@ -165,6 +165,12 @@ function start(root) {
     }
     if(el.matches('[data-upgrade-reset]')){state.upgradeState='idle';state.upgradeResult=null;render();return;}
     if(el.matches('[data-reset]')){state.openingState='idle';state.wonItem=null;render();return;}
+    if (el.dataset.transactionFilter) {
+      state.transactionFilter = el.dataset.transactionFilter;
+      render();
+      root.querySelector('[data-transaction-filter][aria-pressed="true"]')?.focus();
+      return;
+    }
     if(el.dataset.filter){state.filter=el.dataset.filter;render();return;}
     if(el.dataset.sell){if(!confirm(gettext('¿Vender este objeto? Esta acción no se puede deshacer.')))return;mutate(()=>api.mutate(`${urls.inventoryUrl}${el.dataset.sell}/sell/`),gettext('Objeto vendido.'));return;}
     if(el.dataset.send){if(!confirm(gettext('¿Registrar el envío simulado? El objeto dejará de estar disponible.')))return;mutate(()=>api.mutate(`${urls.inventoryUrl}${el.dataset.send}/send/`),gettext('Envío simulado guardado. No se realizó una transferencia a Steam.'));return;}
