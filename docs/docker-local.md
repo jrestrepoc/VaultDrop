@@ -9,9 +9,11 @@ Copiar `.env.example` a `.env` y llenar `DJANGO_SECRET_KEY` y `POSTGRES_PASSWORD
 ```sh
 cp .env.example .env
 docker compose up --build -d
-docker compose exec web python manage.py test apps --noinput
+docker compose exec -T -e CELERY_BROKER_URL= -e NOTIFICACION_MODE=MOCK web python manage.py test apps --noinput
 docker compose down
 ```
+
+La suite usa una base PostgreSQL de pruebas y ejecuta las tareas en el proceso de pruebas para aislarlas del worker del entorno local.
 
 Si el puerto 80 está ocupado, usar por ejemplo `HTTP_PORT=8002` en `.env`.
 
