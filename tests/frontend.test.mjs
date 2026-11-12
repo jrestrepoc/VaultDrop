@@ -155,10 +155,23 @@ test('upgrade page offers only better targets and enables after choosing one',()
   assert.match(html,/data-target="2"/);
   assert.doesNotMatch(html,/data-target="3"/);
   assert.match(html,/data-upgrade disabled/);
+  assert.match(html,/Elige un objeto en Objetivo/);
   state.upgradeTarget='2';
   html=createViews(state,{}).html();
   assert.match(html,/<strong>50,00%<\/strong>/);
   assert.doesNotMatch(html,/data-upgrade disabled/);
+});
+
+test('upgrade explains when selected skins have no more valuable target',()=>{
+  const state=createState(true);state.page='upgrade';
+  applyAccount(state,cuentaCon('DISPONIBLE'));
+  state.cases=[{items:[{item:{id:'1',nombre:'Pistola',valor:25,rareza:'consumer'}}]}];
+  assert.match(createViews(state,{}).html(),/Selecciona objetos para ver los objetivos/);
+  state.selection=['7'];
+  const html=createViews(state,{}).html();
+  assert.match(html,/No hay un objetivo válido para esta selección/);
+  assert.match(html,/data-upgrade disabled/);
+  assert.doesNotMatch(html,/data-target=/);
 });
 
 test('free case banner and ranking escape user content',()=>{
