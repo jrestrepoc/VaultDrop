@@ -28,6 +28,9 @@ class IntegracionAliadaTests(TestCase):
         self.assertFalse(ItemInventario.objects.exists())
         self.assertFalse(Transaccion.objects.exists())
 
+    def test_caja_demo_sin_cajas_responde_404(self):
+        self.assertEqual(self.client.post(reverse('cases:demo-open')).status_code, 404)
+
     @override_settings(HANZI_CATALOGO_URL='https://hanzi.example/api/v1/caracteres/')
     def test_reto_genera_cuatro_opciones_y_califica_la_respuesta(self):
         pronunciaciones = {'人': 'rén', '水': 'shuǐ', '火': 'huǒ', '山': 'shān'}
