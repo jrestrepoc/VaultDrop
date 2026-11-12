@@ -414,6 +414,12 @@ msgstr "TARGET"
 msgid "Selecciona objetos para ver los objetivos posibles."
 msgstr "Select items to see possible targets."
 
+msgid "No hay un objetivo válido para esta selección. Prueba con menos objetos o con objetos de menor valor."
+msgstr "There is no eligible target for this selection. Try fewer items or lower-value items."
+
+msgid "Elige un objeto en Objetivo para activar la mejora."
+msgstr "Choose an item under Target to enable the upgrade."
+
 msgid "Cargando historial..."
 msgstr "Loading history..."
 

@@ -326,6 +326,9 @@ export function createViews(state, urls) {
     const chance = state.upgradeResult ? state.upgradeResult.probabilidad : objetivo ? upgradeChance(total, objetivo.valor) : 0;
     const puede = objetivo && !excedido && state.upgradeState === 'idle';
     const resultado = state.upgradeState === 'result' ? state.upgradeResult : null;
+    const sinObjetivos = state.selection.length
+      ? gettext('No hay un objetivo válido para esta selección. Prueba con menos objetos o con objetos de menor valor.')
+      : gettext('Selecciona objetos para ver los objetivos posibles.');
     return `<section class="section">
       <h1 class="gradient-text section-title" style="margin-bottom:8px">${gettext('MEJORAR ARMAS')}</h1>
       <p class="section-copy">${gettext('Entrega objetos de tu inventario por una oportunidad de obtener uno mejor. Si falla, los pierdes.')}</p>
@@ -336,12 +339,13 @@ export function createViews(state, urls) {
       <div class="action-row">
         ${state.upgradeState === 'spinning' || state.upgradeState === 'requesting' ? `<button class="primary-action" disabled>⏳ ${gettext('SPINNING...')}</button>` : resultado ? `<button class="primary-action" data-upgrade-reset>${gettext('INTENTAR OTRA')}</button>` : `<button class="primary-action" data-upgrade ${puede ? '' : 'disabled'}>⬆️ ${gettext('INTENTAR MEJORA')}</button>`}
       </div>
+      ${objetivos.length && !objetivo && !excedido && state.upgradeState === 'idle' ? `<p class="section-copy" role="status">${gettext('Elige un objeto en Objetivo para activar la mejora.')}</p>` : ''}
       <div class="upgrade-columns">
         <div><h3 class="panel-title">${gettext('TUS OBJETOS')}</h3>
           ${disponibles.length ? `<div class="upgrade-list">${disponibles.map(ii => `<label class="upgrade-option ${state.selection.includes(ii.id) ? 'chosen' : ''}"><input type="checkbox" data-select="${ii.id}" ${state.selection.includes(ii.id) ? 'checked' : ''}>${imageTag(ii.item.nombre, ii.item.image)}<span>${escapeHtml(ii.item.nombre)}</span><strong>¢${fmtCurrency(ii.item.valor)}</strong></label>`).join('')}</div>` : `<p class="section-copy">${gettext('No tienes objetos disponibles.')}</p>`}
         </div>
         <div><h3 class="panel-title">${gettext('OBJETIVO')}</h3>
-          ${objetivos.length ? `<div class="upgrade-list">${objetivos.map(item => `<button class="upgrade-option ${item.id === state.upgradeTarget ? 'chosen' : ''}" data-target="${item.id}" aria-pressed="${item.id === state.upgradeTarget}">${imageTag(item.nombre, item.image)}<span>${escapeHtml(item.nombre)}</span><strong>${fmtPercent(upgradeChance(total, item.valor), 1)}</strong></button>`).join('')}</div>` : `<p class="section-copy">${gettext('Selecciona objetos para ver los objetivos posibles.')}</p>`}
+          ${objetivos.length ? `<div class="upgrade-list">${objetivos.map(item => `<button class="upgrade-option ${item.id === state.upgradeTarget ? 'chosen' : ''}" data-target="${item.id}" aria-pressed="${item.id === state.upgradeTarget}">${imageTag(item.nombre, item.image)}<span>${escapeHtml(item.nombre)}</span><strong>${fmtPercent(upgradeChance(total, item.valor), 1)}</strong></button>`).join('')}</div>` : `<p class="section-copy">${sinObjetivos}</p>`}
         </div>
       </div>
     </section>`;
