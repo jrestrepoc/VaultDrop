@@ -41,6 +41,12 @@ Revisión de usabilidad, navegación y formularios de la Entrega 2. Se midió en
 - Los iconos de la barra son emoji decorativos, ocultos para lectores de pantalla.
 - La confirmación usa el diálogo nativo del navegador, que ya es accesible y bilingüe por su texto.
 
+## Pantallas agregadas después
+
+El inventario con selección múltiple, el mejorador, el historial y la portada con clasificación se midieron con el mismo método en 1024, 375 y 320 px: sin textos bajo 4,5:1, controles menores de 24 px, campos sin etiqueta ni desbordamiento. En teléfonos se oculta el logo, y bajo 360 px también el saldo, para que quepan los cinco botones de navegación.
+
+La ruleta se reproduce siempre, aunque el sistema pida reducir movimiento, porque es el momento central de la aplicación. Quien tenga sensibilidad al movimiento también la verá.
+
 ## Límites de esta auditoría
 
 La medición automática no sustituye una prueba con personas ni con un lector de pantalla real. No se evaluaron textos sobre fondos con degradado o imagen, porque su contraste no se puede calcular de forma fiable. La página de límite de intentos de Nginx es bilingüe, pero estática porque no pasa por Django.

@@ -26,12 +26,18 @@ La rama `taller-2` agrega Nginx como punto de entrada para una etapa del patron 
 | POST | `/api/v1/inventory/mejorar/` | Intentar una mejora |
 | GET | `/api/v1/inventory/historial/` | Aperturas y mejoras propias |
 | POST | `/api/v1/cajas/gratis/abrir/` | Caja gratis diaria |
+| POST | `/api/v1/cajas/demo/abrir/` | Apertura de demostración para HanZi Mentor, sin autenticación ni cambios en la base |
 | GET | `/api/v1/cajas/ranking/` | Mejores premios |
 | POST | `/api/v1/auth/register/` | Registro y token |
-| POST | `/api/v1/auth/login/` | Autenticación por token |
+| POST | `/api/v1/auth/login/` | Autenticación por token con usuario o correo |
 | PATCH | `/api/v1/auth/profile/` | Actualizar el perfil propio |
+| POST | `/logout/` | Cerrar la sesión web |
+| POST | `/i18n/setlang/` | Cambiar el idioma |
+| GET | `/jsi18n/` | Catálogo de traducciones del frontend |
+| GET | `/admin/` | Panel administrador |
+| GET, POST | `/reto-pinyin/` | Reto de pinyin con el catálogo de HanZi Mentor |
 
-Las mutaciones POST de apertura, recarga, venta y envío admiten `Idempotency-Key`. Debe conservarse la misma clave al reintentar la misma operación y usarse otra para una acción nueva. La respuesta de apertura conserva los campos existentes y añade `account`. Las ventas y recargas devuelven `account` actualizado. Los importes se serializan como cadenas decimales.
+Las mutaciones POST de apertura, caja gratis, recarga, venta, envío, acciones masivas y mejora admiten `Idempotency-Key`. Debe conservarse la misma clave al reintentar la misma operación y usarse otra para una acción nueva. Las respuestas de estas operaciones incluyen `account` actualizado. Los importes se serializan como cadenas decimales.
 
 ## Qué aportaría una pasarela
 

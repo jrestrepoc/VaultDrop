@@ -2,9 +2,9 @@
 
 ## Factory
 
-`apps/users/infra/factories.py` contiene `INotificador`, `NotificadorConsola`, `NotificadorEmail` y `NotificadorFactory`. La configuración selecciona la implementación; `UserService` también permite inyectarla en el constructor para pruebas.
+`apps/users/infra/factories.py` contiene `NotificadorConsola`, `NotificadorEmail` y `NotificadorFactory`; el contrato `INotificador` está en `apps/users/notifications.py`. `NOTIFICACION_MODE` (`MOCK`, `SIMULADO` o `REAL`) selecciona la implementación; `UserService` también permite inyectarla en el constructor para pruebas.
 
-El envío se programa después del commit mediante `transaction.on_commit`. Si se revierte la creación de la cuenta no se envía una bienvenida. Si el envío falla después del commit, la cuenta ya creada se conserva y el fallo queda registrado. Esto no implementa una cola durable de correo.
+El envío se programa después del commit mediante `transaction.on_commit`. Si se revierte la creación de la cuenta no se envía una bienvenida. Si el envío falla después del commit, la cuenta ya creada se conserva y el fallo queda registrado. Con Docker el envío lo hace el worker de Celery; si Redis está caído, el aviso se pierde y la cuenta se conserva.
 
 ## Builder
 
