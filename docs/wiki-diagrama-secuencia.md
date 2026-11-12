@@ -1,5 +1,7 @@
 # Secuencia real: abrir una caja
 
+La caja gratis sigue este mismo flujo, sin el débito: una restricción por usuario y fecha sustituye el cobro.
+
 ```mermaid
 sequenceDiagram
     actor U as Usuario

@@ -31,7 +31,7 @@ flowchart LR
     W -->|SMTP en modo REAL| M[Servidor de correo]
 ```
 
-VaultDrop consulta el catálogo público de HanZi Mentor y genera un reto de pinyin en `/reto-pinyin/`. Configurar `HANZI_CATALOGO_URL` con la URL completa del catálogo publicado, por ejemplo `http://IP_ALIADA/api/v1/caracteres/?nivel=1&limite=20`. El navegador habla con VaultDrop y Django consulta HanZi Mentor. Si el servicio falla, la página del reto muestra un mensaje y el catálogo de VaultDrop sigue disponible.
+VaultDrop consulta el catálogo público de HanZi Mentor y genera un reto de pinyin en `/reto-pinyin/`. Configurar `HANZI_CATALOGO_URL` con la URL completa del catálogo publicado, por ejemplo `http://IP_ALIADA/api/v2/caracteres/?nivel=1&limite=20`. Se usa la ruta `v2` porque en el Strangler de HanZi la `v1` es la versión antigua. El navegador habla con VaultDrop y Django consulta HanZi Mentor. Si el servicio falla, la página del reto muestra un mensaje y el catálogo de VaultDrop sigue disponible.
 
 HanZi Mentor puede llamar desde su servidor a `POST /api/v1/cajas/demo/abrir/` sin cuerpo ni autenticación. El servidor sortea un objeto de una caja activa con las probabilidades configuradas. La apertura de demostración no modifica saldos, inventarios ni historiales. Ejemplo de respuesta:
 
@@ -63,7 +63,9 @@ Los códigos de rareza son `COMUN`, `RARO`, `EPICO` y `LEGENDARIO`. `imagen` es 
 | Strangler | `services/catalog_service` | Migrar la consulta del catálogo sin detener el monolito |
 | API Gateway | `nginx.conf` | Enrutar el tráfico entre Django y Flask |
 | Adapter | `apps/wallet/infra/exchange_rates.py` | Aislar la API externa detrás de `IProveedorTasaCambio` |
-| Factory | `apps/users/infra/factories.py` | Elegir el notificador MOCK o REAL |
+| Adapter | `apps/core/hanzi.py` | Convertir el catálogo de HanZi Mentor en un reto de pinyin |
+| Unidad de trabajo | `apps/core/unit_of_work.py` | Delimitar transacciones sin que los servicios llamen al ORM |
+| Factory | `apps/users/infra/factories.py` | Elegir el notificador MOCK, SIMULADO o REAL |
 | Builder | `apps/users/domain/builders.py`, `apps/openings/domain/builders.py` | Validar y construir objetos sin guardarlos |
 | Repository | `apps/*/repositories.py` | Separar el acceso a datos de los casos de uso |
 

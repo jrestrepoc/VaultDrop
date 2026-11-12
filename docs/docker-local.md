@@ -42,7 +42,7 @@ Compose usa el modo `SIMULADO` para las notificaciones. Celery genera el correo 
    nano .env
    ```
 
-   En `.env`, generar los secretos con `openssl rand -hex 32` y agregar la IP elástica a `DJANGO_ALLOWED_HOSTS`. Hacerlo antes del primer `up`: Postgres solo toma la contraseña al crear su volumen.
+   En `.env`, generar los secretos con `openssl rand -hex 32` y agregar la IP elástica a `DJANGO_ALLOWED_HOSTS`. Para el reto de pinyin, poner en `HANZI_CATALOGO_URL` la URL del catálogo de HanZi Mentor con su IP, por ejemplo `http://IP_HANZI/api/v2/caracteres/?nivel=1&limite=20`. Hacerlo antes del primer `up`: Postgres solo toma la contraseña al crear su volumen.
 
 6. Levantar y verificar:
 
@@ -51,6 +51,7 @@ Compose usa el modo `SIMULADO` para las notificaciones. Celery genera el correo 
    docker compose ps
    curl http://<IP-ELASTICA>/api/v1/cajas/
    curl http://<IP-ELASTICA>/api/v2/catalogo/
+   curl -X POST http://<IP-ELASTICA>/api/v1/cajas/demo/abrir/
    ```
 
 Para entrar al panel en `http://<IP-ELASTICA>/admin/`, crear un administrador con:
