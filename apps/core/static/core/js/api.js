@@ -7,6 +7,16 @@ function errorMessage(data) {
   return data?.detail || data?.error || Object.values(data || {}).flat().join(' ') || gettext('No se pudo completar la operación.');
 }
 
+function operationKey() {
+  if (typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+  return [hex.slice(0, 8), hex.slice(8, 12), hex.slice(12, 16), hex.slice(16, 20), hex.slice(20)].join('-');
+}
+
 export class ApiClient {
   constructor(urls, userId) {
     this.urls = urls;
@@ -39,7 +49,7 @@ export class ApiClient {
 
   async mutate(url, body = {}) {
     const signature = JSON.stringify([url, body]);
-    const key = this.pending.get(signature) || crypto.randomUUID();
+    const key = this.pending.get(signature) || operationKey();
     this.pending.set(signature, key);
     this.persist();
     try {
