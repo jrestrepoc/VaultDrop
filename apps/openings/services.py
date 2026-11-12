@@ -45,7 +45,7 @@ class AperturaCajaService:
         caja = self.caja_repository.get_caja_gratis()
         if caja is None:
             raise CajaNoEncontradaError(_('Caja no encontrada'))
-        _, items = self._caja_lista(caja.pk)
+        _caja, items = self._caja_lista(caja.pk)
         return self._seleccionar_item(items)
 
     def abrir_gratis(self, user):
