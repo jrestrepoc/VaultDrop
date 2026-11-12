@@ -11,6 +11,7 @@ x-django: &django
   DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:?Copia .env.example a .env}
   NOTIFICACION_MODE: "SIMULADO"
   CATALOG_URL: "/api/v2/catalogo/"
+  HANZI_CATALOGO_URL: ${HANZI_CATALOGO_URL:-}
   CELERY_BROKER_URL: "redis://redis:6379/0"
 
 services:

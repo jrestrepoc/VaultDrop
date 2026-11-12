@@ -1,0 +1,41 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Reto de pinyin" %} | VaultDrop{% endblock %}
+{% block body %}
+  <main class="auth-shell">
+    <a class="auth-brand" href="{% url 'core:home' %}">⚡ VAULTDROP</a>
+    <section class="auth-card">
+      <h1 class="gradient-text auth-title">{% translate "Reto de pinyin" %}</h1>
+      <p class="auth-subtitle">HanZi Mentor</p>
+      {% if no_disponible %}
+        <p role="status">{% translate "HanZi Mentor no está disponible en este momento." %}</p>
+      {% elif reto_vencido %}
+        <p role="status">{% translate "El reto venció. Carga uno nuevo." %}</p>
+      {% elif pinyin_correcto %}
+        <p role="status">
+          {% if acerto %}{% translate "¡Correcto!" %}{% else %}{% translate "Respuesta incorrecta." %}{% endif %}
+          {{ pinyin_correcto }}
+        </p>
+      {% else %}
+        <p>{% translate "¿Cómo se pronuncia este carácter?" %}</p>
+        <p class="auth-title" lang="zh">{{ caracter }}</p>
+        <div class="deposit-row">
+          {% for opcion in opciones %}
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="reto" value="{{ reto }}">
+              <input type="hidden" name="opcion" value="{{ forloop.counter0 }}">
+              <button type="submit" class="amount-button" lang="zh-Latn">{{ opcion }}</button>
+            </form>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <div class="auth-switch">
+        {% if not caracter %}<a href="{% url 'core:reto-pinyin' %}">{% translate "Cargar reto" %}</a>{% endif %}
+        <a href="{% url 'core:home' %}">{% translate "Volver a VaultDrop" %}</a>
+      </div>
+      {% include "core/language_switch.html" %}
+    </section>
+  </main>
+{% endblock %}
