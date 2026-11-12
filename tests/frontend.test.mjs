@@ -24,12 +24,19 @@ test('reel spins even with reduced motion and lands on the server prize',async()
   assert.equal(frames[1].transform,'translateX(-800px)');
 });
 
-test('network retry reuses operation key and creates no local prize', async()=>{
+test('HTTP without randomUUID sends a UUID and reuses it on network retry', async(t)=>{
+  const originalCrypto = Object.getOwnPropertyDescriptor(globalThis, 'crypto');
+  Object.defineProperty(globalThis, 'crypto', {
+    configurable: true,
+    value: {getRandomValues: globalThis.crypto.getRandomValues.bind(globalThis.crypto)},
+  });
+  t.after(() => Object.defineProperty(globalThis, 'crypto', originalCrypto));
   const calls=[];
   globalThis.fetch=async(_,options)=>{calls.push(options.headers['Idempotency-Key']);if(calls.length===1)throw Error('offline');return {ok:true,json:async()=>({id:1})};};
   const api=new ApiClient({},'test');
   await assert.rejects(api.mutate('/open/'));
   await api.mutate('/open/');
+  assert.match(calls[0], /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
   assert.equal(calls[0],calls[1]);
   await api.mutate('/open/');
   assert.notEqual(calls[1],calls[2]);
