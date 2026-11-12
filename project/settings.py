@@ -93,6 +93,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Solo detras de Nginx existe Flask; sin Gateway el frontend usa la ruta de Django.
 CATALOG_URL = os.environ.get('CATALOG_URL', '')
+HANZI_CATALOGO_URL = os.environ.get('HANZI_CATALOGO_URL', '')
 
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', '')
 # Sin broker (desarrollo sin Docker) las tareas corren en el mismo proceso.

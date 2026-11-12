@@ -446,3 +446,27 @@ msgstr "Notificación de envío"
 
 msgid "Notificaciones de envío"
 msgstr "Notificaciones de envío"
+
+msgid "Reto de pinyin"
+msgstr "Reto de pinyin"
+
+msgid "HanZi Mentor no está disponible en este momento."
+msgstr "HanZi Mentor no está disponible en este momento."
+
+msgid "El reto venció. Carga uno nuevo."
+msgstr "El reto venció. Carga uno nuevo."
+
+msgid "¡Correcto!"
+msgstr "¡Correcto!"
+
+msgid "Respuesta incorrecta."
+msgstr "Respuesta incorrecta."
+
+msgid "¿Cómo se pronuncia este carácter?"
+msgstr "¿Cómo se pronuncia este carácter?"
+
+msgid "Cargar reto"
+msgstr "Cargar reto"
+
+msgid "Volver a VaultDrop"
+msgstr "Volver a VaultDrop"

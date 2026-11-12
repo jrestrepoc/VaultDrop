@@ -29,6 +29,19 @@ class AbrirCajaAPIView(APIView):
                                           'open', {'caja_id': caja_id}, action)
         return Response({**data, 'account': account_snapshot(request.user)}, status=201)
 
+class AbrirCajaDemoAPIView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request):
+        item = AperturaCajaService().abrir_demo()
+        return Response({
+            'item': item.nombre,
+            'rareza': item.rareza,
+            'imagen': request.build_absolute_uri(item.imagen_url) if item.imagen_url else None,
+        }, headers={'Cache-Control': 'no-store'})
+
+
 class InventoryAPIView(APIView):
     permission_classes = [IsAuthenticated]
 

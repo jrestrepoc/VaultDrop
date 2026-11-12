@@ -41,6 +41,13 @@ class AperturaCajaService:
             self.wallet_service.debitar(user, caja.precio)
             return self._registrar(user, caja, caja_items, caja.precio)
 
+    def abrir_demo(self):
+        caja = self.caja_repository.get_caja_gratis()
+        if caja is None:
+            raise CajaNoEncontradaError(_('Caja no encontrada'))
+        _, items = self._caja_lista(caja.pk)
+        return self._seleccionar_item(items)
+
     def abrir_gratis(self, user):
         gratis = self.caja_repository.get_caja_gratis()
         if gratis is None:

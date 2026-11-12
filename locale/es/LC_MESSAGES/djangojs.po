@@ -468,3 +468,6 @@ msgstr "No se encontraron movimientos"
 #, python-format
 msgid "Paid: ¢%(cost)s"
 msgstr "Pagado: ¢%(cost)s"
+
+msgid "Reto de pinyin"
+msgstr "Reto de pinyin"

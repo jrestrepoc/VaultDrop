@@ -468,3 +468,6 @@ msgstr "No transactions found"
 #, python-format
 msgid "Paid: ¢%(cost)s"
 msgstr "Paid: ¢%(cost)s"
+
+msgid "Reto de pinyin"
+msgstr "Pinyin challenge"

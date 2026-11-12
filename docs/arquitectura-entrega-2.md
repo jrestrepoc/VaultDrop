@@ -25,11 +25,25 @@ flowchart LR
         W --> P
     end
 
+    D -->|Adapter HTTP| H[HanZi Mentor]
+    H -->|Apertura de demostración| N
     D -->|Adapter HTTPS| X[ExchangeRate-API]
     W -->|SMTP en modo REAL| M[Servidor de correo]
 ```
 
-El consumo del servicio del equipo aliado está pendiente, y su diagrama se completará al integrarlo.
+VaultDrop consulta el catálogo público de HanZi Mentor y genera un reto de pinyin en `/reto-pinyin/`. Configurar `HANZI_CATALOGO_URL` con la URL completa del catálogo publicado, por ejemplo `http://IP_ALIADA/api/v1/caracteres/?nivel=1&limite=20`. El navegador habla con VaultDrop y Django consulta HanZi Mentor. Si el servicio falla, la página del reto muestra un mensaje y el catálogo de VaultDrop sigue disponible.
+
+HanZi Mentor puede llamar desde su servidor a `POST /api/v1/cajas/demo/abrir/` sin cuerpo ni autenticación. El servidor sortea un objeto de una caja activa con las probabilidades configuradas. La apertura de demostración no modifica saldos, inventarios ni historiales. Ejemplo de respuesta:
+
+```json
+{
+  "item": "AK-47 | Redline",
+  "rareza": "EPICO",
+  "imagen": "http://IP_VAULTDROP/static/core/images/catalog/skin-91a429af4a60.png"
+}
+```
+
+Los códigos de rareza son `COMUN`, `RARO`, `EPICO` y `LEGENDARIO`. `imagen` es una URL absoluta o `null` si el objeto carece de imagen.
 
 ## Responsabilidades
 
