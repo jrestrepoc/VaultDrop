@@ -25,6 +25,8 @@ La ruta `GET /api/v2/catalogo/` devuelve las cajas, sus ítems y sus probabilida
 
 ## Reto de pinyin
 
-La pantalla muestra el aviso de respaldo cuando HanZi Mentor no responde. La demostración con datos reales y la prueba del catálogo desde la app del aliado quedan pendientes de una sesión conjunta con ambas instancias encendidas.
+La pantalla muestra el aviso de respaldo cuando HanZi Mentor no responde. Con ambas instancias encendidas, HanZi Mentor confirmó que su app muestra las cajas de VaultDrop. VaultDrop cargó el carácter 五 con cuatro opciones y mostró «¡Correcto! wǔ» al elegir su lectura.
+
+![Reto de pinyin con cuatro opciones de HanZi Mentor](evidencia/05-reto-funcional.jpg)
 
 ![Reto de pinyin con el aviso de respaldo](evidencia/04-reto-pinyin.jpg)
