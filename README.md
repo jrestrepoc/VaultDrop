@@ -57,6 +57,7 @@ docker compose exec web python manage.py createsuperuser
 ```
 
 Con Docker, el catálogo inicial solo se carga cuando no hay ninguna caja, para que una caja borrada desde el panel no reaparezca. El despliegue en EC2 está en [docs/docker-local.md](docs/docker-local.md).
+- [Evidencia del despliegue en AWS](docs/evidencia-despliegue.md)
 
 ## Validar
 
